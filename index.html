@@ -628,10 +628,10 @@ credential.
     </section>
 
     <section>
-      <h4>DecentralizedRenderer</h4>
+      <h4>EmbeddedRenderer</h4>
 
       <p>
-        DecentralizedRenderer is used by an issuer to render a verifiable
+        EmbeddedRenderer is used by an issuer to render a verifiable
         credential. The verifiable credential is rendered in HTML within an embedded
         `&ltiframe&gt` through a Template Renderer website referenced in
         the document. This arrangement allows for interactive selective disclosure
@@ -644,8 +644,8 @@ credential.
         process.
       </p>
       <p>
-        There currently exists a number of DecentralizedRenderer issuers
-        and decentralized renderer implementations.
+        There currently exists a number of EmbeddedRenderer issuers
+        and embedded renderer implementations.
       </p>
       <p>
         When an [=issuer=] desires to specify an embedded rendering instructions
@@ -665,18 +665,18 @@ credential.
             <td>id</td>
             <td>
               A URL that locates a website that implements the
-              DecentralizedRenderer Action API.
+              EmbeddedRenderer Action API.
             </td>
           </tr>
           <tr>
             <td>type</td>
-            <td>The `type` property MUST be `DecentralizedRenderer`.</td>
+            <td>The `type` property MUST be `EmbeddedRenderer`.</td>
           </tr>
           <tr>
             <td>renderName</td>
             <td>
               Name of the template used by the website specified by `id` to render
-              the document. A different template can be used for the decentralized
+              the document. A different template can be used for the embedded
               renderer to present a different HTML view of the verifiable
               credential.
             </td>
@@ -709,7 +709,7 @@ credential.
       },
       <span class="highlight">"renderMethod": [
           {
-            "type": "DecentralizedRenderer",
+            "type": "EMBEDDED_RENDERER",
             "templateName": "DEMO_CERTIFICATE",
             "id": "https://generic-templates.tradetrust.io"
           }
@@ -718,28 +718,28 @@ credential.
       </pre>
 
       <p>
-        The [=verifiable credential=] specifies a decentralized renderer at
+        The [=verifiable credential=] specifies a embedded renderer at
         `https://generic-templates.tradetrust.io`, using the template named
         `DEMO_CERTIFICATE`.
       </p>
       <p>
-        The decentralized renderer can support different templates that can provide
+        The embedded renderer can support different templates that can provide
         different views of the verifiable credentials. Below are two renderings of
         the same [=verifiable credential=] using different templates.
       </p>
 
-      <figure id="decentralized-renderer-certificate-template">
+      <figure id="embedded-renderer-certificate-template">
         <img
           style="width: 100%"
-          src="images/decentralized-renderer-certificate-template.png"
+          src="images/embedded-renderer-certificate.png"
           alt="Certificate Template"
         />
         <figcaption>Certificate Template</figcaption>
       </figure>
-      <figure id="decentralized-renderer-transcript-template">
+      <figure id="embedded-renderer-transcript-template">
         <img
           style="width: 100%"
-          src="images/decentralized-renderer-transcript-template.png"
+          src="images/embedded-renderer-transcript.png"
           alt="Transcript Template"
         />
         <figcaption>Transcript Template</figcaption>
@@ -781,10 +781,10 @@ credential.
                 The interaction between the Host and the Template Renderer is illustrated in
                 the following diagram.
             </p>
-            <figure id="decentralized-renderer-sequence-diagram">
+            <figure id="embedded-renderer-sequence-diagram">
                 <img
                         style="width: 100%"
-                        src="images/decentralized-renderer-sequence-diagram.png"
+                        src="images/embedded-renderer-sequence-diagram.png"
                         alt="Sequence Diagram"
                 />
                 <figcaption>Sequence Diagram</figcaption>
