@@ -14,11 +14,11 @@
     <script type="text/javascript" class="remove">
       var respecConfig = {
         // specification status (e.g. WD, LCWD, NOTE, etc.). If in doubt use ED.
-        specStatus: "CG-FINAL",
+        specStatus: "ED",
 
         // the specification's short name, as in http://www.w3.org/TR/short-name/
         shortName: "vc-render-method",
-        group: "credentials",
+        group: "vc",
 
         // if you wish the publication date to be other than today, set this
         //publishDate:  "2023-04-18",
@@ -29,8 +29,8 @@
         // previousMaturity:  "WD",
 
         // if there a publicly available Editor's Draft, this is the link
-        edDraftURI: "https://w3c-ccg.github.io/vc-render-method/",
-        latestVersion: "https://www.w3.org/community/reports/credentials/CG-FINAL-vc-render-method-20250831/",
+        edDraftURI: "https://w3c.github.io/vc-render-method/",
+        //latestVersion: "https://www.w3.org/community/reports/credentials/CG-FINAL-vc-render-method-20250831/",
 
         // if this is a LCWD, uncomment and set the end of its review period
         // lcEnd: "2009-08-05",
@@ -42,17 +42,17 @@
         // editors, add as many as you like
         // only "name" is required
         editors: [{
-          name: "Manu Sporny",
-          url: "https://www.linkedin.com/in/manusporny/",
-          company: "Digital Bazaar",
-          companyURL: "https://digitalbazaar.com/",
-          w3cid: 41758
-        }, {
           name: "Dmitri Zagidulin",
           url: "https://www.linkedin.com/in/dzagidulin/",
           company: "MIT Digital Credentials Consortium",
           companyURL: "https://digitalcredentials.mit.edu/",
           w3cid: 86708
+        }, {
+          name: "Manu Sporny",
+          url: "https://www.linkedin.com/in/manusporny/",
+          company: "Digital Bazaar",
+          companyURL: "https://digitalbazaar.com/",
+          w3cid: 41758
         }, {
           name: "Calvin Cheng",
           url: "https://linkedin.com/in/cxcheng/",
@@ -97,7 +97,7 @@
           companyURL: "https://opsecid.ca/"
         }],
 
-        github: "https://github.com/w3c-ccg/vc-render-method/",
+        github: "https://github.com/w3c/vc-render-method/",
 
         // URI of the patent status for this WG, for Rec-track documents
         // !!!! IMPORTANT !!!!
@@ -110,17 +110,14 @@
         alternateFormats: [ {uri: "diff-20111214.html", label: "diff to previous version"} ],
         */
         localBiblio: {
-          MULTIBASE: {
-            title: "Multibase",
-            href: "https://datatracker.ietf.org/doc/html/draft-multiformats-multibase-01",
-          },
-          MULTICODEC: {
-            title: "Multicodec",
-            href: "https://github.com/multiformats/multicodec/",
+          ENTRY: {
+            title: "Example Title",
+            href: "https://website.example/document",
           },
         },
         lint: {"no-unused-dfns": false},
-        postProcess: [restrictRefs]
+        postProcess: [],
+        xref: ["INFRA", "VC-DATA-MODEL-2.0", "CID"]
       };
     </script>
     <style>
