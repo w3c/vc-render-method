@@ -31,20 +31,6 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout/@v4
-      - name: Setup Deno
-        uses: denoland/setup-deno@v2
-        with:
-          deno-version: v2.x
-      - name: Generate the vocabulary files
-        # Run the yml2vocab script
-        # As a result, the following files will be available on w3c.github.io/vocab/
-        # - vocabulary.{html,ttl,jsonld}:  Vocab in HTML/RDFa, Turtle, and JSON-LD, respectively
-        # - vocabulary.context.jsonld: JSON-LD context file for the full vocabulary, including external terms
-        run: |
-          (cd vocab; deno run -A jsr:@iherman/yml2vocab/cli -t template.html -v vocabulary.yml -c)
-          mkdir contexts
-          mv vocab/vocabulary.html vocab/index.html
-        #  mv vocab/vocabulary.context.jsonld contexts/v1.1rc1
       - name: Setup Github Pages
         uses: actions/configure-pages@v5
       - name: Upload artifact
