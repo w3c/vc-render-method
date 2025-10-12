@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Verifiable Credential Rendering Methods</title>
+    <title>Verifiable Credential Rendering Methods v0.9</title>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
     <!--
       === NOTA BENE ===
@@ -14,7 +14,7 @@
     <script type="text/javascript" class="remove">
       var respecConfig = {
         // specification status (e.g. WD, LCWD, NOTE, etc.). If in doubt use ED.
-        specStatus: "CG-DRAFT",
+        specStatus: "CG-FINAL",
 
         // the specification's short name, as in http://www.w3.org/TR/short-name/
         shortName: "vc-render-method",
@@ -30,7 +30,7 @@
 
         // if there a publicly available Editor's Draft, this is the link
         edDraftURI: "https://w3c-ccg.github.io/vc-render-method/",
-        //latestVersion: "https://www.w3.org/community/reports/credentials/CG-FINAL-di-eddsa-2020-20220724/",
+        latestVersion: "https://www.w3.org/community/reports/credentials/CG-FINAL-vc-render-method-20250831/",
 
         // if this is a LCWD, uncomment and set the end of its review period
         // lcEnd: "2009-08-05",
@@ -394,7 +394,7 @@ as specified in [[[RFC6838]]].
                       <td>digestMultibase</td>
                       <td>
 An OPTIONAL multibase-encoded Multihash of the template file. The multibase
-value MUST be `u` (base64url-nopad) and the multihash value MUST be SHA-2 with 
+value MUST be `u` (base64url-nopad) and the multihash value MUST be SHA-2 with
 256-bits of output (`0x12`).
                       </td>
                     </tr>
@@ -406,7 +406,7 @@ value MUST be `u` (base64url-nopad) and the multihash value MUST be SHA-2 with
               <td>digestMultibase</td>
                 <td>
 An OPTIONAL multibase-encoded Multihash of the render method referenced if `id`
-is specified. The multibase value MUST be `u` (base64url-nopad) and the multihash 
+is specified. The multibase value MUST be `u` (base64url-nopad) and the multihash
 value MUST be SHA-2 with 256-bits of output (`0x12`).
                 </td>
               </tr>
