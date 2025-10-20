@@ -977,15 +977,15 @@ credential.
       <p>
         When OCA is used as a render method for [=verifiable credentials=], the capture
         base in the OCA Bundle uses JSON paths (as defined in [[[RFC6901]]]) as attribute
-        names to reference properties within the [=verifiable credential=]'s
-        `credentialSubject`, and defines the data type for each attribute. For example,
-        an attribute named `/degree/name` would reference the `name` property within
-        the nested `degree` object of the credential subject. The overlays then provide
-        presentation metadata such as human-readable labels in multiple languages,
-        formatting rules for dates and numbers, constraints for data entry, and
-        descriptive information about each attribute. This separation allows the same
-        credential data to be rendered differently based on context, locale, or user
-        preferences while maintaining a consistent semantic foundation.
+        names to reference properties from the root of the [=verifiable credential=]
+        document, and defines the data type for each attribute. For example,
+        an attribute named `/credentialSubject/degree/name` would reference the `name` 
+        property within the nested `degree` object of the credential's `credentialSubject`.
+        The overlays then provide presentation metadata such as human-readable labels in 
+        multiple languages, formatting rules for dates and numbers, constraints for data 
+        entry, and descriptive information about each attribute. This separation allows 
+        the same credential data to be rendered differently based on context, locale, or 
+        user preferences while maintaining a consistent semantic foundation.
       </p>
 
       <p>
@@ -1118,10 +1118,10 @@ processing logic for the OCA Bundle format.
       "digest": "ECui6bAv2zzW2gMVQbKT3M7g2q4r6yWKf2Y2k9CDa8Nq",
       "type": "spec/capture_base/2.0.0",
       "attributes": {
-        "/degree/type": "Text",
-        "/degree/name": "Text",
-        "/degree/degreeType": "Text",
-        "/degree/major": "Text"
+        "/credentialSubject/degree/type": "Text",
+        "/credentialSubject/degree/name": "Text",
+        "/credentialSubject/degree/degreeType": "Text",
+        "/credentialSubject/degree/major": "Text"
       },
       "classification": ""
     },
@@ -1139,10 +1139,10 @@ processing logic for the OCA Bundle format.
         "capture_base": "ECui6bAv2zzW2gMVQbKT3M7g2q4r6yWKf2Y2k9CDa8Nq",
         "language": "en",
         "attribute_labels": {
-          "/degree/type": "Degree Type",
-          "/degree/name": "Degree Name",
-          "/degree/degreeType": "Degree Classification",
-          "/degree/major": "Major"
+          "/credentialSubject/degree/type": "Degree Type",
+          "/credentialSubject/degree/name": "Degree Name",
+          "/credentialSubject/degree/degreeType": "Degree Classification",
+          "/credentialSubject/degree/major": "Major"
         }
       },
       {
@@ -1151,10 +1151,10 @@ processing logic for the OCA Bundle format.
         "capture_base": "ECui6bAv2zzW2gMVQbKT3M7g2q4r6yWKf2Y2k9CDa8Nq",
         "language": "fr",
         "attribute_labels": {
-          "/degree/type": "Type de diplôme",
-          "/degree/name": "Nom du diplôme",
-          "/degree/degreeType": "Classification du diplôme",
-          "/degree/major": "Spécialisation"
+          "/credentialSubject/degree/type": "Type de diplôme",
+          "/credentialSubject/degree/name": "Nom du diplôme",
+          "/credentialSubject/degree/degreeType": "Classification du diplôme",
+          "/credentialSubject/degree/major": "Spécialisation"
         }
       },
       {
@@ -1163,10 +1163,10 @@ processing logic for the OCA Bundle format.
         "capture_base": "ECui6bAv2zzW2gMVQbKT3M7g2q4r6yWKf2Y2k9CDa8Nq",
         "language": "en",
         "attribute_information": {
-          "/degree/type": "The type of academic degree awarded",
-          "/degree/name": "The full official name of the degree",
-          "/degree/degreeType": "Classification level (e.g., Undergraduate, Graduate)",
-          "/degree/major": "The primary field of study"
+          "/credentialSubject/degree/type": "The type of academic degree awarded",
+          "/credentialSubject/degree/name": "The full official name of the degree",
+          "/credentialSubject/degree/degreeType": "Classification level (e.g., Undergraduate, Graduate)",
+          "/credentialSubject/degree/major": "The primary field of study"
         }
       },
       {
@@ -1174,7 +1174,7 @@ processing logic for the OCA Bundle format.
         "type": "spec/overlays/sensitive/2.0.0",
         "capture_base": "ECui6bAv2zzW2gMVQbKT3M7g2q4r6yWKf2Y2k9CDa8Nq",
         "attributes": [
-          "/degree/name"
+          "/credentialSubject/degree/name"
         ]
       }
     ]
