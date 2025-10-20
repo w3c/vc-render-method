@@ -278,9 +278,9 @@ The value of the `renderMethod` property MUST specify one or
 more rendering methods that can be used by software to express the
 [=verifiable credential=] using a visual, auditory, or haptic mechanism. Each
 `renderMethod` value MUST specify its `type`, for example,
-`TemplateRenderMethod`. The precise contents of each rendering
-hint is determined by the specific `renderMethod` `type`
-definition.
+`TemplateRenderMethod`, `OpenAttestationEmbeddedRenderer`, or `OCABundle`.
+The precise contents of each rendering hint is determined by the specific
+`renderMethod` `type` definition.
           </dd>
         </dl>
       </section>
@@ -947,6 +947,242 @@ credential.
                 </table>
             </section>
         </section>
+    </section>
+
+    <section>
+      <h4>OCABundle</h4>
+
+      <p>
+        OCABundle is used by an issuer to specify rendering instructions
+        based on an Overlays Capture Architecture (OCA) Bundle. OCA provides a
+        standardized way to define schemas with semantic overlays that enable
+        multi-language support, data entry formats, sensitive data flagging, and
+        rich metadata for rendering verifiable credentials in a consistent and
+        interoperable manner.
+      </p>
+
+      <p>
+        An OCA Bundle consists of a capture base that defines the core structure
+        and data types of the credential attributes, along with various overlays
+        that provide additional context such as labels, character encoding, format
+        specifications, entry codes, and information overlays. This layered approach
+        enables flexible and culturally-aware rendering of credentials while maintaining
+        data integrity.
+      </p>
+
+      <p>
+        When OCA is used as a render method for [=verifiable credentials=], the capture
+        base in the OCA Bundle uses JSON paths (as defined in [[[RFC6901]]]) as attribute
+        names to reference properties within the [=verifiable credential=]'s
+        `credentialSubject`, and defines the data type for each attribute. For example,
+        an attribute named `/degree/name` would reference the `name` property within
+        the nested `degree` object of the credential subject. The overlays then provide
+        presentation metadata such as human-readable labels in multiple languages,
+        formatting rules for dates and numbers, constraints for data entry, and
+        descriptive information about each attribute. This separation allows the same
+        credential data to be rendered differently based on context, locale, or user
+        preferences while maintaining a consistent semantic foundation.
+      </p>
+
+      <p>
+        When an [=issuer=] desires to specify OCA-based rendering instructions
+        for a [=verifiable credential=], they MAY add a `renderMethod` property
+        that uses the data model described below.
+      </p>
+
+      <table class="simple">
+        <thead>
+          <tr>
+            <th style="white-space: nowrap">Property</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>id</td>
+            <td>
+A REQUIRED [=string=] that follows the [[[URL]]] specification and, when fetched,
+dereferences to an OCA Bundle in JSON format. The OCA Bundle contains the schema
+base and associated overlays needed for rendering the credential.
+            </td>
+          </tr>
+          <tr>
+            <td>type</td>
+            <td>
+A REQUIRED [=string=] that MUST be the value `OCABundle`.
+            </td>
+          </tr>
+          <tr>
+            <td>name</td>
+            <td>
+An OPTIONAL human-readable [=string=] that can be displayed to provide a hint to
+the type of rendering that will be performed. This property might be used in a
+graphical interface that enables an individual to select between multiple
+presentation modes.
+            </td>
+          </tr>
+          <tr>
+            <td>description</td>
+            <td>
+An OPTIONAL human-readable [=string=] that provides a more detailed description
+of the OCA-based rendering method and when it might be useful.
+            </td>
+          </tr>
+          <tr>
+            <td>digestMultibase</td>
+            <td>
+An OPTIONAL multibase-encoded Multihash of the OCA Bundle. The multibase
+value MUST be `u` (base64url-nopad) and the multihash value MUST be SHA-2 with
+256 bits of output (0x12 in the multicodec table). This property can be used by
+verifiers to ensure the integrity of the fetched OCA Bundle.
+            </td>
+          </tr>
+          <tr>
+            <td>version</td>
+            <td>
+An OPTIONAL [=string=] that specifies the OCA specification version that the
+referenced OCA Bundle conforms to (e.g., "v2.0.0-rc1", "v2.0.0", "v1.0").
+This property helps renderers determine compatibility and select appropriate
+processing logic for the OCA Bundle format.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p>
+        The data model shown above is expressed in a [=verifiable credential=] in
+        the example below.
+      </p>
+
+      <pre
+        class="example nohighlight"
+        title="Usage of OCABundle render method with a remote OCA Bundle"
+      >
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://example.org/oca/v1"
+  ],
+  "type": ["VerifiableCredential", "UniversityDegreeCredential"],
+  "issuer": {
+    "id": "https://example.edu/issuers/565049",
+    "name": "Example University"
+  },
+  "validFrom": "2024-01-01T00:00:00Z",
+  "credentialSubject": {
+    "id": "did:example:ebfeb1f712ebc6f1c276e12ec21",
+    "degree": {
+      "type": "BachelorDegree",
+      "name": "Bachelor of Science and Arts",
+      "degreeType": "Undergraduate",
+      "major": "Computer Science"
+    }
+  },
+  <span class="highlight">"renderMethod": [{
+    "id": "https://example.edu/oca-bundles/degree-2024.json",
+    "type": "OCABundle",
+    "name": "University Degree Display",
+    "description": "Renders the degree credential with multi-language support",
+    "digestMultibase": "uEiC96D8xPcVfm...WNcMF4Kc-Yw",
+    "version": "v2.0.0-rc1"
+  }]</span>
+}
+      </pre>
+
+      <p>
+        In this example, the OCA Bundle located at
+        `https://example.edu/oca-bundles/degree-2024.json` contains the schema
+        base and overlays necessary to render the credential. The bundle might
+        include label overlays for multiple languages, format overlays for date
+        and number formatting, and information overlays with descriptions of each
+        attribute.
+      </p>
+
+      <p>
+        An example OCA Bundle structure for this credential might look like:
+      </p>
+
+      <pre
+        class="example nohighlight"
+        title="Example OCA Bundle structure with JSON path attributes"
+      >
+{
+  "bundle": {
+    "digest": "EBfdlu8R27Fbx-ehrqwIxQ-na4B7A4LqidzXqj8gkzHp",
+    "capture_base": {
+      "digest": "ECui6bAv2zzW2gMVQbKT3M7g2q4r6yWKf2Y2k9CDa8Nq",
+      "type": "capture_base/2.0.0",
+      "attributes": {
+        "/degree/type": "Text",
+        "/degree/name": "Text",
+        "/degree/degreeType": "Text",
+        "/degree/major": "Text"
+      }
+    },
+    "overlays": {
+      "meta": {
+        "digest": "EMzAk6N2iI1K5EpS9YqU7WxTc8BvPq1RgFn0D4XyJwLz",
+        "type": "meta/2.0.0",
+        "capture_base": "ECui6bAv2zzW2gMVQbKT3M7g2q4r6yWKf2Y2k9CDa8Nq",
+        "name": "University Degree Credential",
+        "description": "Academic degree credential issued by universities"
+      },
+      "label": [
+        {
+          "digest": "EJqWh3K9fF8H2BmP6VnR4TxQz5YsLm8NcDk7A1UvGtIw",
+          "type": "label/2.0.0",
+          "capture_base": "ECui6bAv2zzW2gMVQbKT3M7g2q4r6yWKf2Y2k9CDa8Nq",
+          "language": "en",
+          "attribute_labels": {
+            "/degree/type": "Degree Type",
+            "/degree/name": "Degree Name",
+            "/degree/degreeType": "Degree Classification",
+            "/degree/major": "Major"
+          }
+        },
+        {
+          "digest": "EKpXi4L0gG9I3CnQ7WoS5UyRa6ZtNo9OdEl8B2VwHuJx",
+          "type": "label/2.0.0",
+          "capture_base": "ECui6bAv2zzW2gMVQbKT3M7g2q4r6yWKf2Y2k9CDa8Nq",
+          "language": "fr",
+          "attribute_labels": {
+            "/degree/type": "Type de diplôme",
+            "/degree/name": "Nom du diplôme",
+            "/degree/degreeType": "Classification du diplôme",
+            "/degree/major": "Spécialisation"
+          }
+        }
+      ],
+      "information": {
+        "digest": "ELrYj5M1hH0J4DoR8XpT6VzSb7AuOp0QeFm9C3WxIvKy",
+        "type": "information/2.0.0",
+        "capture_base": "ECui6bAv2zzW2gMVQbKT3M7g2q4r6yWKf2Y2k9CDa8Nq",
+        "language": "en",
+        "attribute_information": {
+          "/degree/type": "The type of academic degree awarded",
+          "/degree/name": "The full official name of the degree",
+          "/degree/degreeType": "Classification level (e.g., Undergraduate, Graduate)",
+          "/degree/major": "The primary field of study"
+        }
+      },
+      "sensitive": {
+        "digest": "ENaZl7O3jJ2L6FqT0ZrV8XyUd9CwRs2ShGo1E5YzKxMa",
+        "type": "sensitive/2.0.0",
+        "capture_base": "ECui6bAv2zzW2gMVQbKT3M7g2q4r6yWKf2Y2k9CDa8Nq",
+        "attributes": [
+          "/degree/name"
+        ]
+      }
+    }
+  }
+}
+      </pre>
+
+      <p>
+        Implementers can use the OCA Bundle to generate appropriate user interfaces,
+        select language-specific labels, apply format specifications, and ensure
+        consistent rendering across different applications and platforms.
+      </p>
     </section>
   </section>
 
