@@ -1109,54 +1109,54 @@ processing logic for the OCA Bundle format.
       >
 {
   "bundle": {
+    "v": "OCAS11JSON000646_",
     "digest": "EBfdlu8R27Fbx-ehrqwIxQ-na4B7A4LqidzXqj8gkzHp",
     "capture_base": {
       "digest": "ECui6bAv2zzW2gMVQbKT3M7g2q4r6yWKf2Y2k9CDa8Nq",
-      "type": "capture_base/2.0.0",
+      "type": "spec/capture_base/2.0.0",
       "attributes": {
         "/degree/type": "Text",
         "/degree/name": "Text",
         "/degree/degreeType": "Text",
         "/degree/major": "Text"
-      }
+      },
+      "classification": ""
     },
-    "overlays": {
-      "meta": {
+    "overlays": [
+      {
         "digest": "EMzAk6N2iI1K5EpS9YqU7WxTc8BvPq1RgFn0D4XyJwLz",
-        "type": "meta/2.0.0",
+        "type": "spec/overlays/meta/2.0.0",
         "capture_base": "ECui6bAv2zzW2gMVQbKT3M7g2q4r6yWKf2Y2k9CDa8Nq",
         "name": "University Degree Credential",
         "description": "Academic degree credential issued by universities"
       },
-      "label": [
-        {
-          "digest": "EJqWh3K9fF8H2BmP6VnR4TxQz5YsLm8NcDk7A1UvGtIw",
-          "type": "label/2.0.0",
-          "capture_base": "ECui6bAv2zzW2gMVQbKT3M7g2q4r6yWKf2Y2k9CDa8Nq",
-          "language": "en",
-          "attribute_labels": {
-            "/degree/type": "Degree Type",
-            "/degree/name": "Degree Name",
-            "/degree/degreeType": "Degree Classification",
-            "/degree/major": "Major"
-          }
-        },
-        {
-          "digest": "EKpXi4L0gG9I3CnQ7WoS5UyRa6ZtNo9OdEl8B2VwHuJx",
-          "type": "label/2.0.0",
-          "capture_base": "ECui6bAv2zzW2gMVQbKT3M7g2q4r6yWKf2Y2k9CDa8Nq",
-          "language": "fr",
-          "attribute_labels": {
-            "/degree/type": "Type de diplôme",
-            "/degree/name": "Nom du diplôme",
-            "/degree/degreeType": "Classification du diplôme",
-            "/degree/major": "Spécialisation"
-          }
+      {
+        "digest": "EJqWh3K9fF8H2BmP6VnR4TxQz5YsLm8NcDk7A1UvGtIw",
+        "type": "spec/overlays/label/2.0.0",
+        "capture_base": "ECui6bAv2zzW2gMVQbKT3M7g2q4r6yWKf2Y2k9CDa8Nq",
+        "language": "en",
+        "attribute_labels": {
+          "/degree/type": "Degree Type",
+          "/degree/name": "Degree Name",
+          "/degree/degreeType": "Degree Classification",
+          "/degree/major": "Major"
         }
-      ],
-      "information": {
+      },
+      {
+        "digest": "EKpXi4L0gG9I3CnQ7WoS5UyRa6ZtNo9OdEl8B2VwHuJx",
+        "type": "spec/overlays/label/2.0.0",
+        "capture_base": "ECui6bAv2zzW2gMVQbKT3M7g2q4r6yWKf2Y2k9CDa8Nq",
+        "language": "fr",
+        "attribute_labels": {
+          "/degree/type": "Type de diplôme",
+          "/degree/name": "Nom du diplôme",
+          "/degree/degreeType": "Classification du diplôme",
+          "/degree/major": "Spécialisation"
+        }
+      },
+      {
         "digest": "ELrYj5M1hH0J4DoR8XpT6VzSb7AuOp0QeFm9C3WxIvKy",
-        "type": "information/2.0.0",
+        "type": "spec/overlays/information/2.0.0",
         "capture_base": "ECui6bAv2zzW2gMVQbKT3M7g2q4r6yWKf2Y2k9CDa8Nq",
         "language": "en",
         "attribute_information": {
@@ -1166,15 +1166,15 @@ processing logic for the OCA Bundle format.
           "/degree/major": "The primary field of study"
         }
       },
-      "sensitive": {
+      {
         "digest": "ENaZl7O3jJ2L6FqT0ZrV8XyUd9CwRs2ShGo1E5YzKxMa",
-        "type": "sensitive/2.0.0",
+        "type": "spec/overlays/sensitive/2.0.0",
         "capture_base": "ECui6bAv2zzW2gMVQbKT3M7g2q4r6yWKf2Y2k9CDa8Nq",
         "attributes": [
           "/degree/name"
         ]
       }
-    }
+    ]
   }
 }
       </pre>
