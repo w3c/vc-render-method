@@ -401,6 +401,16 @@ value MUST be `u` (base64url-nopad) and the multihash value MUST be SHA-2 with
               </td>
             </tr>
             <tr>
+              <td>renderProperty</td>
+              <td>
+An OPTIONAL [=list=] of [=string=] values that each conform to the
+[[[RFC6901]]] syntax that specifies which properties from the [=verifiable
+credential=] are exposed when using this specific render method. If
+`renderProperty` is not provided, the entire [=verifiable credential=] is
+presumed to be shared when the render method is used.
+              </td>
+            </tr>
+            <tr>
               <td>digestMultibase</td>
                 <td>
 An OPTIONAL multibase-encoded Multihash of the render method referenced if `id`
@@ -497,16 +507,6 @@ presentation modes.
               <td>
 An OPTIONAL human-readable [=string=] that provides a more involved description
 than `name` of when the particular rendering might be useful.
-              </td>
-            </tr>
-            <tr>
-              <td>renderProperty</td>
-              <td>
-An OPTIONAL [=list=] of [=string=] values that each conform to the
-[[[RFC6901]]] syntax that specifies which properties from the [=verifiable
-credential=] are exposed when using this specific render method. If
-`renderProperty` is not provided, the entire [=verifiable credential=] is
-presumed to be shared when the render method is used.
               </td>
             </tr>
             <tr>
