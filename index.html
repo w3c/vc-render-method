@@ -302,13 +302,12 @@ definition.
         </dl>
       </section>
 
-      <section>
-        <h4>TemplateRenderMethod</h4>
+      <section><!-- RenderMethod -->
+        <h4>RenderMethod</h4>
 
         <p>
-When an [=issuer=] desires to specify template-based rendering instructions
-for a [=verifiable credential=], they MAY add a `renderMethod` property that uses
-the data model described below.
+The `RenderMethod` base class can be used to provide a predetermined payload to
+be displayed, transmitted, or otherwise rendered when templating is not required.
         </p>
 
         <table class="simple">
@@ -329,14 +328,19 @@ dereferences to a render template.
             <tr>
               <td>type</td>
               <td>
-A REQUIRED [=string=] that MUST be the value `TemplateRenderMethod`.
+A REQUIRED [=string=] that MUST be the value `RenderMethod`.
               </td>
             </tr>
             <tr>
-              <td>renderSuite</td>
+              <td>modality</td>
               <td>
-A REQUIRED [=string=] that identifies the algorithms that are used for
-generating the concrete rendering.
+A REQUIRED [=string=] that identifies the mode by which the payload will be
+transmitted or rendered. Possible examples of modalities may include `nfc`,
+`qr-code`, `audio`, and `braille`.
+
+<aside class="issue">
+Define additional modalities.
+</aside>
               </td>
             </tr>
             <tr>
@@ -356,20 +360,10 @@ than `name` of when the particular rendering might be useful.
               </td>
             </tr>
             <tr>
-              <td>renderProperty</td>
+              <td>payload</td>
               <td>
-An OPTIONAL [=list=] of [=string=] values that each conform to the
-[[[RFC6901]]] syntax that specifies which properties from the [=verifiable
-credential=] are exposed when using this specific render method. If
-`renderProperty` is not provided, the entire [=verifiable credential=] is
-presumed to be shared when the render method is used.
-              </td>
-            </tr>
-            <tr>
-              <td>template</td>
-              <td>
-An OPTIONAL [=string=] or [=ordered map|map=] that provides the template that
-will be used to perform the rendering. If the value is a [=string=], it MUST be
+An OPTIONAL [=string=] or [=ordered map|map=] that provides the raw data that
+will be used for rendering. If the value is a [=string=], it MUST be
 a URL. If the value is a [=ordered map|map=], it MUST conform to the following
 rules:
                 <table class="simple">
@@ -407,6 +401,16 @@ value MUST be `u` (base64url-nopad) and the multihash value MUST be SHA-2 with
               </td>
             </tr>
             <tr>
+              <td>renderProperty</td>
+              <td>
+An OPTIONAL [=list=] of [=string=] values that each conform to the
+[[[RFC6901]]] syntax that specifies which properties from the [=verifiable
+credential=] are exposed when using this specific render method. If
+`renderProperty` is not provided, the entire [=verifiable credential=] is
+presumed to be shared when the render method is used.
+              </td>
+            </tr>
+            <tr>
               <td>digestMultibase</td>
                 <td>
 An OPTIONAL multibase-encoded Multihash of the render method referenced if `id`
@@ -415,15 +419,73 @@ value MUST be SHA-2 with 256-bits of output (`0x12`).
                 </td>
               </tr>
             </tbody>
-          </table>
+        </table>
+
+        <section>
+          <h3>The `nfc` Render Modality</h3>
+          <p>
+The `nfc` render modality transmits a binary payload representing the
+[=verifiable credential=] over a wireless NFC connection.
+          </p>
 
           <p>
-The data model shown above is expressed in a [=verifiable credential=]
-in the example below.
+In the example below, a fully embedded NFC payload is used.
           </p>
 
           <pre class="example nohighlight"
-          title="Usage of the render property by an issuer">
+               title="Usage of the nfc render suite">
+{
+  <span class="comment">...</span>
+  "renderMethod": {
+    "type": "RenderMethod",
+    "modality": "nfc",
+    "name": "Tap to send",
+    <span class="comment">// the NFC payload is embedded</span>
+    "payload": "data:application/octet-stream;base64,2QZkpQGDG...G8XJWnROcY4Biw"
+  }
+  </span>
+}
+          </pre>
+
+          <aside class="note">
+Trust is placed in the [=issuer=] that the contained payload is a minimally
+sufficient representation of the [=verifiable credential=] for verification
+purposes.
+          </aside>
+
+        </section>
+      </section>
+
+      <section><!-- TemplateRenderMethod -->
+        <h4>TemplateRenderMethod</h4>
+
+        <p>
+When an [=issuer=] desires to specify template-based rendering instructions
+for a [=verifiable credential=], they MAY add a `renderMethod` property using
+the `TemplateRenderMethod` class on the base data model adding additional
+processing instructions as described below.
+        </p>
+
+        <table class="simple">
+          <thead>
+            <tr>
+              <th style="white-space: nowrap">Property</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>renderSuite</td>
+              <td>
+A REQUIRED [=string=] that identifies the algorithms that are used for
+generating the concrete rendering.
+              </td>
+            </tr>
+            </tbody>
+          </table>
+
+          <pre class="example nohighlight"
+          title="Usage of the renderSuite property by an issuer">
 {
   "@context": [
     "https://www.w3.org/ns/credentials/v2",
@@ -444,7 +506,7 @@ in the example below.
   <span class="highlight">"renderMethod": {
     "type": "TemplateRenderMethod",
     "renderSuite": "svg-mustache",
-    "template": {
+    "payload": {
       "id": "https://example.edu/credential-templates/BachelorDegree",
       "mediaType": "image/svg+xml",
       "digestMultibase": "zQmerWC85Wg6wFl9znFCwYxApG270iEu5h6JqWAPdhyxz2dR",
@@ -463,7 +525,7 @@ template for a Bachelor's degree that will be filled in with specific
 information from the [=verifiable credential=] listed in `renderProperty`.
         </p>
 
-        <section>
+        <section><!-- svg-mustache Render Suite -->
           <h3>The `svg-mustache` Render Suite</h3>
           <p>
 The `svg-mustache` render suite uses the Mustache templating language to
@@ -484,7 +546,7 @@ template.
     "type": "TemplateRenderMethod",
     "renderSuite": "svg-mustache",
     <span class="comment">// the SVG file is embedded in the VC</span>
-    "template": "data:image/svg+xml;base64,Qjei89...3jZpW"
+    "payload": "data:image/svg+xml;base64,Qjei89...3jZpW"
   }
 }
           </pre>
@@ -501,7 +563,7 @@ modification by using the `digestMultibase` property.
 "renderMethod": {
   "type": "TemplateRenderMethod",
   "renderSuite": "svg-mustache",
-  "template": {
+  "payload": {
     <span class="comment">// this SVG file is fetched from the Web</span>
     "id": "https://degree.example/credential-templates/bachelors",
     "mediaType": "image/svg+xml",
@@ -531,7 +593,7 @@ using the `digestMultibase` property:
 
         </section>
 
-        <section>
+        <section><!-- pdf-mustache Render Suite -->
           <h3>The `pdf-mustache` Render Suite</h3>
           <p>
 The `pdf-mustache` render suite uses the Mustache templating language to
@@ -552,7 +614,7 @@ template.
     "type": "TemplateRenderMethod",
     "renderSuite": "pdf-mustache",
     <span class="comment">// this PDF file is embedded in the VC</span>
-    "template": "data:application/pdf;base64,k309SK...pwK83b"
+    "payload": "data:application/pdf;base64,k309SK...pwK83b"
   }
 }
           </pre>
@@ -569,7 +631,7 @@ modification by using the `digestMultibase` property.
 "renderMethod": {
   "type": "TemplateRenderMethod",
   "renderSuite": "pdf-mustache",
-  "template": {
+  "payload": {
     <span class="comment">// this PDF file is fetched from the Web</span>
     "id": "https://degree.example/bachelors.pdf",
     "mediaType": "application/pdf",
@@ -598,38 +660,7 @@ using the `digestMultibase` property:
 
         </section>
 
-        <section>
-          <h3>The `nfc` Render Suite</h3>
-          <p>
-The `nfc` render suite transmits a binary payload representing the
-[=verifiable credential=] over a wireless NFC connection.
-          </p>
-
-          <p>
-In the example below, a fully embedded NFC payload is used as the rendering
-template, which only discloses the barcode identifier associated with the
-credential.
-          </p>
-
-          <pre class="example nohighlight"
-               title="Usage of the nfc render suite">
-{
-  <span class="comment">...</span>
-  "renderMethod": {
-    "type": "TemplateRenderMethod",
-    "renderSuite": "nfc",
-    "name": "Tap to send",
-    <span class="comment">// the NFC payload is embedded</span>
-    "template": "data:application/octet-stream;base64,2QZkpQGDG...G8XJWnROcY4Biw",
-    <span class="comment">// only the barcode is transmitted over NFC</span>
-    "renderProperty": ["/credentialSubject/barcode"]
-  }
-  </span>
-}
-        </pre>
-
       </section>
-    </section>
 
     <section>
       <h4>OpenAttestationEmbeddedRenderer</h4>
