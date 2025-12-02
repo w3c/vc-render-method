@@ -302,6 +302,150 @@ definition.
         </dl>
       </section>
 
+      <section><!-- RenderMethod -->
+        <h4>RenderMethod</h4>
+
+        <p>
+In situations where templating is not required, an [=issuer=] can provide a
+predetermined payload to be displayed, transmitted, or otherwise rendered.
+        </p>
+
+        <table class="simple">
+          <thead>
+            <tr>
+              <th style="white-space: nowrap">Property</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>id</td>
+              <td>
+An OPTIONAL [=string=] that follows the [[[URL]]] and, when fetched,
+dereferences to a render template.
+              </td>
+            </tr>
+            <tr>
+              <td>type</td>
+              <td>
+A REQUIRED [=string=] that MUST be the value `RenderMethod`.
+              </td>
+            </tr>
+            <tr>
+              <td>modality</td>
+              <td>
+A REQUIRED [=string=] that identifies the mode by which the payload will be
+transmitted or rendered. Possible examples of modalities may include `nfc`,
+`qr-code`, `audio`, and `braille`.
+
+<aside class="issue">
+Define additional modalities.
+</aside>
+              </td>
+            </tr>
+            <tr>
+              <td>name</td>
+              <td>
+An OPTIONAL human-readable [=string=] that can be displayed to provide a hint to
+the type of rendering that will be performed. This property might be used in a
+graphical interface that enables an individual to select between multiple
+presentation modes.
+              </td>
+            </tr>
+            <tr>
+              <td>description</td>
+              <td>
+An OPTIONAL human-readable [=string=] that provides a more involved description
+than `name` of when the particular rendering might be useful.
+              </td>
+            </tr>
+            <tr>
+              <td>payload</td>
+              <td>
+An OPTIONAL [=string=] or [=ordered map|map=] that provides the raw data that
+will be used for rendering. If the value is a [=string=], it MUST be
+a URL. If the value is a [=ordered map|map=], it MUST conform to the following
+rules:
+                <table class="simple">
+                  <thead>
+                    <tr>
+                      <th style="white-space: nowrap">Property</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>id</td>
+                      <td>
+An REQUIRED [=string=] that follows the [[[URL]]] and, when fetched,
+dereferences to a template such as an SVG or PDF file.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>mediaType</td>
+                      <td>
+A RECOMMENDED [=string=] that identifies the media type for the `id` value
+as specified in [[[RFC6838]]].
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>digestMultibase</td>
+                      <td>
+An OPTIONAL multibase-encoded Multihash of the template file. The multibase
+value MUST be `u` (base64url-nopad) and the multihash value MUST be SHA-2 with
+256-bits of output (`0x12`).
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td>digestMultibase</td>
+                <td>
+An OPTIONAL multibase-encoded Multihash of the render method referenced if `id`
+is specified. The multibase value MUST be `u` (base64url-nopad) and the multihash
+value MUST be SHA-2 with 256-bits of output (`0x12`).
+                </td>
+              </tr>
+            </tbody>
+        </table>
+
+        <section>
+          <h3>The `nfc` Render Modality</h3>
+          <p>
+The `nfc` render modality transmits a binary payload representing the
+[=verifiable credential=] over a wireless NFC connection.
+          </p>
+
+          <p>
+In the example below, a fully embedded NFC payload is used.
+          </p>
+
+          <pre class="example nohighlight"
+               title="Usage of the nfc render suite">
+{
+  <span class="comment">...</span>
+  "renderMethod": {
+    "type": "RenderMethod",
+    "modality": "nfc",
+    "name": "Tap to send",
+    <span class="comment">// the NFC payload is embedded</span>
+    "payload": "data:application/octet-stream;base64,2QZkpQGDG...G8XJWnROcY4Biw"
+  }
+  </span>
+}
+          </pre>
+
+          <aside class="note">
+Trust is placed in the [=issuer=] that the contained payload is a minimally
+sufficient representation of the [=verifiable credential=] for verification
+purposes.
+          </aside>
+
+        </section>
+      </section>
+
       <section><!-- TemplateRenderMethod -->
         <h4>TemplateRenderMethod</h4>
 
@@ -599,150 +743,6 @@ using the `digestMultibase` property:
         </section>
 
       </section>
-
-      <section><!-- RenderMethod -->
-        <h4>RenderMethod</h4>
-
-        <p>
-In situations where templating is not required, an [=issuer=] can provide a
-predetermined payload to be displayed, transmitted, or otherwise rendered.
-        </p>
-
-        <table class="simple">
-          <thead>
-            <tr>
-              <th style="white-space: nowrap">Property</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>id</td>
-              <td>
-An OPTIONAL [=string=] that follows the [[[URL]]] and, when fetched,
-dereferences to a render template.
-              </td>
-            </tr>
-            <tr>
-              <td>type</td>
-              <td>
-A REQUIRED [=string=] that MUST be the value `RenderMethod`.
-              </td>
-            </tr>
-            <tr>
-              <td>modality</td>
-              <td>
-A REQUIRED [=string=] that identifies the mode by which the payload will be
-transmitted or rendered. Possible examples of modalities may include `nfc`,
-`qr-code`, `audio`, and `braille`.
-
-<aside class="issue">
-Define additional modalities.
-</aside>
-              </td>
-            </tr>
-            <tr>
-              <td>name</td>
-              <td>
-An OPTIONAL human-readable [=string=] that can be displayed to provide a hint to
-the type of rendering that will be performed. This property might be used in a
-graphical interface that enables an individual to select between multiple
-presentation modes.
-              </td>
-            </tr>
-            <tr>
-              <td>description</td>
-              <td>
-An OPTIONAL human-readable [=string=] that provides a more involved description
-than `name` of when the particular rendering might be useful.
-              </td>
-            </tr>
-            <tr>
-              <td>payload</td>
-              <td>
-An OPTIONAL [=string=] or [=ordered map|map=] that provides the raw data that
-will be used for rendering. If the value is a [=string=], it MUST be
-a URL. If the value is a [=ordered map|map=], it MUST conform to the following
-rules:
-                <table class="simple">
-                  <thead>
-                    <tr>
-                      <th style="white-space: nowrap">Property</th>
-                      <th>Description</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>id</td>
-                      <td>
-An REQUIRED [=string=] that follows the [[[URL]]] and, when fetched,
-dereferences to a template such as an SVG or PDF file.
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>mediaType</td>
-                      <td>
-A RECOMMENDED [=string=] that identifies the media type for the `id` value
-as specified in [[[RFC6838]]].
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>digestMultibase</td>
-                      <td>
-An OPTIONAL multibase-encoded Multihash of the template file. The multibase
-value MUST be `u` (base64url-nopad) and the multihash value MUST be SHA-2 with
-256-bits of output (`0x12`).
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </td>
-            </tr>
-            <tr>
-              <td>digestMultibase</td>
-                <td>
-An OPTIONAL multibase-encoded Multihash of the render method referenced if `id`
-is specified. The multibase value MUST be `u` (base64url-nopad) and the multihash
-value MUST be SHA-2 with 256-bits of output (`0x12`).
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-        <section>
-          <h3>The `nfc` Render Modality</h3>
-          <p>
-The `nfc` render modality transmits a binary payload representing the
-[=verifiable credential=] over a wireless NFC connection.
-          </p>
-
-          <p>
-In the example below, a fully embedded NFC payload is used.
-          </p>
-
-          <pre class="example nohighlight"
-               title="Usage of the nfc render suite">
-{
-  <span class="comment">...</span>
-  "renderMethod": {
-    "type": "RenderMethod",
-    "modality": "nfc",
-    "name": "Tap to send",
-    <span class="comment">// the NFC payload is embedded</span>
-    "payload": "data:application/octet-stream;base64,2QZkpQGDG...G8XJWnROcY4Biw"
-  }
-  </span>
-}
-        </pre>
-
-          <aside class="note">
-Trust is placed in the [=issuer=] that the contained payload is a minimally
-sufficient representation of the [=verifiable credential=] for verification
-purposes.
-          </aside>
-
-      </section>
-    </section>
 
     <section>
       <h4>OpenAttestationEmbeddedRenderer</h4>
