@@ -601,23 +601,221 @@ using the `digestMultibase` property:
         <section>
           <h3>The `json-card` Render Suite</h3>
           <p>
-The `json-card` render suite uses the JSONata templating language to
-transform a [=verifiable credential=] into a standardized JSON card format.
-This format enables wallets to display credentials in a responsive card layout
-with key data highlighted and configurable additional fields. Wallets that
-implement this method can render the standardized JSON output into their own
-card UI designs, allowing credentials to be displayed even when a wallet
-doesn't natively support a specific credential type.
+The `json-card` render suite uses JSON templates to transform a
+[=verifiable credential=] into a standardized JSON card format. This format
+enables wallets to display credentials in a responsive card layout with key
+data highlighted and configurable additional fields. Wallets that implement
+this method can render the standardized JSON output into their own card UI
+designs, allowing credentials to be displayed even when a wallet doesn't
+natively support a specific credential type.
           </p>
 
           <p>
-The template is expressed as a JSONata expression string. When the template
-is evaluated against the [=verifiable credential=] data, it MUST produce
-output that conforms to the json-card JSON schema defined below.
+The template is a JSON object that matches the json-card output structure.
+String values in the template can be JSON pointer strings (as specified in
+[[[RFC6901]]]) that reference fields in the [=verifiable credential=]. When
+processing the template, JSON pointer strings are evaluated against the
+credential data and replaced with the resolved values. The template MUST
+conform to the JSON template schema defined below, and the resulting output
+MUST conform to the json-card output schema. Compound data across multiple
+fields is not supported; each field references a single JSON pointer.
           </p>
 
           <section>
-            <h4>JSON Card Schema</h4>
+            <h4>JSON Template Schema</h4>
+            <p>
+The template for a `json-card` render suite MUST be a JSON object that
+conforms to the following structure. The template structure matches the
+output structure, but string values can be either literal strings or JSON
+pointer strings (starting with `/`) that reference fields in the
+[=verifiable credential=]. The template SHOULD be validated against this
+schema before processing.
+            </p>
+
+            <table class="simple">
+              <thead>
+                <tr>
+                  <th style="white-space: nowrap">Property</th>
+                  <th>Type</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>name</td>
+                  <td>[=string=]</td>
+                  <td>
+A REQUIRED string that is either a literal display name or a JSON pointer
+string (e.g., <code>"/credentialSubject/degree/name"</code>) that references
+the credential data.
+                  </td>
+                </tr>
+                <tr>
+                  <td>description</td>
+                  <td>[=string=]</td>
+                  <td>
+A REQUIRED string that is either a literal description or a JSON pointer
+string that references the credential data.
+                  </td>
+                </tr>
+                <tr>
+                  <td>icon</td>
+                  <td>[=string=]</td>
+                  <td>
+An OPTIONAL string that is either a literal URL/data URI or a JSON pointer
+string that references the credential data.
+                  </td>
+                </tr>
+                <tr>
+                  <td>theme</td>
+                  <td>[=ordered map|map=]</td>
+                  <td>
+An OPTIONAL color theme object with the following properties:
+                    <ul>
+                      <li><code>primaryColor</code> ([=string=]): Primary color as a literal string or JSON pointer</li>
+                      <li><code>accentColor</code> ([=string=]): Accent color as a literal string or JSON pointer</li>
+                    </ul>
+                  </td>
+                </tr>
+                <tr>
+                  <td>fields</td>
+                  <td>[=list=]</td>
+                  <td>
+A REQUIRED ordered list of custom data fields. Each field is an object with:
+                    <ul>
+                      <li><code>label</code> ([=string=]): The field label (MUST be a literal string, not a JSON pointer)</li>
+                      <li><code>value</code> ([=string=]): The field value as a JSON pointer string (e.g., <code>"/issuer"</code>)</li>
+                    </ul>
+                  </td>
+                </tr>
+                <tr>
+                  <td>issueDate</td>
+                  <td>[=string=]</td>
+                  <td>
+An OPTIONAL string that is either a literal ISO 8601 date or a JSON pointer
+string that references the credential data.
+                  </td>
+                </tr>
+                <tr>
+                  <td>expirationDate</td>
+                  <td>[=string=]</td>
+                  <td>
+An OPTIONAL string that is either a literal ISO 8601 date or a JSON pointer
+string that references the credential data.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p>
+The following JSON Schema implements the template structure rules defined
+above:
+            </p>
+
+            <pre class="example nohighlight"
+                 title="JSON Schema for json-card template">
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["name", "description", "fields"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Display name as a literal string or JSON pointer (e.g., \"/credentialSubject/degree/name\")"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description as a literal string or JSON pointer"
+    },
+    "icon": {
+      "type": "string",
+      "description": "Icon URL/data URI as a literal string or JSON pointer"
+    },
+    "theme": {
+      "type": "object",
+      "properties": {
+        "primaryColor": {
+          "type": "string",
+          "description": "Primary color as a literal string or JSON pointer"
+        },
+        "accentColor": {
+          "type": "string",
+          "description": "Accent color as a literal string or JSON pointer"
+        }
+      },
+      "additionalProperties": false
+    },
+    "fields": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["label", "value"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Field label (MUST be a literal string, not a JSON pointer)"
+          },
+          "value": {
+            "type": "string",
+            "pattern": "^/",
+            "description": "Field value as a JSON pointer string (MUST start with \"/\")"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "issueDate": {
+      "type": "string",
+      "description": "Issue date as a literal ISO 8601 date string or JSON pointer"
+    },
+    "expirationDate": {
+      "type": "string",
+      "description": "Expiration date as a literal ISO 8601 date string or JSON pointer"
+    }
+  },
+  "additionalProperties": false
+}
+            </pre>
+
+            <p>
+The following example shows a valid json-card template with JSON pointer
+strings:
+            </p>
+
+            <pre class="example nohighlight"
+                 title="Example json-card template">
+{
+  "name": "/credentialSubject/degree/name",
+  "description": "University Degree Credential",
+  "icon": "/credentialSubject/icon",
+  "theme": {
+    "primaryColor": "#1a5490",
+    "accentColor": "/credentialSubject/theme/accentColor"
+  },
+  "fields": [
+    {
+      "label": "Institution",
+      "value": "/issuer"
+    },
+    {
+      "label": "Degree Type",
+      "value": "/credentialSubject/degree/type"
+    },
+    {
+      "label": "Issue Date",
+      "value": "/validFrom"
+    }
+  ],
+  "issueDate": "/validFrom",
+  "expirationDate": "/validUntil"
+}
+            </pre>
+
+          </section>
+
+          <section>
+            <h4>JSON Card Output Schema</h4>
             <p>
 The output of a `json-card` template MUST be a JSON object that conforms to
 the following structure:
@@ -727,9 +925,60 @@ The following example shows a valid json-card output:
 
           </section>
 
+          <section>
+            <h4>Template Processing</h4>
+            <p>
+When processing a `json-card` template, the following steps MUST be
+performed:
+            </p>
+
+            <ol class="algorithm">
+              <li>
+Validate the template JSON object against the JSON template schema defined
+above. If validation fails, processing MUST stop and an error MUST be
+returned.
+              </li>
+              <li>
+For each string value in the template object:
+                <ol class="algorithm">
+                  <li>
+If the string value starts with `/` (indicating it is a JSON pointer),
+evaluate it using the JSON Pointer algorithm [[[RFC6901]]] against the
+[=verifiable credential=] as the target document.
+                  </li>
+                  <li>
+If the JSON pointer evaluation succeeds, replace the JSON pointer string with
+the resolved value. If the resolved value is not a string, convert it to a
+string representation.
+                  </li>
+                  <li>
+If the JSON pointer evaluation fails or returns `null`, the behavior is
+implementation-specific. Implementations MAY use an empty string, leave the
+value as `null`, or signal an error.
+                  </li>
+                  <li>
+If the string value does not start with `/`, treat it as a literal string
+and leave it unchanged.
+                  </li>
+                </ol>
+              </li>
+              <li>
+Validate the resulting JSON object against the json-card output schema. If
+validation fails, processing MUST stop and an error MUST be returned.
+              </li>
+            </ol>
+
+            <p>
+Note that compound data across multiple fields is not supported. Each field
+in the template references a single JSON pointer that resolves to a single
+value from the credential.
+            </p>
+
+          </section>
+
           <p>
-In the example below, a fully embedded JSONata template is used as the rendering
-template.
+In the example below, a fully embedded JSON template is used as the rendering
+template. The template uses JSON pointer strings to reference credential data.
           </p>
 
           <pre class="example nohighlight"
@@ -739,26 +988,28 @@ template.
   "renderMethod": {
     "type": "TemplateRenderMethod",
     "renderSuite": "json-card",
-    "template": "data:text/plain;base64,eyJuYW1lIjogY3JlZGVudGlhbFN1YmplY3QuZGVncmVlLm5hbWUsICJkZXNjcmlwdGlvbiI6ICJVbml2ZXJzaXR5IERlZ3JlZSBDcmVkZW50aWFsIiwgImZpZWxkcyI6IFt7ImxhYmVsIjogIkluc3RpdHV0aW9uIiwgInZhbHVlIjogaXNzdWVyfV19"
+    <span class="comment">// the JSON template is embedded in the VC</span>
+    "template": "data:application/json;base64,eyJuYW1lIjogIi9jcmVkZW50aWFsU3ViamVjdC9kZWdyZWUvbmFtZSIsICJkZXNjcmlwdGlvbiI6ICJVbml2ZXJzaXR5IERlZ3JlZSBDcmVkZW50aWFsIiwgImZpZWxkcyI6IFt7ImxhYmVsIjogIkluc3RpdHV0aW9uIiwgInZhbHVlIjogIi9pc3N1ZXIifV19"
   }
 }
           </pre>
 
           <p>
-The next example links to the JSONata template on the Web and secures it against
+The next example links to the JSON template on the Web and secures it against
 modification by using the `digestMultibase` property.
           </p>
 
           <pre class="example nohighlight"
-              title="A remotely hosted JSONata template for a json-card render template">
+              title="A remotely hosted JSON template for a json-card render template">
 {
 <span class="comment">...</span>
 "renderMethod": {
   "type": "TemplateRenderMethod",
   "renderSuite": "json-card",
   "template": {
-    "id": "https://degree.example/credential-templates/bachelors.jsonata",
-    "mediaType": "text/plain",
+    <span class="comment">// this JSON template is fetched from the Web</span>
+    "id": "https://degree.example/credential-templates/bachelors.json",
+    "mediaType": "application/json",
     "digestMultibase": "zQmerWC85Wg6wFl9znFCwYxApG270iEu5h6JqWAPdhyxz2dR"
   }
 }
