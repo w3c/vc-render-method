@@ -599,6 +599,193 @@ using the `digestMultibase` property:
         </section>
 
         <section>
+          <h3>The `json-card` Render Suite</h3>
+          <p>
+The `json-card` render suite uses the JSONata templating language to
+transform a [=verifiable credential=] into a standardized JSON card format.
+This format enables wallets to display credentials in a responsive card layout
+with key data highlighted and configurable additional fields. Wallets that
+implement this method can render the standardized JSON output into their own
+card UI designs, allowing credentials to be displayed even when a wallet
+doesn't natively support a specific credential type.
+          </p>
+
+          <p>
+The template is expressed as a JSONata expression string. When the template
+is evaluated against the [=verifiable credential=] data, it MUST produce
+output that conforms to the json-card JSON schema defined below.
+          </p>
+
+          <section>
+            <h4>JSON Card Schema</h4>
+            <p>
+The output of a `json-card` template MUST be a JSON object that conforms to
+the following structure:
+            </p>
+
+            <table class="simple">
+              <thead>
+                <tr>
+                  <th style="white-space: nowrap">Property</th>
+                  <th>Type</th>
+                  <th>Description</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>name</td>
+                  <td>[=string=]</td>
+                  <td>
+A REQUIRED display name for the credential card.
+                  </td>
+                </tr>
+                <tr>
+                  <td>description</td>
+                  <td>[=string=]</td>
+                  <td>
+A REQUIRED description text for the credential card.
+                  </td>
+                </tr>
+                <tr>
+                  <td>icon</td>
+                  <td>[=string=]</td>
+                  <td>
+An OPTIONAL URL or data URI for an icon or image to display on the card.
+                  </td>
+                </tr>
+                <tr>
+                  <td>theme</td>
+                  <td>[=ordered map|map=]</td>
+                  <td>
+An OPTIONAL color theme object with the following properties:
+                    <ul>
+                      <li><code>primaryColor</code> ([=string=]): Primary color for backgrounds and highlights</li>
+                      <li><code>accentColor</code> ([=string=]): Accent color for highlights and emphasis</li>
+                    </ul>
+                  </td>
+                </tr>
+                <tr>
+                  <td>fields</td>
+                  <td>[=list=]</td>
+                  <td>
+A REQUIRED ordered list of custom data fields. Each field is an object with:
+                    <ul>
+                      <li><code>label</code> ([=string=]): The field label</li>
+                      <li><code>value</code> ([=string=]): The field value</li>
+                    </ul>
+                  </td>
+                </tr>
+                <tr>
+                  <td>issueDate</td>
+                  <td>[=string=]</td>
+                  <td>
+An OPTIONAL ISO 8601 date string indicating when the credential was issued.
+                  </td>
+                </tr>
+                <tr>
+                  <td>expirationDate</td>
+                  <td>[=string=]</td>
+                  <td>
+An OPTIONAL ISO 8601 date string indicating when the credential expires.
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <p>
+The following example shows a valid json-card output:
+            </p>
+
+            <pre class="example nohighlight"
+                 title="Example json-card output">
+{
+  "name": "Bachelor of Science and Arts",
+  "description": "University Degree Credential",
+  "icon": "https://example.edu/icons/degree.svg",
+  "theme": {
+    "primaryColor": "#1a5490",
+    "accentColor": "#4a90e2"
+  },
+  "fields": [
+    {
+      "label": "Institution",
+      "value": "Example University"
+    },
+    {
+      "label": "Degree Type",
+      "value": "BachelorDegree"
+    },
+    {
+      "label": "Graduation Date",
+      "value": "2010-05-15"
+    }
+  ],
+  "issueDate": "2010-01-01T19:23:24Z",
+  "expirationDate": null
+}
+            </pre>
+
+          </section>
+
+          <p>
+In the example below, a fully embedded JSONata template is used as the rendering
+template.
+          </p>
+
+          <pre class="example nohighlight"
+               title="Basic usage of the json-card render suite">
+{
+  <span class="comment">...</span>
+  "renderMethod": {
+    "type": "TemplateRenderMethod",
+    "renderSuite": "json-card",
+    "template": "data:text/plain;base64,eyJuYW1lIjogY3JlZGVudGlhbFN1YmplY3QuZGVncmVlLm5hbWUsICJkZXNjcmlwdGlvbiI6ICJVbml2ZXJzaXR5IERlZ3JlZSBDcmVkZW50aWFsIiwgImZpZWxkcyI6IFt7ImxhYmVsIjogIkluc3RpdHV0aW9uIiwgInZhbHVlIjogaXNzdWVyfV19"
+  }
+}
+          </pre>
+
+          <p>
+The next example links to the JSONata template on the Web and secures it against
+modification by using the `digestMultibase` property.
+          </p>
+
+          <pre class="example nohighlight"
+              title="A remotely hosted JSONata template for a json-card render template">
+{
+<span class="comment">...</span>
+"renderMethod": {
+  "type": "TemplateRenderMethod",
+  "renderSuite": "json-card",
+  "template": {
+    "id": "https://degree.example/credential-templates/bachelors.jsonata",
+    "mediaType": "text/plain",
+    "digestMultibase": "zQmerWC85Wg6wFl9znFCwYxApG270iEu5h6JqWAPdhyxz2dR"
+  }
+}
+          </pre>
+
+          <p>
+The next example links to the rendering template on the Web and secures it
+using the `digestMultibase` property:
+          </p>
+
+          <pre class="example nohighlight"
+              title="A remotely hosted json-card render method">
+{
+<span class="comment">...</span>
+"renderMethod": {
+  <span class="comment">// this render method is fetched from the Web</span>
+  "id": "https://degrees.example/bachelors-json-card.jsonld",
+  "mediaType": "application/ld+json",
+  "type": "TemplateRenderMethod",
+  "renderSuite": "json-card",
+  "digestMultibase": "zQmG270iEu5h6JqWAPdhyxz2dRerWC85Wg6wFl9znFCwYxAp"
+}
+          </pre>
+
+        </section>
+
+        <section>
           <h3>The `nfc` Render Suite</h3>
           <p>
 The `nfc` render suite transmits a binary payload representing the
