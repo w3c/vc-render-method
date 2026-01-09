@@ -1,0 +1,73 @@
+  <html>
+    <head>
+      <meta http-equiv="content-security-policy" content="default-src 'none' data: 'unsafe-inline'">
+      <script name="credential" type="application/vc">{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://www.w3.org/ns/credentials/examples/v2"
+  ],
+  "type": [
+    "VerifiableCredential",
+    "NameCredential"
+  ],
+  "issuer": {
+    "id": "did:example:1234",
+    "name": "The Issuer"
+  },
+  "credentialSubject": {
+    "name": "Example Name",
+    "notRendered": "should not appear"
+  },
+  "renderMethod": {
+    "type": "TemplateRenderMethod",
+    "renderEngine": "html",
+    "renderProperty": [
+      "/issuer/name",
+      "/credentialSubject/name"
+    ],
+    "template": {
+      "id": "https://test.example/credential-templates/NameCredential.html",
+      "mediaType": "text/html",
+      "digestMultibase": "zQmerWC85Wg6wFl9znFCwYxApG270iEu5h6JqWAPdhyxz2dR"
+    },
+    "outputPreference": {
+      "mode": [
+        "visual",
+        "audio"
+      ],
+      "mediaType": "application/html",
+      "style": {
+        "width": "800px",
+        "height": "800px"
+      }
+    }
+  }
+}</script>
+    </head>
+    <body>
+<div>
+  <script>
+    console.log('running template render script');
+
+    // display credential as JSON as an example renderer; anything
+    // could be done here instead, including mustache/other-style
+    // template processing to generate the HTML for display
+
+    // FIXME: determine best name/location for the datablock/script tag
+    const credential = JSON.parse(document.querySelector(
+      'head > script[name="credential"]').innerHTML);
+
+    document.querySelector('#credentialSubject-name').innerText =
+      credential.credentialSubject.name;
+    document.querySelector('#issuer-name').innerText =
+      credential.issuer.name;
+
+    // TBD: signal to host that rendering is complete
+    window.renderMethodReady()
+  </script>
+
+  <h1 id="credentialSubject-name"></h1>
+  <p>Issued by: <span id="issuer-name"></span></p>
+</div>
+    </body>
+  </html>
