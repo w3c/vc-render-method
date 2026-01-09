@@ -629,8 +629,141 @@ credential.
         </pre>
 
       </section>
+
+      <section>
+        <h3>The `html` Render Suite</h3>
+        <p>
+The `html` render suite allows template authors to provide an HTML template
+which may contain JavaScript to render a [=Verifiable Credential=]. The HTML
+may be provided via either a `template` property or an `id` property that
+dereferences to HTML. JavaScript within the HTML fragment is responsible for
+rendering the filtered [=Verifiable Credential=] data provided via an
+HTML data block (i.e. `<script type="application/vc"></script>`) hosted in a
+sandboxed iframe alongside the HTML template.
+        </p>
+
+        <pre class="example"
+             title="Example VC using the HTML render suite">
+{
+  "@context": [
+    "https://www.w3.org/ns/credentials/v2",
+    "https://www.w3.org/ns/credentials/examples/v2"
+  ],
+  "type": [
+    "VerifiableCredential",
+    "NameCredential"
+  ],
+  "issuer": {
+    "id": "did:example:1234",
+    "name": "The Issuer"
+  },
+  "credentialSubject": {
+    "name": "Example Name",
+    "notRendered": "should not appear"
+  },
+  "renderMethod": {
+    "type": "TemplateRenderMethod",
+    "renderEngine": "html",
+    "renderProperty": [
+      "/issuer/name",
+      "/credentialSubject/name"
+    ],
+    "template": {
+      "id": "https://test.example/credential-templates/NameCredential.html",
+      "mediaType": "text/html",
+      "digestMultibase": "zQmerWC85Wg6wFl9znFCwYxApG270iEu5h6JqWAPdhyxz2dR"
+    },
+    "outputPreference": {
+      "mode": [
+        "visual",
+        "audio"
+      ],
+      "mediaType": "application/html",
+      "style": {
+        "width": "800px",
+        "height": "800px"
+      }
+    }
+  }
+}
+        </pre>
+
+        <p>
+Implementations MUST provide an environment that allows for JavaScript to safely
+render the HTML template using the filtered [=Verifiable Credential=] data. At
+minimum, this environment MUST prevent navigation, loading of external
+content, and access to the host page.
+        </p>
+
+        <p>
+Browser based implementations, for example, can provide such an environment
+using a combination of Content Security Policy [[CSP3]] restrictions on a
+Host Page, sandboxing of an `iframe` hosting the HTML template, and shim
+code that wraps the HTML template to add additional CSP restrictions and
+provides ready and error event communication with the Host Page.
+        </p>
+
+        <h5>Host Page</h5>
+        <p>
+The Host Page (typically a Wallet or VC Renderer) MUST
+prevent the HTML template from navigating the top-level browsing context,
+accessing external content, accessing the host page, and loading any remote
+content.
+        </p>
+        <p>
+The following MUST be set on the Host Page:
+          <ul>
+            <li>
+The Content Security Policy (CSP) restrictions MUST include `frame-src 'none'`
+forces the use of `srcdoc` instead of `src` for iframes, preventing loading the
+HTML template via the browser forcing the Host Page to preload and check the
+`digestMultibase` value for the template prior to using it.
+            </li>
+            <li>
+  `sandbox="allow-scripts allow-modals"` MUST be set on the `iframe` hosting the
+  HTML template to prevent navigation and top-level access.
+            </li>
+          </ul>
+        </p>
+
+        <pre class="example"
+            title="Minimal Host Page">
+<section data-include="minimal-host-page.html" data-include-format="text"></section>
+        </pre>
+       
+        <h5>Shim Code</h5>
+        <p>
+The template HTML fragment MUST be wrapped in shim code that provides the data
+block containing the partial [=Verifiable Credential=] and adds an additional
+CSP policies to prevent navigation and external content loading. Specifically,
+the shim code MUST add the following CSP restrictions of `default-src 'none'
+data: 'unsafe-inline'` to prevent any network requests from being made by the
+template code.
+        </p>
+        <pre class="example"
+            title="Shim Code to wrap template and credential in iframe[srcdoc]">
+<section data-include="shim-code.html" data-include-format="text"></section>
+        </pre>
+
+        <p>
+To complete the setup, the Host Page MUST inject the shim code (once populated
+with the credential and the template) into the iframe's `srcdoc` attribute which
+will run any JavaScript contained in the shim code and template.
+        </p>
+        
+        <pre class="example"
+             title="Combined Shim Code with Template and Credential">
+<section data-include="combined.html" data-include-format="text"></section>
+        </pre>
+      </section>
     </section>
 
+
+
+
+
+
+    <!-- OpenAttestationEmbeddedRenderer -->
     <section>
       <h4>OpenAttestationEmbeddedRenderer</h4>
 
