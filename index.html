@@ -728,9 +728,9 @@ HTML template via the browser forcing the Host Page to preload and check the
 
         <pre class="example"
             title="Minimal Host Page">
-<section data-include="minimal-host-page.html" data-include-format="text"></section>
+<section data-include="_includes/minimal-host-page.html" data-include-format="text"></section>
         </pre>
-       
+
         <h5>Shim Code</h5>
         <p>
 The template HTML fragment MUST be wrapped in shim code that provides the data
@@ -742,7 +742,7 @@ template code.
         </p>
         <pre class="example"
             title="Shim Code to wrap template and credential in iframe[srcdoc]">
-<section data-include="shim-code.html" data-include-format="text"></section>
+<section data-include="_includes/shim-code.html" data-include-format="text"></section>
         </pre>
 
         <p>
@@ -750,10 +750,10 @@ To complete the setup, the Host Page MUST inject the shim code (once populated
 with the credential and the template) into the iframe's `srcdoc` attribute which
 will run any JavaScript contained in the shim code and template.
         </p>
-        
+
         <pre class="example"
              title="Combined Shim Code with Template and Credential">
-<section data-include="combined.html" data-include-format="text"></section>
+<section data-include="_includes/combined.html" data-include-format="text"></section>
         </pre>
       </section>
     </section>
