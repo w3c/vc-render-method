@@ -755,6 +755,41 @@ will run any JavaScript contained in the shim code and template.
              title="Combined Shim Code with Template and Credential">
 <section data-include="_includes/combined.html" data-include-format="text"></section>
         </pre>
+
+        <h5>Ready and Error Events</h5>
+
+        <p>
+The iframe created in the Shim Code MUST provide a communication channel to
+allow the template to notify the Host Page when rendering is complete or if
+there was an error during rendering. This can be accomplished using the
+`postMessage` API with a `MessageChannel` setup by the Shim Code.
+        </p>
+
+        <p>
+The JavaScript shown below would be added to the above Host Page to add an
+`onload` event to the iframe which sets up the `MessageChannel`. The Host Page
+also creates a `Promise` that resolves when a `ready` message is received from
+the Shim Code or rejects when an `error` message is received. The Shim Code
+also provides a `window.renderMethodReady` method for use by the template to
+notify the Host Page that rendering is complete or send back an error message.
+        </p>
+
+        <pre class="example"
+             title="Additions to the Host Page to setup MessageChannel">
+<section data-include="_includes/message-channel-setup.js" data-include-format="text"></section>
+        </pre>
+
+        <pre class="example"
+             title="Shim Code additions to connect the MessageChannel and create `renderMethodReady`">
+<section data-include="_includes/render-method-ready-setup.js" data-include-format="text"></section>
+        </pre>
+
+        <p>
+With this setup, the template JavaScript can call `window.renderMethodReady()`
+to notify the Host Page that rendering is complete or call
+`window.renderMethodReady(new Error("error message"))` to notify the Host Page
+of an error.
+        </p>
       </section>
     </section>
 
