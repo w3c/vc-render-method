@@ -1,7 +1,9 @@
-  <html>
-    <head>
-      <meta http-equiv="content-security-policy" content="default-src 'none' data: 'unsafe-inline'">
-      <script name="credential" type="application/vc">{
+<html>
+  <head>
+    <meta http-equiv="content-security-policy" content="default-src 'none' data: 'unsafe-inline'">
+
+<!-- The credential data block injected into the Shim Code. -->
+<script name="credential" type="application/vc">{
   "@context": [
     "https://www.w3.org/ns/credentials/v2",
     "https://www.w3.org/ns/credentials/examples/v2"
@@ -43,8 +45,12 @@
     }
   }
 }</script>
-    </head>
-    <body>
+<!-- End credential data block -->
+
+</head>
+<body>
+
+<!-- The template HTML injected into the Shim Code. -->
 <div>
   <script>
     console.log('running template render script');
@@ -69,5 +75,7 @@
   <h1 id="credentialSubject-name"></h1>
   <p>Issued by: <span id="issuer-name"></span></p>
 </div>
-    </body>
-  </html>
+<!-- End template HTML -->
+
+  </body>
+</html>
