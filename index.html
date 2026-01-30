@@ -824,6 +824,168 @@ to notify the Host Page that rendering is complete or call
 `window.renderMethodReady(new Error("error message"))` to notify the Host Page
 of an error.
         </p>
+
+        <h3>Algorithms</h3>
+        <p>
+The following sections outline the algorithms that are used by the `html` render
+suite to safely render the HTML template.
+        </p>
+
+        <h4>Host Page</h4>
+
+        <p>
+The Host Page MUST create an `iframe` element to host the HTML template. The
+Host Page MUST set the `sandbox` attribute on the `iframe` to `allow-scripts
+allow-modals` to prevent navigation and top-level access.
+        </p>
+
+        <ol class="algorithm">
+          <li>
+Let `vc` be the [=verifiable credential=] to be rendered.
+          </li>
+          <li>
+Let `renderMethod` be the chosen `renderMethod` property in `vc` where
+`renderMethod.type` is `TemplateRenderMethod` and
+`renderMethod.renderSuite` is `html`.
+          </li>
+          <li>
+If `renderMethod.template` is a [=string=], then let `templete` be the value of
+`renderMethod.template`.
+          </li>
+          <li>
+If `renderMethod.template` is a [=map=], then let `template` be the result of
+fetching the URL in `renderMethod.template.id`.
+          </li>
+        </ol>
+
+      <p>
+The Host Page MUST filter the [=verifiable credential=] `vc` to only include
+the properties specified in `renderMethod.renderProperty`, if it is present. If
+`renderMethod.renderProperty` is not present, the entire [=verifiable credential=] is
+used.
+      </p>
+
+      <p>
+This filtering MUST be done by applying the `selectJsonLd` algorithm defined in
+<a href="https://www.w3.org/TR/vc-di-ecdsa/#selectjsonld">Section 3.4.13 selectJsonLd</a>
+of the Data Integrity ECDSA Cryptosuites v1.0 specification [[VC-DI-ECDSA]] to
+the JSON Pointer [[RFC6901]] values present in `renderMethod.renderProperty`.
+      </p>
+
+      <p>
+The Host Page MUST create the Shim Code by embedding the filtered
+[=verifiable credential=] and the HTML template into the Shim Code template
+defined above.
+      </p>
+
+      <ol class="algorithm">
+        <li>
+Let `shimCode` be an HTML Document with `<meta http-equiv="Content-Security-Policy"
+content="default-src 'none' data: 'unsafe-inline'">` in the `<head>`.
+        </li>
+        <li>
+Let `datablock` be an HTML Data Block with a `type` of `application/vc`.
+        </li>
+        <li>
+Set the contents of `datablock` to be the filtered [=verifiable credential=]
+in stringified JSON format.
+        </li>
+        <li>
+Insert `datablock` into the `<head>` of `shimCode`. 
+        </li>
+        <li>
+Insert the value of `template` into the `<body>` of `shimCode`.
+        </li>
+      </ol>
+
+      <p>
+The Host Page MUST set the `srcdoc` attribute of the `iframe`
+to the resulting Shim Code.
+      </p>
+
+      <ol class="algorithm">
+        <li>
+Set the `srcdoc` attribute of the `iframe` to the stringified HTML of
+`shimCode`.
+        </li>
+      </ol>
+
+      <p>
+The Host Page MUST setup a communication channel with the Shim Code to
+receive `ready` and `error` messages as described above.
+      </p>
+
+      <ol class="algorithm">
+        <li>
+Let `renderPromise` be a new `Promise` that...
+          <ol class="algorithm">
+            <li>
+On `resolve`, may be used to display the `iframe` to the user.
+            </li>
+            <li>
+On `reject`, display the error message to the user.
+            </li>
+          </ol>
+        </li>
+        <li>
+In the `onload` event of the `iframe`...
+          <ol class="algorithm">
+            <li>
+  Let `channel` be a new `MessageChannel`.
+            </li>
+            <li>
+  Create and start a new `port1` listener on `channel` that listens for a `ready`
+  message from the code in `template` now injected into the `iframe` via
+  `shimCode`.
+            </li>
+            <li>
+  In the `port1` listener, if a `ready` message is received, resolve `renderPromise`.
+  If an `error` message is received, reject `renderPromise` with the error
+  message.
+            </li>
+            <li>
+  Use `postMessage` to send `port2` of `channel` to the `iframe` content window.
+            </li>
+          </ol>
+        </li>
+      </ol>
+
+      <p>
+The Host Page SHOULD use the `renderPromise` to determine when rendering is
+complete or if there was an error during rendering.
+      </p>
+
+      <h4>Shim Code</h4>
+      <p>
+The Shim Code MUST setup to receive communication from the Host Page via the
+`MessageChannel` and provide the `window.renderMethodReady` method for use by
+the template code.
+      </p>
+
+      <ol class="algorithm">
+        <li>
+In the `window.onload` event...
+          <ol class="algorithm">
+            <li>
+Let `port` be the `MessagePort` received from the Host Page via the
+`message` event.
+            </li>
+            <li>
+Create `window.renderMethodReady` function that...
+              <ol class="algorithm">
+                <li>
+If called with no arguments, sends a `ready` message to the Host Page via
+`port`.
+                </li>
+                <li>
+If called with an `Error` argument, sends an `error` message to the Host Page
+via `port` with the error message.
+                </li>
+              </ol>
+            </li>
+          </ol>
+        </li>
+      </ol>
       </section>
     </section>
 
