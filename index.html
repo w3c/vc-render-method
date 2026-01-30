@@ -751,6 +751,20 @@ HTML template via the browser forcing the Host Page to preload and check the
 <section data-include="_includes/minimal-host-page.html" data-include-format="text"></section>
         </pre>
 
+        <h5>Template Code</h5>
+        <p>
+          The HTML template code referenced by the `template` property in the
+          `renderMethod` MUST be an HTML fragment that contains the HTML, CSS,
+          and JavaScript necessary to render the [=Verifiable Credential=]. The
+          template code MUST NOT include any `<html>`, `<head>`, or `<body>` tags
+          as these will be provided by the Shim Code.
+        </p>
+
+        <pre class="example"
+            title="Example HTML Template Fragment">
+<section data-include="_includes/template-fragment.html" data-include-format="text"></section>
+        </pre>
+
         <h5>Shim Code</h5>
         <p>
 The template HTML fragment MUST be wrapped in shim code that provides the data
