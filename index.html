@@ -10,6 +10,7 @@
      -->
     <script src="https://www.w3.org/Tools/respec/respec-w3c" class="remove"></script>
     <script class="remove" src="https://w3c.github.io/vc-data-integrity/common.js"></script>
+    <script class="remove" src="https://cdn.jsdelivr.net/gh/w3c/respec-mermaid@1.2.0/dist/main.js"></script>
 
     <script type="text/javascript" class="remove">
       var respecConfig = {
@@ -112,7 +113,8 @@
         // Team Contact.
         // wgPatentURI:  "",
         maxTocLevel: 4,
-        /*preProcess: [ webpayments.preProcess ],
+        preProcess: [ respecMermaid.createFigures ],
+        /*
         alternateFormats: [ {uri: "diff-20111214.html", label: "diff to previous version"} ],
         */
         localBiblio: {
@@ -702,6 +704,24 @@ Host Page, sandboxing of an `iframe` hosting the HTML template, and shim
 code that wraps the HTML template to add additional CSP restrictions and
 provides ready and error event communication with the Host Page.
         </p>
+
+        <figure>
+          <pre class="diagram mermaid">
+graph TD
+    subgraph Wallet's VC Rendering HTML
+        direction LR
+        A(VC) -- selectively disclosed --> B{VC subset datablock}
+        subgraph "iframe[srcdoc] shim code"
+            B{VC subset datablock}
+            C[HTML/CSS/JS template from renderMethod]
+        end
+        C[HTML/CSS/JS template from renderMethod] --> D[renderMethodReady]
+    end
+          </pre>
+          <figcaption>
+            Communication between the Host Page and the iframe + Shim Code
+          </figcaption>
+        </figure>
 
         <h5>Host Page</h5>
         <p>
