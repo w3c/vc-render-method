@@ -691,18 +691,41 @@ sandboxed iframe alongside the HTML template.
 
         <p>
 Implementations MUST provide an environment that allows for JavaScript to safely
-render the HTML template using the filtered [=verifiable credential=] data. At
-minimum, this environment MUST prevent navigation, loading of external
-content, and access to the host page in order to prevent tracking and other 
+render the HTML template using the filtered [=verifiable credential=] data. The
+following terminology is used to describe this environment:
+        </p>
+
+        <dl>
+          <dt><dfn>host page</dfn></dt>
+          <dd>
+            Provides the secure environment for rendering the HTML template.
+          </dd>
+
+          <dt><dfn>template code</dfn></dt>
+          <dd>
+            The HTML fragment provided within or remotely referenced by the
+            Render Method.
+          </dd>
+
+          <dt><dfn>shim code</dfn></dt>
+          <dd>
+            Code that wraps the HTML template to provide additional security
+            restrictions and communication with the [=host page=].
+          </dd>
+        </dl>
+
+        <p>
+At minimum, the environment MUST prevent navigation, loading of external
+content, and access to the [=host page=] in order to prevent tracking and other
 privacy harms.
         </p>
 
         <p>
 Browser based implementations, for example, can provide such an environment
 using a combination of Content Security Policy [[CSP3]] restrictions on a
-Host Page, sandboxing of an `iframe` hosting the HTML template, and shim
+[=host page=], sandboxing of an `iframe` hosting the HTML template, and shim
 code that wraps the HTML template to add additional CSP restrictions and
-provides ready and error event communication with the Host Page.
+provides ready and error event communication with the [=host page=].
         </p>
 
         <figure>
@@ -719,24 +742,24 @@ graph TD
     end
           </pre>
           <figcaption>
-            Communication between the Host Page and the iframe + Shim Code
+            Communication between the [=host page=] and the iframe + [=shim code=]
           </figcaption>
         </figure>
 
         <h5>Host Page</h5>
         <p>
-The Host Page (typically a Wallet or [=verifiable credential=] renderer) MUST
+The [=host page=] (typically a Wallet or [=verifiable credential=] renderer) MUST
 prevent the HTML template from navigating the top-level browsing context,
-accessing external content, accessing the host page, and loading any remote
+accessing external content, accessing the [=host page=], and loading any remote
 content.
         </p>
         <p>
-If a Host Page is used, the following rules apply:
+If a [=host page=] is used, the following rules apply:
           <ul>
             <li>
 The Content Security Policy (CSP) restrictions MUST include `frame-src 'none'`
 forces the use of `srcdoc` instead of `src` for iframes, preventing loading the
-HTML template via the browser forcing the Host Page to preload and check the
+HTML template via the browser forcing the [=host page=] to preload and check the
 `digestMultibase` value for the template prior to using it.
             </li>
             <li>
@@ -753,11 +776,11 @@ HTML template via the browser forcing the Host Page to preload and check the
 
         <h5>Template Code</h5>
         <p>
-The HTML template code referenced by the `template` property in the
+The HTML [=template code=] referenced by the `template` property in the
 `renderMethod` MUST be an HTML fragment that contains the HTML, CSS,
 and JavaScript necessary to render the [=verifiable credential=]. The
-template code MUST NOT include any `<html>`, `<head>`, or `<body>` tags
-as these will be provided by the Shim Code.
+[=template code=] MUST NOT include any `<html>`, `<head>`, or `<body>` tags
+as these will be provided by the [=shim code=].
         </p>
 
         <pre class="example"
@@ -767,7 +790,7 @@ as these will be provided by the Shim Code.
 
         <h5>Shim Code</h5>
         <p>
-The template HTML fragment MUST be wrapped in <dfn>shim code</dfn>
+The template HTML fragment MUST be wrapped in [=shim code=]
 that provides the data block containing the partial [=verifiable credential=]
 and adds an additional CSP policies to prevent navigation and external
 content loading. Specifically, the [=shim code=] MUST add the following CSP
@@ -800,12 +823,12 @@ there was an error during rendering. This can be accomplished using the
         </p>
 
         <p>
-The JavaScript shown below would be added to the above Host Page to add an
-`onload` event to the iframe which sets up the `MessageChannel`. The Host Page
+The JavaScript shown below would be added to the above [=host page=] to add an
+`onload` event to the iframe which sets up the `MessageChannel`. The [=host page=]
 also creates a `Promise` that resolves when a `ready` message is received from
-the Shim Code or rejects when an `error` message is received. The Shim Code
+the [=shim code=] or rejects when an `error` message is received. The [=shim code=]
 also provides a `window.renderMethodReady` method for use by the template to
-notify the Host Page that rendering is complete or send back an error message.
+notify the [=host page=] that rendering is complete or send back an error message.
         </p>
 
         <pre class="example"
@@ -820,8 +843,8 @@ notify the Host Page that rendering is complete or send back an error message.
 
         <p>
 With this setup, the template JavaScript can call `window.renderMethodReady()`
-to notify the Host Page that rendering is complete or call
-`window.renderMethodReady(new Error("error message"))` to notify the Host Page
+to notify the [=host page=] that rendering is complete or call
+`window.renderMethodReady(new Error("error message"))` to notify the [=host page=]
 of an error.
         </p>
 
@@ -835,8 +858,8 @@ as long as the security and privacy outcomes as well as the output is the same.
         <h4>Host Page</h4>
 
         <p>
-The Host Page MUST create an `iframe` element to host the HTML template. The
-Host Page MUST set the `sandbox` attribute on the `iframe` to `allow-scripts
+The [=host page=] MUST create an `iframe` element to host the HTML template. The
+[=host page=] MUST set the `sandbox` attribute on the `iframe` to `allow-scripts
 allow-modals` to prevent navigation and top-level access.
         </p>
 
@@ -860,7 +883,7 @@ fetching the URL in `renderMethod.template.id`.
         </ol>
 
       <p>
-The Host Page MUST filter the [=verifiable credential=] `vc` to only include
+The [=host page=] MUST filter the [=verifiable credential=] `vc` to only include
 the properties specified in `renderMethod.renderProperty`, if it is present. If
 `renderMethod.renderProperty` is not present, the entire [=verifiable credential=] is
 used.
@@ -874,8 +897,8 @@ the JSON Pointer [[RFC6901]] values present in `renderMethod.renderProperty`.
       </p>
 
       <p>
-The Host Page MUST create the Shim Code by embedding the filtered
-[=verifiable credential=] and the HTML template into the Shim Code template
+The [=host page=] MUST create the [=shim code=] by embedding the filtered
+[=verifiable credential=] and the HTML template into the [=shim code=] template
 defined above.
       </p>
 
@@ -900,8 +923,8 @@ Insert the value of `template` into the `<body>` of `shimCode`.
       </ol>
 
       <p>
-The Host Page MUST set the `srcdoc` attribute of the `iframe`
-to the resulting Shim Code.
+The [=host page=] MUST set the `srcdoc` attribute of the `iframe`
+to the resulting [=shim code=].
       </p>
 
       <ol class="algorithm">
@@ -912,7 +935,7 @@ Set the `srcdoc` attribute of the `iframe` to the stringified HTML of
       </ol>
 
       <p>
-The Host Page MUST setup a communication channel with the Shim Code to
+The [=host page=] MUST setup a communication channel with the [=shim code=] to
 receive `ready` and `error` messages as described above.
       </p>
 
@@ -952,15 +975,15 @@ In the `onload` event of the `iframe`:
       </ol>
 
       <p>
-The Host Page SHOULD use the `renderPromise` to determine when rendering is
+The [=host page=] SHOULD use the `renderPromise` to determine when rendering is
 complete or if there was an error during rendering.
       </p>
 
       <h4>Shim Code</h4>
       <p>
-The Shim Code MUST setup to receive communication from the Host Page via the
+The [=shim code=] MUST setup to receive communication from the [=host page=] via the
 `MessageChannel` and provide the `window.renderMethodReady` method for use by
-the template code.
+the [=template code=].
       </p>
 
       <ol class="algorithm">
@@ -968,18 +991,18 @@ the template code.
 In the `window.onload` event...
           <ol class="algorithm">
             <li>
-Let `port` be the `MessagePort` received from the Host Page via the
+Let `port` be the `MessagePort` received from the [=host page=] via the
 `message` event.
             </li>
             <li>
 Create `window.renderMethodReady` function that...
               <ol class="algorithm">
                 <li>
-If called with no arguments, sends a `ready` message to the Host Page via
+If called with no arguments, sends a `ready` message to the [=host page=] via
 `port`.
                 </li>
                 <li>
-If called with an `Error` argument, sends an `error` message to the Host Page
+If called with an `Error` argument, sends an `error` message to the [=host page=]
 via `port` with the error message.
                 </li>
               </ol>
