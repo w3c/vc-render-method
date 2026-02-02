@@ -636,10 +636,10 @@ credential.
         <h3>The `html` Render Suite</h3>
         <p>
 The `html` render suite allows template authors to provide an HTML template
-which may contain JavaScript to render a [=Verifiable Credential=]. The HTML
-may be provided via either a `template` property or an `id` property that
-dereferences to HTML. JavaScript within the HTML fragment is responsible for
-rendering the filtered [=Verifiable Credential=] data provided via an
+to render a [=verifiable credential=]. The HTML can be provided via either a 
+`template` property or an `id` property that dereferences to an HTML document. 
+JavaScript within the HTML fragment is responsible for
+rendering the filtered [=verifiable credential=] data provided via an
 HTML data block (i.e. `<script type="application/vc"></script>`) hosted in a
 sandboxed iframe alongside the HTML template.
         </p>
@@ -677,8 +677,7 @@ sandboxed iframe alongside the HTML template.
     },
     "outputPreference": {
       "mode": [
-        "visual",
-        "audio"
+        "visual"
       ],
       "mediaType": "application/html",
       "style": {
@@ -692,9 +691,10 @@ sandboxed iframe alongside the HTML template.
 
         <p>
 Implementations MUST provide an environment that allows for JavaScript to safely
-render the HTML template using the filtered [=Verifiable Credential=] data. At
+render the HTML template using the filtered [=verifiable credential=] data. At
 minimum, this environment MUST prevent navigation, loading of external
-content, and access to the host page.
+content, and access to the host page in order to prevent tracking and other 
+privacy harms.
         </p>
 
         <p>
@@ -725,13 +725,13 @@ graph TD
 
         <h5>Host Page</h5>
         <p>
-The Host Page (typically a Wallet or VC Renderer) MUST
+The Host Page (typically a Wallet or [=verifiable credential=] renderer) MUST
 prevent the HTML template from navigating the top-level browsing context,
 accessing external content, accessing the host page, and loading any remote
 content.
         </p>
         <p>
-The following MUST be set on the Host Page:
+If a Host Page is used, the following rules apply:
           <ul>
             <li>
 The Content Security Policy (CSP) restrictions MUST include `frame-src 'none'`
@@ -753,11 +753,11 @@ HTML template via the browser forcing the Host Page to preload and check the
 
         <h5>Template Code</h5>
         <p>
-          The HTML template code referenced by the `template` property in the
-          `renderMethod` MUST be an HTML fragment that contains the HTML, CSS,
-          and JavaScript necessary to render the [=Verifiable Credential=]. The
-          template code MUST NOT include any `<html>`, `<head>`, or `<body>` tags
-          as these will be provided by the Shim Code.
+The HTML template code referenced by the `template` property in the
+`renderMethod` MUST be an HTML fragment that contains the HTML, CSS,
+and JavaScript necessary to render the [=verifiable credential=]. The
+template code MUST NOT include any `<html>`, `<head>`, or `<body>` tags
+as these will be provided by the Shim Code.
         </p>
 
         <pre class="example"
@@ -767,12 +767,12 @@ HTML template via the browser forcing the Host Page to preload and check the
 
         <h5>Shim Code</h5>
         <p>
-The template HTML fragment MUST be wrapped in shim code that provides the data
-block containing the partial [=Verifiable Credential=] and adds an additional
-CSP policies to prevent navigation and external content loading. Specifically,
-the shim code MUST add the following CSP restrictions of `default-src 'none'
-data: 'unsafe-inline'` to prevent any network requests from being made by the
-template code.
+The template HTML fragment MUST be wrapped in <dfn>shim code</dfn>
+that provides the data block containing the partial [=verifiable credential=]
+and adds an additional CSP policies to prevent navigation and external
+content loading. Specifically, the [=shim code=] MUST add the following CSP
+restrictions of `default-src 'none' data: 'unsafe-inline'` to prevent any 
+network requests from being made by the [=template code=].
         </p>
         <pre class="example"
             title="Shim Code to wrap template and credential in iframe[srcdoc]">
@@ -780,9 +780,9 @@ template code.
         </pre>
 
         <p>
-To complete the setup, the Host Page MUST inject the shim code (once populated
-with the credential and the template) into the iframe's `srcdoc` attribute which
-will run any JavaScript contained in the shim code and template.
+To complete the setup, the [=host page=] MUST inject the [=shim code=] (once populated
+with the [=verifiable credential=] and the [=template code=]) into the iframe's `srcdoc` 
+attribute which will run any JavaScript contained in the [=shim code=] and [=template code=].
         </p>
 
         <pre class="example"
@@ -793,10 +793,10 @@ will run any JavaScript contained in the shim code and template.
         <h5>Ready and Error Events</h5>
 
         <p>
-The iframe created in the Shim Code MUST provide a communication channel to
-allow the template to notify the Host Page when rendering is complete or if
+The iframe created in the [=shim code=] MUST provide a communication channel to
+allow the template to notify the [=host page=] when rendering is complete or if
 there was an error during rendering. This can be accomplished using the
-`postMessage` API with a `MessageChannel` setup by the Shim Code.
+`postMessage` API with a `MessageChannel` setup by the [=shim code=].
         </p>
 
         <p>
@@ -828,7 +828,8 @@ of an error.
         <h3>Algorithms</h3>
         <p>
 The following sections outline the algorithms that are used by the `html` render
-suite to safely render the HTML template.
+suite to safely render the HTML template. Alternative algorithms MAY be used 
+as long as the security and privacy outcomes as well as the output is the same.
         </p>
 
         <h4>Host Page</h4>
@@ -849,7 +850,7 @@ Let `renderMethod` be the chosen `renderMethod` property in `vc` where
 `renderMethod.renderSuite` is `html`.
           </li>
           <li>
-If `renderMethod.template` is a [=string=], then let `templete` be the value of
+If `renderMethod.template` is a [=string=], then let `template` be the value of
 `renderMethod.template`.
           </li>
           <li>
@@ -917,10 +918,10 @@ receive `ready` and `error` messages as described above.
 
       <ol class="algorithm">
         <li>
-Let `renderPromise` be a new `Promise` that...
+Let `renderPromise` be a new `Promise` that:
           <ol class="algorithm">
             <li>
-On `resolve`, may be used to display the `iframe` to the user.
+On `resolve`, can be used to display the `iframe` to the user.
             </li>
             <li>
 On `reject`, display the error message to the user.
@@ -928,7 +929,7 @@ On `reject`, display the error message to the user.
           </ol>
         </li>
         <li>
-In the `onload` event of the `iframe`...
+In the `onload` event of the `iframe`:
           <ol class="algorithm">
             <li>
   Let `channel` be a new `MessageChannel`.
