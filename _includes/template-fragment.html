@@ -1,22 +1,24 @@
 <div>
   <script>
-    console.log('running template render script');
+    document.addEventListener('DOMContentLoaded', (event) => {
+      console.log('running template render script');
 
-    // display credential as JSON as an example renderer; anything
-    // could be done here instead, including mustache/other-style
-    // template processing to generate the HTML for display
+      // display credential as JSON as an example renderer; anything
+      // could be done here instead, including mustache/other-style
+      // template processing to generate the HTML for display
 
-    // FIXME: determine best name/location for the datablock/script tag
-    const credential = JSON.parse(document.querySelector(
-      'head > script[name="credential"]').innerHTML);
+      // FIXME: determine best name/location for the datablock/script tag
+      const credential = JSON.parse(document.querySelector(
+        'head > script[name="credential"]').innerHTML);
 
-    document.querySelector('#credentialSubject-name').innerText =
-      credential.credentialSubject.name;
-    document.querySelector('#issuer-name').innerText =
-      credential.issuer.name;
+      document.querySelector('#credentialSubject-name').innerText =
+        credential.credentialSubject.name;
+      document.querySelector('#issuer-name').innerText =
+        credential.issuer.name;
 
-    // TBD: signal to host that rendering is complete
-    window.renderMethodReady()
+      // TBD: signal to host that rendering is complete
+      window.renderMethodReady();
+    });
   </script>
   <style>
     h1 {
