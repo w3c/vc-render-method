@@ -794,7 +794,7 @@ The template HTML fragment MUST be wrapped in [=shim code=]
 that provides the data block containing the partial [=verifiable credential=]
 and adds an additional CSP policies to prevent navigation and external
 content loading. Specifically, the [=shim code=] MUST add the following CSP
-restrictions of `default-src 'none' data: 'unsafe-inline'` to prevent any 
+restrictions of `default-src data: 'unsafe-inline'` to prevent any
 network requests from being made by the [=template code=].
         </p>
         <pre class="example"
@@ -905,7 +905,7 @@ defined above.
       <ol class="algorithm">
         <li>
 Let `shimCode` be an HTML Document with `<meta http-equiv="Content-Security-Policy"
-content="default-src 'none' data: 'unsafe-inline'">` in the `<head>`.
+content="default-src data: 'unsafe-inline'">` in the `<head>`.
         </li>
         <li>
 Let `datablock` be an HTML Data Block with a `type` of `application/vc`.
