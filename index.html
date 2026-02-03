@@ -763,7 +763,7 @@ HTML template via the browser forcing the [=host page=] to preload and check the
 `digestMultibase` value for the template prior to using it.
             </li>
             <li>
-  `sandbox="allow-scripts allow-modals"` MUST be set on the `iframe` hosting the
+  `sandbox="allow-scripts"` MUST be set on the `iframe` hosting the
   HTML template to prevent navigation and top-level access.
             </li>
           </ul>
@@ -859,8 +859,8 @@ as long as the security and privacy outcomes as well as the output is the same.
 
         <p>
 The [=host page=] MUST create an `iframe` element to host the HTML template. The
-[=host page=] MUST set the `sandbox` attribute on the `iframe` to `allow-scripts
-allow-modals` to prevent navigation and top-level access.
+[=host page=] MUST set the `sandbox` attribute on the `iframe` to
+`allow-scripts` to prevent navigation and top-level access.
         </p>
 
         <ol class="algorithm">
