@@ -368,10 +368,10 @@ presumed to be shared when the render method is used.
             <tr>
               <td>template</td>
               <td>
-An OPTIONAL [=string=] or [=ordered map|map=] that provides the template that
-will be used to perform the rendering. If the value is a [=string=], it MUST be
-a URL. If the value is a [=ordered map|map=], it MUST conform to the following
-rules:
+An OPTIONAL [=URL=] or [=ordered map|map=] that provides or refers to the
+template that will be used to perform the rendering. If the value is a [=URL=],
+it MAY be a `data:` URL [[rfc2397]] containing the template code. If the value
+is a [=ordered map|map=], it MUST conform to the following rules:
                 <table class="simple">
                   <thead>
                     <tr>
