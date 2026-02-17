@@ -779,7 +779,7 @@ HTML template via the browser forcing the [=host page=] to preload and check the
 The HTML [=template code=] referenced by the `template` property in the
 `renderMethod` MUST be an HTML fragment that contains the HTML, CSS,
 and JavaScript necessary to render the [=verifiable credential=]. The
-[=template code=] MUST NOT include any `<html>`, `<head>`, or `<body>` tags
+[=template code=] MUST NOT include any `&lt;html&gt;`, `&lt;head&gt;`, or `&lt;body&gt;` tags
 as these will be provided by the [=shim code=].
         </p>
 
@@ -904,8 +904,8 @@ defined above.
 
       <ol class="algorithm">
         <li>
-Let `shimCode` be an HTML Document with `<meta http-equiv="Content-Security-Policy"
-content="default-src data: 'unsafe-inline'">` in the `<head>`.
+Let `shimCode` be an HTML Document with `&lt;meta http-equiv="Content-Security-Policy"
+content="default-src data: 'unsafe-inline'"&gt;` in the `&lt;head&gt;`.
         </li>
         <li>
 Let `datablock` be an HTML Data Block with a `type` of `application/vc`.
@@ -915,10 +915,10 @@ Set the contents of `datablock` to be the filtered [=verifiable credential=]
 in stringified JSON format.
         </li>
         <li>
-Insert `datablock` into the `<head>` of `shimCode`. 
+Insert `datablock` into the `&lt;head&gt;` of `shimCode`.
         </li>
         <li>
-Insert the value of `template` into the `<body>` of `shimCode`.
+Insert the value of `template` into the `&lt;body&gt;` of `shimCode`.
         </li>
       </ol>
 
