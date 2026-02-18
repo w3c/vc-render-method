@@ -757,10 +757,12 @@ content.
 If a [=host page=] is used, the following rules apply:
           <ul>
             <li>
-The Content Security Policy (CSP) restrictions MUST include `frame-src 'none'`
-forces the use of `srcdoc` instead of `src` for iframes, preventing loading the
-HTML template via the browser forcing the [=host page=] to preload and check the
-`digestMultibase` value for the template prior to using it.
+The Content Security Policy (CSP) restrictions MUST include `frame-src 'none'`.
+This forces the use of `srcdoc` instead of `src` for iframes, which prevents
+the browser from loading the HTML template. In turn, this forces the
+[=host page=] code to preload remotely referenced template code and check the
+response against the related `digestMultibase` value prior to injecting the
+template into the [=wrapper code=].
             </li>
             <li>
   `sandbox="allow-scripts"` MUST be set on the `iframe` hosting the
