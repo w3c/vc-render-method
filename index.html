@@ -636,11 +636,12 @@ credential.
         <h3>The `html` Render Suite</h3>
         <p>
 The `html` render suite allows template authors to provide an HTML template
-to render a [=verifiable credential=]. The HTML can be provided via either a 
-`template` property or an `id` property that dereferences to an HTML document. 
-JavaScript within the HTML fragment is responsible for
-rendering the filtered [=verifiable credential=] data provided via an
-HTML data block (i.e. `&lt;script type="application/vc"&gt;&lt;/script&gt;`) hosted in a
+to render a [=verifiable credential=]. The HTML can be referenced remotely or
+via a `data:` URL as the value of either `template` or `template.id` (when
+the value of `template` is an object). JavaScript within the HTML fragment is
+responsible for rendering the filtered [=verifiable credential=] data provided
+via an HTML data block
+(i.e. `&lt;script type="application/vc"&gt;&lt;/script&gt;`) hosted in a
 sandboxed iframe alongside the HTML template.
         </p>
 
