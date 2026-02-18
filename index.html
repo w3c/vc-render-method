@@ -707,7 +707,7 @@ following terminology is used to describe this environment:
             Render Method.
           </dd>
 
-          <dt><dfn>shim code</dfn></dt>
+          <dt><dfn>wrapper code</dfn></dt>
           <dd>
             Code that wraps the HTML template to provide additional security
             restrictions and communication with the [=host page=].
@@ -723,7 +723,7 @@ privacy harms.
         <p>
 Browser based implementations, for example, can provide such an environment
 using a combination of Content Security Policy [[CSP3]] restrictions on a
-[=host page=], sandboxing of an `iframe` hosting the HTML template, and shim
+[=host page=], sandboxing of an `iframe` hosting the HTML template, and wrapper
 code that wraps the HTML template to add additional CSP restrictions and
 provides ready and error event communication with the [=host page=].
         </p>
@@ -734,7 +734,7 @@ graph TD
     subgraph Wallet's VC Rendering HTML
         direction LR
         A(VC) -- selectively disclosed --> B{VC subset datablock}
-        subgraph "iframe[srcdoc] shim code"
+        subgraph "iframe[srcdoc] wrapper code"
             B{VC subset datablock}
             C[HTML/CSS/JS template from renderMethod]
         end
@@ -742,7 +742,7 @@ graph TD
     end
           </pre>
           <figcaption>
-            Communication between the [=host page=] and the iframe + [=shim code=]
+            Communication between the [=host page=] and the iframe + [=wrapper code=]
           </figcaption>
         </figure>
 
@@ -780,7 +780,7 @@ The HTML [=template code=] referenced by the `template` property in the
 `renderMethod` MUST be an HTML fragment that contains the HTML, CSS,
 and JavaScript necessary to render the [=verifiable credential=]. The
 [=template code=] MUST NOT include any `&lt;html&gt;`, `&lt;head&gt;`, or `&lt;body&gt;` tags
-as these will be provided by the [=shim code=].
+as these will be provided by the [=wrapper code=].
         </p>
 
         <pre class="example"
@@ -788,45 +788,45 @@ as these will be provided by the [=shim code=].
 <section data-include="_includes/template-fragment.html" data-include-format="text"></section>
         </pre>
 
-        <h5>Shim Code</h5>
+        <h5>Wrapper Code</h5>
         <p>
-The template HTML fragment MUST be wrapped in [=shim code=]
+The template HTML fragment MUST be wrapped in [=wrapper code=]
 that provides the data block containing the partial [=verifiable credential=]
 and adds an additional CSP policies to prevent navigation and external
-content loading. Specifically, the [=shim code=] MUST add the following CSP
+content loading. Specifically, the [=wrapper code=] MUST add the following CSP
 restrictions of `default-src data: 'unsafe-inline'` to prevent any
 network requests from being made by the [=template code=].
         </p>
         <pre class="example"
-            title="Shim Code to wrap template and credential in iframe[srcdoc]">
-<section data-include="_includes/shim-code.html" data-include-format="text"></section>
+            title="Wrapper Code to wrap template and credential in iframe[srcdoc]">
+<section data-include="_includes/wrapper-code.html" data-include-format="text"></section>
         </pre>
 
         <p>
-To complete the setup, the [=host page=] MUST inject the [=shim code=] (once populated
+To complete the setup, the [=host page=] MUST inject the [=wrapper code=] (once populated
 with the [=verifiable credential=] and the [=template code=]) into the iframe's `srcdoc` 
-attribute which will run any JavaScript contained in the [=shim code=] and [=template code=].
+attribute which will run any JavaScript contained in the [=wrapper code=] and [=template code=].
         </p>
 
         <pre class="example"
-             title="Combined Shim Code with Template and Credential">
+             title="Combined Wrapper Code with Template and Credential">
 <section data-include="_includes/combined.html" data-include-format="text"></section>
         </pre>
 
         <h5>Ready and Error Events</h5>
 
         <p>
-The iframe created in the [=shim code=] MUST provide a communication channel to
+The iframe created in the [=wrapper code=] MUST provide a communication channel to
 allow the template to notify the [=host page=] when rendering is complete or if
 there was an error during rendering. This can be accomplished using the
-`postMessage` API with a `MessageChannel` setup by the [=shim code=].
+`postMessage` API with a `MessageChannel` setup by the [=wrapper code=].
         </p>
 
         <p>
 The JavaScript shown below would be added to the above [=host page=] to add an
 `onload` event to the iframe which sets up the `MessageChannel`. The [=host page=]
 also creates a `Promise` that resolves when a `ready` message is received from
-the [=shim code=] or rejects when an `error` message is received. The [=shim code=]
+the [=wrapper code=] or rejects when an `error` message is received. The [=wrapper code=]
 also provides a `window.renderMethodReady` method for use by the template to
 notify the [=host page=] that rendering is complete or send back an error message.
         </p>
@@ -837,7 +837,7 @@ notify the [=host page=] that rendering is complete or send back an error messag
         </pre>
 
         <pre class="example"
-             title="Shim Code additions to connect the MessageChannel and create `renderMethodReady`">
+             title="Wrapper Code additions to connect the MessageChannel and create `renderMethodReady`">
 <section data-include="_includes/render-method-ready-setup.js" data-include-format="text"></section>
         </pre>
 
@@ -897,14 +897,14 @@ the JSON Pointer [[RFC6901]] values present in `renderMethod.renderProperty`.
       </p>
 
       <p>
-The [=host page=] MUST create the [=shim code=] by embedding the filtered
-[=verifiable credential=] and the HTML template into the [=shim code=] template
+The [=host page=] MUST create the [=wrapper code=] by embedding the filtered
+[=verifiable credential=] and the HTML template into the [=wrapper code=] template
 defined above.
       </p>
 
       <ol class="algorithm">
         <li>
-Let `shimCode` be an HTML Document with `&lt;meta http-equiv="Content-Security-Policy"
+Let `wrapperCode` be an HTML Document with `&lt;meta http-equiv="Content-Security-Policy"
 content="default-src data: 'unsafe-inline'"&gt;` in the `&lt;head&gt;`.
         </li>
         <li>
@@ -915,27 +915,27 @@ Set the contents of `datablock` to be the filtered [=verifiable credential=]
 in stringified JSON format.
         </li>
         <li>
-Insert `datablock` into the `&lt;head&gt;` of `shimCode`.
+Insert `datablock` into the `&lt;head&gt;` of `wrapperCode`.
         </li>
         <li>
-Insert the value of `template` into the `&lt;body&gt;` of `shimCode`.
+Insert the value of `template` into the `&lt;body&gt;` of `wrapperCode`.
         </li>
       </ol>
 
       <p>
 The [=host page=] MUST set the `srcdoc` attribute of the `iframe`
-to the resulting [=shim code=].
+to the resulting [=wrapper code=].
       </p>
 
       <ol class="algorithm">
         <li>
 Set the `srcdoc` attribute of the `iframe` to the stringified HTML of
-`shimCode`.
+`wrapperCode`.
         </li>
       </ol>
 
       <p>
-The [=host page=] MUST setup a communication channel with the [=shim code=] to
+The [=host page=] MUST setup a communication channel with the [=wrapper code=] to
 receive `ready` and `error` messages as described above.
       </p>
 
@@ -960,7 +960,7 @@ In the `onload` event of the `iframe`:
             <li>
   Create and start a new `port1` listener on `channel` that listens for a `ready`
   message from the code in `template` now injected into the `iframe` via
-  `shimCode`.
+  `wrapperCode`.
             </li>
             <li>
   In the `port1` listener, if a `ready` message is received, resolve `renderPromise`.
@@ -979,9 +979,9 @@ The [=host page=] SHOULD use the `renderPromise` to determine when rendering is
 complete or if there was an error during rendering.
       </p>
 
-      <h4>Shim Code</h4>
+      <h4>Wrapper Code</h4>
       <p>
-The [=shim code=] MUST setup to receive communication from the [=host page=] via the
+The [=wrapper code=] MUST setup to receive communication from the [=host page=] via the
 `MessageChannel` and provide the `window.renderMethodReady` method for use by
 the [=template code=].
       </p>
