@@ -118,6 +118,11 @@
         alternateFormats: [ {uri: "diff-20111214.html", label: "diff to previous version"} ],
         */
         localBiblio: {
+          BCP47: {
+            title: "Tags for Identifying Languages",
+            href: "https://www.rfc-editor.org/info/bcp47",
+            publisher: "IETF",
+          },
           ENTRY: {
             title: "Example Title",
             href: "https://website.example/document",
@@ -687,23 +692,24 @@ A REQUIRED ordered list of custom data fields. Each field is an object with:
                     <ul>
                       <li><code>label</code> ([=string=]): The field label (MUST be a literal string, not a JSON pointer)</li>
                       <li><code>value</code> ([=string=]): The field value as a JSON pointer string (e.g., <code>"/issuer"</code>)</li>
+                      <li><code>language</code> ([=string=]): An OPTIONAL language tag (as specified in [[[BCP47]]]) indicating the language of the field's label and/or value</li>
                     </ul>
                   </td>
                 </tr>
                 <tr>
-                  <td>issueDate</td>
+                  <td>validFrom</td>
                   <td>[=string=]</td>
                   <td>
 An OPTIONAL string that is either a literal ISO 8601 date or a JSON pointer
-string that references the credential data.
+string that references the credential data (validity start date).
                   </td>
                 </tr>
                 <tr>
-                  <td>expirationDate</td>
+                  <td>validUntil</td>
                   <td>[=string=]</td>
                   <td>
 An OPTIONAL string that is either a literal ISO 8601 date or a JSON pointer
-string that references the credential data.
+string that references the credential data (validity end date).
                   </td>
                 </tr>
               </tbody>
@@ -762,18 +768,22 @@ above:
             "type": "string",
             "pattern": "^/",
             "description": "Field value as a JSON pointer string (MUST start with \"/\")"
+          },
+          "language": {
+            "type": "string",
+            "description": "Optional BCP 47 language tag for the field"
           }
         },
         "additionalProperties": false
       }
     },
-    "issueDate": {
+    "validFrom": {
       "type": "string",
-      "description": "Issue date as a literal ISO 8601 date string or JSON pointer"
+      "description": "Validity start date as a literal ISO 8601 date string or JSON pointer"
     },
-    "expirationDate": {
+    "validUntil": {
       "type": "string",
-      "description": "Expiration date as a literal ISO 8601 date string or JSON pointer"
+      "description": "Validity end date as a literal ISO 8601 date string or JSON pointer"
     }
   },
   "additionalProperties": false
@@ -809,8 +819,8 @@ strings:
       "value": "/validFrom"
     }
   ],
-  "issueDate": "/validFrom",
-  "expirationDate": "/validUntil"
+  "validFrom": "/validFrom",
+  "validUntil": "/validUntil"
 }
             </pre>
 
@@ -872,21 +882,22 @@ A REQUIRED ordered list of custom data fields. Each field is an object with:
                     <ul>
                       <li><code>label</code> ([=string=]): The field label</li>
                       <li><code>value</code> ([=string=]): The field value</li>
+                      <li><code>language</code> ([=string=]): An OPTIONAL language tag (as specified in [[[BCP47]]]) indicating the language of the field</li>
                     </ul>
                   </td>
                 </tr>
                 <tr>
-                  <td>issueDate</td>
+                  <td>validFrom</td>
                   <td>[=string=]</td>
                   <td>
-An OPTIONAL ISO 8601 date string indicating when the credential was issued.
+An OPTIONAL ISO 8601 date string indicating when the credential becomes valid.
                   </td>
                 </tr>
                 <tr>
-                  <td>expirationDate</td>
+                  <td>validUntil</td>
                   <td>[=string=]</td>
                   <td>
-An OPTIONAL ISO 8601 date string indicating when the credential expires.
+An OPTIONAL ISO 8601 date string indicating when the credential ceases to be valid.
                   </td>
                 </tr>
               </tbody>
@@ -920,8 +931,8 @@ The following example shows a valid `json-card` output:
       "value": "2010-05-15"
     }
   ],
-  "issueDate": "2010-01-01T19:23:24Z",
-  "expirationDate": null
+  "validFrom": "2010-01-01T19:23:24Z",
+  "validUntil": null
 }
             </pre>
 
