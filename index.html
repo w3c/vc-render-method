@@ -607,19 +607,19 @@ The `json-card` render suite uses JSON templates to transform a
 [=verifiable credential=] into a standardized JSON card format. This format
 enables wallets to display credentials in a responsive card layout with key
 data highlighted and configurable additional fields. Wallets that implement
-this method can render the standardized JSON output into their own card UI
+this method can render the standardized JSON output in their own card UI
 designs, allowing credentials to be displayed even when a wallet doesn't
 natively support a specific credential type.
           </p>
 
           <p>
-The template is a JSON object that matches the json-card output structure.
+The template is a JSON object that matches the `json-card` output structure.
 String values in the template can be JSON pointer strings (as specified in
 [[[RFC6901]]]) that reference fields in the [=verifiable credential=]. When
 processing the template, JSON pointer strings are evaluated against the
 credential data and replaced with the resolved values. The template MUST
 conform to the JSON template schema defined below, and the resulting output
-MUST conform to the json-card output schema. Compound data across multiple
+MUST conform to the `json-card` output schema. Compound data across multiple
 fields is not supported; each field references a single JSON pointer.
           </p>
 
@@ -781,7 +781,7 @@ above:
             </pre>
 
             <p>
-The following example shows a valid json-card template with JSON pointer
+The following example shows a valid `json-card` template with JSON pointer
 strings:
             </p>
 
@@ -893,7 +893,7 @@ An OPTIONAL ISO 8601 date string indicating when the credential expires.
             </table>
 
             <p>
-The following example shows a valid json-card output:
+The following example shows a valid `json-card` output:
             </p>
 
             <pre class="example nohighlight"
@@ -965,7 +965,7 @@ and leave it unchanged.
                 </ol>
               </li>
               <li>
-Validate the resulting JSON object against the json-card output schema. If
+Validate the resulting JSON object against the `json-card` output schema. If
 validation fails, processing MUST stop and an error MUST be returned.
               </li>
             </ol>
