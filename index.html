@@ -626,7 +626,7 @@ credential.
     <span class="comment">// only the barcode is transmitted over NFC</span>
     "renderProperty": ["/credentialSubject/barcode"]
   }
-  </span>
+  <span class="comment">...</span>
 }
         </pre>
 
@@ -747,7 +747,7 @@ graph TD
           </figcaption>
         </figure>
 
-        <h5>Host Page</h5>
+        <h4>Host Page</h4>
         <p>
 The [=host page=] (typically a Wallet or [=verifiable credential=] renderer) MUST
 prevent the HTML template from navigating the top-level browsing context,
@@ -756,25 +756,25 @@ content.
         </p>
         <p>
 If a [=host page=] is used, the following rules apply:
-          <ul>
-            <li>
+        </p>
+        <ul>
+          <li>
 The Content Security Policy (CSP) restrictions MUST include `frame-src 'none'`.
 This forces the use of `srcdoc` instead of `src` for iframes, which prevents
 the browser from loading the HTML template. In turn, this forces the
 [=host page=] code to preload remotely referenced template code and check the
 response against the related `digestMultibase` value prior to injecting the
 template into the [=wrapper code=].
-            </li>
-            <li>
-  `sandbox="allow-scripts"` MUST be set on the `iframe` hosting the
-  HTML template to prevent navigation and top-level access.
-            </li>
-          </ul>
-        </p>
+          </li>
+          <li>
+`sandbox="allow-scripts"` MUST be set on the `iframe` hosting the
+HTML template to prevent navigation and top-level access.
+          </li>
+        </ul>
 
-        <pre class="example"
-            title="Minimal Host Page">
-<section data-include="_includes/minimal-host-page.html" data-include-format="text"></section>
+        <pre class="example" title="Minimal Host Page"
+          data-include="_includes/minimal-host-page.html"
+          data-include-format="text">
         </pre>
 
         <h5>Template Code</h5>
@@ -786,9 +786,9 @@ and JavaScript necessary to render the [=verifiable credential=]. The
 as these will be provided by the [=wrapper code=].
         </p>
 
-        <pre class="example"
-            title="Example HTML Template Fragment">
-<section data-include="_includes/template-fragment.html" data-include-format="text"></section>
+        <pre class="example" title="Example HTML Template Fragment"
+          data-include="_includes/template-fragment.html"
+          data-include-format="text">
         </pre>
 
         <h5>Wrapper Code</h5>
@@ -801,19 +801,20 @@ restrictions of `default-src data: 'unsafe-inline'` to prevent any
 network requests from being made by the [=template code=].
         </p>
         <pre class="example"
-            title="Wrapper Code to wrap template and credential in iframe[srcdoc]">
-<section data-include="_includes/wrapper-code.html" data-include-format="text"></section>
+          title="Wrapper Code to wrap template and credential in iframe[srcdoc]"
+          data-include="_includes/wrapper-code.html"
+          data-include-format="text">
         </pre>
 
         <p>
 To complete the setup, the [=host page=] MUST inject the [=wrapper code=] (once populated
-with the [=verifiable credential=] and the [=template code=]) into the iframe's `srcdoc` 
+with the [=verifiable credential=] and the [=template code=]) into the iframe's `srcdoc`
 attribute which will run any JavaScript contained in the [=wrapper code=] and [=template code=].
         </p>
 
         <pre class="example"
-             title="Combined Wrapper Code with Template and Credential">
-<section data-include="_includes/combined.html" data-include-format="text"></section>
+          title="Combined Wrapper Code with Template and Credential"
+          data-include="_includes/combined.html" data-include-format="text">
         </pre>
 
         <h5>Ready and Error Events</h5>
@@ -835,13 +836,15 @@ notify the [=host page=] that rendering is complete or send back an error messag
         </p>
 
         <pre class="example"
-             title="Additions to the Host Page to setup MessageChannel">
-<section data-include="_includes/message-channel-setup.js" data-include-format="text"></section>
+          title="Additions to the Host Page to setup MessageChannel"
+          data-include="_includes/message-channel-setup.js"
+          data-include-format="text">
         </pre>
 
         <pre class="example"
-             title="Wrapper Code additions to connect the MessageChannel and create `renderMethodReady`">
-<section data-include="_includes/render-method-ready-setup.js" data-include-format="text"></section>
+             title="Wrapper Code additions to connect the MessageChannel and create `renderMethodReady`"
+             data-include="_includes/render-method-ready-setup.js"
+             data-include-format="text">
         </pre>
 
         <p>
@@ -854,7 +857,7 @@ of an error.
         <h3>Algorithms</h3>
         <p>
 The following sections outline the algorithms that are used by the `html` render
-suite to safely render the HTML template. Alternative algorithms MAY be used 
+suite to safely render the HTML template. Alternative algorithms MAY be used
 as long as the security and privacy outcomes as well as the output is the same.
         </p>
 
@@ -1028,7 +1031,7 @@ via `port` with the error message.
       <p>
         EmbeddedRenderer is used by an issuer to render a verifiable
         credential. The verifiable credential is rendered in HTML within an embedded
-        `&ltiframe&gt` through a Template Renderer website referenced in
+        `&lt;iframe&gt;` through a Template Renderer website referenced in
         the document. This arrangement allows for interactive selective disclosure
         using OpenAttestationMerkleProofSignature2018.
       </p>
@@ -1340,6 +1343,7 @@ via `port` with the error message.
             </section>
         </section>
     </section>
+    </section>
   </section>
 
   <section>
@@ -1351,7 +1355,7 @@ for rendering methods.
     </p>
 
     <section>
-      <h5>Render (TemplateRenderMethod)</h5>
+      <h3>Render (TemplateRenderMethod)</h3>
 
       <p>
 The <a href="https://mustache.github.io/">Mustache</a> templating language is used
