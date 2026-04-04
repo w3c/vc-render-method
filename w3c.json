@@ -1,6 +1,7 @@
 {
   "group": [
-    "wg/vc"
+    "wg/vc",
+    "tf/vc-rem"
   ],
   "contacts": [
     "iherman"
