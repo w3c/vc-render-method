@@ -677,7 +677,7 @@ sandboxed iframe alongside the HTML template.
       "digestMultibase": "zQmerWC85Wg6wFl9znFCwYxApG270iEu5h6JqWAPdhyxz2dR"
     },
     "outputPreference": {
-      "mode": [
+      "accessMode": [
         "visual"
       ],
       "mediaType": "application/html",
@@ -853,6 +853,98 @@ to notify the [=host page=] that rendering is complete or call
 `window.renderMethodReady(new Error("error message"))` to notify the [=host page=]
 of an error.
         </p>
+
+        <h3>Output Preferences</h3>
+        <p>
+Rendering environment preferences MAY be provided within the Render Method. The
+objective of this object is to provide suggested use, display, and intended
+access mode when rendering the provided template. An implementation SHOULD
+follow these preferences when provided.
+        </p>
+
+        <table class="simple">
+          <thead>
+            <tr>
+              <th style="white-space: nowrap">Property</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>outputPreference</td>
+              <td>
+An OPTIONAL [=map=] that expresses suggested preferences for the rendering
+environment.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>The `outputPreference` object MAY contain any of the following:</p>
+
+        <table class="simple">
+          <thead>
+            <tr>
+              <th style="white-space: nowrap">Property</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>accessMode</td>
+              <td>
+An OPTIONAL [=list=] of one or more [=string=] values of `auditory`, `tactile`,
+`textual`, or `visual` as defined in
+<!-- TODO: use Respec ref not URL -->
+https://w3c.github.io/cg-reports/a11y-discov-vocab/CG-FINAL-vocabulary-20260128/#accessMode-vocabulary
+              </td>
+            </tr>
+            <tr>
+              <td>mediaType</td>
+              <td>
+An OPTIONAL [=string=] stating a valid media type listed in the
+<a href="https://www.iana.org/assignments/media-types/media-types.xhtml">
+IANA Media Types</a> preferred for rendering. This value MAY be used when
+suggesting addtional processing prior to rendering. Examples include converting
+an SVG template into a static image or an HTML document into a PDF.
+              </td>
+            </tr>
+            <tr>
+              <td>style</td>
+              <td>
+An OPTIONAL [=map=] which defines style properties to potentially be used by
+the rendering environment.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>The `style` object MAY contain any of the following properties:</p>
+
+        <table class="simple">
+          <thead>
+            <tr>
+              <th style="white-space: nowrap">Property</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>width</td>
+              <td>
+An OPTIONAL [=string=] containing a CSS compatible width preference to be set
+on the `iframe`.
+              </td>
+            </tr>
+            <tr>
+              <td>height</td>
+              <td>
+An OPTIONAL [=string=] containing a CSS compatible height preference to be set
+on the `iframe`.
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
         <h3>Algorithms</h3>
         <p>
