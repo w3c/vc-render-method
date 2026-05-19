@@ -863,7 +863,7 @@ of an error.
         <h3>Output Preferences</h3>
         <p>
 Rendering environment preferences MAY be provided within the Render Method. The
-objective of this object is to provide suggested use, display, and intended
+purpose of this object is to provide suggested use, display, and intended
 access mode when rendering the provided template. An implementation SHOULD
 follow these preferences when provided.
         </p>
@@ -879,14 +879,15 @@ follow these preferences when provided.
             <tr>
               <td>outputPreference</td>
               <td>
-An OPTIONAL [=map=] that expresses suggested preferences for the rendering
-environment.
+An OPTIONAL [=map=] that expresses the preferred rendering environment for the provided template.
               </td>
             </tr>
           </tbody>
         </table>
 
-        <p>The `outputPreference` object MAY contain any of the following:</p>
+        <p>
+The `outputPreference` object MAY contain any of the following properties:
+        </p>
 
         <table class="simple">
           <thead>
@@ -909,8 +910,8 @@ https://w3c.github.io/cg-reports/a11y-discov-vocab/CG-FINAL-vocabulary-20260128/
               <td>mediaType</td>
               <td>
 An OPTIONAL [=string=] stating a valid media type listed in the
-<a href="https://www.iana.org/assignments/media-types/media-types.xhtml">
-IANA Media Types</a> preferred for rendering. This value MAY be used when
+<a href="https://www.iana.org/assignments/media-types/media-types.xhtml"
+>IANA Media Types</a> preferred for rendering. This value MAY be used when
 suggesting addtional processing prior to rendering. Examples include converting
 an SVG template into a static image or an HTML document into a PDF.
               </td>
