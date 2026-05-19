@@ -1035,8 +1035,9 @@ via `port` with the error message.
 OverlayRenderMethod is used by an [=issuer=] to link a [=verifiable credential=]
 to an external package of presentation metadata&mdash;such as an Overlays Capture
 Architecture (OCA) Bundle [[[OCA]]]&mdash;without prescribing a single visual
-template. A capture base describes credential attributes (often as JSON Pointer
-[[RFC6901]] paths from the document root), and overlays supply labels, formats,
+template. A capture base describes credential attributes as JSON Pointer
+[[RFC6901]] paths from the root of the [=verifiable credential=] document, and
+overlays supply labels, formats,
 sensitive-data flags, and related presentation rules. Renderers use this
 information to build user interfaces, select locales, and display fields
 consistently across applications.
@@ -1214,7 +1215,8 @@ either as a URL or as a map with an `id` that dereferences to the bundle.
           <p>
 When processing this render suite, attribute names in the capture base MUST be
 interpreted as JSON Pointer paths [[RFC6901]] from the root of the
-[=verifiable credential=] document unless otherwise specified by [[[OCA]]].
+[=verifiable credential=] document. Attribute names in overlays that reference
+capture base attributes MUST use the same JSON Pointer paths.
 For example, an attribute named `/credentialSubject/degree/name` references
 the `name` property within the `degree` object of `credentialSubject`. Overlays
 in the bundle provide presentation metadata such as human-readable labels in
