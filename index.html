@@ -1075,7 +1075,8 @@ A REQUIRED [=string=] that MUST be the value `OverlayRenderMethod`.
               <td>renderSuite</td>
               <td>
 A REQUIRED [=string=] that identifies the overlay package format and processing
-algorithm. The `oca-bundle-v2` render suite is defined in this specification.
+algorithm. The `oca-bundle-v2` render suite (OCA v2.0.0) is defined in this
+specification.
               </td>
             </tr>
             <tr>
@@ -1206,10 +1207,12 @@ example below.
           <h3>The `oca-bundle-v2` Render Suite</h3>
 
           <p>
-The `oca-bundle-v2` render suite uses an OCA Bundle as defined in [[[OCA]]].
-The bundle contains a capture base and overlays. For this render suite,
-`renderSuite` MUST be the value `oca-bundle-v2`, and `bundle` MUST be present
-either as a URL or as a map with an `id` that dereferences to the bundle.
+The `oca-bundle-v2` render suite refers to the Overlays Capture Architecture
+(OCA) <a href="https://oca.colossi.network/specification/">v2.0.0</a>
+specification [[[OCA]]]. It uses an OCA Bundle containing a capture base and
+overlays. For this render suite, `renderSuite` MUST be the value
+`oca-bundle-v2`, and `bundle` MUST be present either as a URL or as a map with
+an `id` that dereferences to the bundle.
           </p>
 
           <p>
