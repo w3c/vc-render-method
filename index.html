@@ -424,52 +424,6 @@ value MUST be SHA-2 with 256-bits of output (`0x12`).
             </tbody>
           </table>
 
-          <p>
-The data model shown above is expressed in a [=verifiable credential=]
-in the example below.
-          </p>
-
-          <pre class="example nohighlight"
-          title="Usage of the render property by an issuer">
-{
-  "@context": [
-    "https://www.w3.org/ns/credentials/v2",
-    "https://www.w3.org/ns/credentials/examples/v2",
-    "https://w3id.org/vc/render-method/v1"
-  ],
-  "id": "http://example.edu/credentials/3732",
-  "type": ["VerifiableCredential", "UniversityDegreeCredential"],
-  "issuer": "https://example.edu/issuers/14",
-  "validFrom": "2010-01-01T19:23:24Z",
-  "credentialSubject": {
-    "id": "did:example:ebfeb1f712ebc6f1c276e12ec21",
-    "degree": {
-      "type": "BachelorDegree",
-      "name": "Bachelor of Science and Arts"
-    }
-  },
-  <span class="highlight">"renderMethod": {
-    "type": "TemplateRenderMethod",
-    "renderSuite": "svg-mustache",
-    "template": {
-      "id": "https://example.edu/credential-templates/BachelorDegree",
-      "mediaType": "image/svg+xml",
-      "digestMultibase": "zQmerWC85Wg6wFl9znFCwYxApG270iEu5h6JqWAPdhyxz2dR",
-      "renderProperty": [
-        "/issuer", "/validFrom", "/credentialSubject/degree/name"
-      ]
-    }
-  }
-  </span>
-}
-        </pre>
-
-        <p>
-In the example above, the [=issuer=] has provided a Mustache-based SVG rendering
-template for a Bachelor's degree that will be filled in with specific
-information from the [=verifiable credential=] listed in `renderProperty`.
-        </p>
-
         <section>
           <h3>The `json-card` Render Suite</h3>
           <p>
@@ -1765,18 +1719,6 @@ via `port` with the error message.
 The following sections outline the algorithms that is used by this specification
 for rendering methods.
     </p>
-
-    <section>
-      <h3>Render (TemplateRenderMethod)</h3>
-
-      <p>
-The <a href="https://mustache.github.io/">Mustache</a> templating language is used
-to produce a visual representation of the [=verifiable credential=].
-See the <a href="https://mustache.github.io/mustache.5.html">Mustache 5.0
-Specification</a> for details.
-      </p>
-    </section>
-
   </section>
 
     <section class="appendix informative">
