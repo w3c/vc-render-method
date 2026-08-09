@@ -1,0 +1,57 @@
+id: T3
+name: Tracking via Template and Resource Fetches
+elements: [P3, F1, O1, S1, E1, C1]
+tags: [privacy]
+taxonomyName: STRIDE
+taxonomyClass: Information Disclosure
+description: >-
+  A render method can reference its template, and the template can in turn
+  reference further resources such as images, by location rather than
+  embedding them. When the [=P3|Render=] process resolves such a reference over
+  the network via [=F1|Retrieve Render Template=], the request reveals to the
+  [=E1|issuer=] or to whoever hosts the resource that a particular credential
+  is being rendered, along with the requester's network address, timing, and
+  other request metadata. An issuer that assigns a distinct template or
+  resource location per credential turns each render into a signal that
+  identifies the specific credential and correlates the times and places it is
+  displayed. In the `html` render suite, a template that is permitted to load
+  external content could also encode credential data into the URLs of
+  resources it fetches, such as image requests, exfiltrating rendered data to
+  an external location. Embedding the template and its resources in the
+  credential avoids the network requests entirely, at the cost of increasing
+  the size of the credential, which can be significant for constrained
+  devices. This threat is the render-time expression of
+  <a href="https://www.w3.org/TR/vc-data-model/threat-model/#t10-device-tracking-and-fingerprinting">Device
+  Tracking and Fingerprinting</a> in the [[[VC-DATA-MODEL-2.0]]] threat model,
+  to which readers are referred for the general analysis.
+response:
+  - id: R1
+    name: Block Network Access During Rendering
+    type: Reduce
+    description: >-
+      The rendering environment prevents the template from initiating its own
+      network requests, so that a template cannot fetch per-user resources or
+      encode credential data into outbound requests while rendering. The
+      specification requires this as a security outcome for the `html` render
+      suite; how it is enforced is an implementation detail. A browser based
+      implementation, for example, can enforce it with a Content Security
+      Policy applied by the [=wrapper code=], while other rendering
+      environments deny network egress by other means. Whatever the mechanism,
+      blocking network access during rendering closes the linked-resource
+      exfiltration vector for content loaded while the template runs.
+  - id: R2
+    name: Embed, Cache, or Relay Template Retrieval
+    type: Reduce
+    description: >-
+      Where the retrieval of a template cannot be avoided, the requester
+      protects it rather than revealing each render to the host. As the
+      specification notes, template references are aggressively cached on the
+      client so that a template is fetched at most once, and retrieval is
+      performed through Oblivious HTTP or a similar relay that disassociates
+      the requester from the requested origin. An issuer that prioritizes
+      offline use and unlinkability embeds the template and its resources in
+      the credential, accepting the increase in credential size. The general
+      responses in
+      <a href="https://www.w3.org/TR/vc-data-model/threat-model/#t10-device-tracking-and-fingerprinting">Device
+      Tracking and Fingerprinting</a> in the [[[VC-DATA-MODEL-2.0]]] threat
+      model apply here as well.
