@@ -425,10 +425,10 @@ value MUST be SHA-2 with 256-bits of output (`0x12`).
           </table>
 
         <section>
-          <h3>The `json-card` Render Suite</h3>
+          <h3>The `card` Render Suite</h3>
           <p>
-The `json-card` render suite uses JSON templates to transform a
-[=verifiable credential=] into a standardized JSON card format. This format
+The `card` render suite uses JSON templates to transform a
+[=verifiable credential=] into a standardized data display format. This format
 enables wallets to display credentials in a responsive card layout with key
 data highlighted and configurable additional fields. Wallets that implement
 this method can render the standardized JSON output in their own card UI
@@ -437,20 +437,20 @@ natively support a specific credential type.
           </p>
 
           <p>
-The template is a JSON object that matches the `json-card` output structure.
+The template is a JSON object that matches the `card` output structure.
 String values in the template can be JSON pointer strings (as specified in
 [[[RFC6901]]]) that reference fields in the [=verifiable credential=]. When
 processing the template, JSON pointer strings are evaluated against the
 credential data and replaced with the resolved values. The template MUST
 conform to the JSON template schema defined below, and the resulting output
-MUST conform to the `json-card` output schema. Compound data across multiple
+MUST conform to the `card` output schema. Compound data across multiple
 fields is not supported; each field references a single JSON pointer.
           </p>
 
           <section>
             <h4>JSON Template Schema</h4>
             <p>
-The template for a `json-card` render suite MUST be a JSON object that
+The template for a `card` render suite MUST be a JSON object that
 conforms to the following structure. The template structure matches the
 output structure, but string values can be either literal strings or JSON
 pointer strings (starting with `/`) that reference fields in the
@@ -540,7 +540,7 @@ schema before processing.
             </p>
 
             <pre class="example nohighlight"
-                 title="JSON Schema for json-card template">
+                 title="JSON Schema for card template">
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
@@ -610,12 +610,12 @@ schema before processing.
             </pre>
 
             <p>
-              The following example shows a valid `json-card` template with JSON pointer
+              The following example shows a valid `card` template with JSON pointer
               strings:
             </p>
 
             <pre class="example nohighlight"
-                 title="Example json-card template">
+                 title="Example card template">
 {
   "name": "/credentialSubject/degree/name",
   "description": "University Degree Credential",
@@ -646,9 +646,9 @@ schema before processing.
           </section>
 
           <section>
-            <h4>JSON Card Output Schema</h4>
+            <h4>Card Output Schema</h4>
             <p>
-              The output of a `json-card` template MUST be a JSON object that conforms to
+              The output of a `card` template MUST be a JSON object that conforms to
               the following structure:
             </p>
 
@@ -723,11 +723,11 @@ schema before processing.
             </table>
 
             <p>
-              The following example shows a valid `json-card` output:
+              The following example shows a valid `card` output:
             </p>
 
             <pre class="example nohighlight"
-                 title="Example json-card output">
+                 title="Example card output">
 {
   "name": "Bachelor of Science and Arts",
   "description": "University Degree Credential",
@@ -760,7 +760,7 @@ schema before processing.
           <section>
             <h4>Template Processing</h4>
             <p>
-              When processing a `json-card` template, the following steps MUST be
+              When processing a `card` template, the following steps MUST be
               performed:
             </p>
 
@@ -795,7 +795,7 @@ schema before processing.
                 </ol>
               </li>
               <li>
-                Validate the resulting JSON object against the `json-card` output schema. If
+                Validate the resulting JSON object against the `card` output schema. If
                 validation fails, processing MUST stop and an error MUST be returned.
               </li>
             </ol>
@@ -814,12 +814,12 @@ schema before processing.
           </p>
 
           <pre class="example nohighlight"
-               title="Basic usage of the json-card render suite">
+               title="Basic usage of the card render suite">
 {
   <span class="comment">...</span>
   "renderMethod": {
     "type": "TemplateRenderMethod",
-    "renderSuite": "json-card",
+    "renderSuite": "card",
     <span class="comment">// the JSON template is embedded in the VC</span>
     "template": "data:application/json;base64,eyJuYW1lIjogIi9jcmVkZW50aWFsU3ViamVjdC9kZWdyZWUvbmFtZSIsICJkZXNjcmlwdGlvbiI6ICJVbml2ZXJzaXR5IERlZ3JlZSBDcmVkZW50aWFsIiwgImZpZWxkcyI6IFt7ImxhYmVsIjogIkluc3RpdHV0aW9uIiwgInZhbHVlIjogIi9pc3N1ZXIifV19"
   }
@@ -832,12 +832,12 @@ schema before processing.
           </p>
 
           <pre class="example nohighlight"
-               title="A remotely hosted JSON template for a json-card render template">
+               title="A remotely hosted JSON template for a card render template">
 {
 <span class="comment">...</span>
 "renderMethod": {
   "type": "TemplateRenderMethod",
-  "renderSuite": "json-card",
+  "renderSuite": "card",
   "template": {
     <span class="comment">// this JSON template is fetched from the Web</span>
     "id": "https://degree.example/credential-templates/bachelors.json",
@@ -853,15 +853,15 @@ schema before processing.
           </p>
 
           <pre class="example nohighlight"
-               title="A remotely hosted json-card render method">
+               title="A remotely hosted card render method">
 {
 <span class="comment">...</span>
 "renderMethod": {
   <span class="comment">// this render method is fetched from the Web</span>
-  "id": "https://degrees.example/bachelors-json-card.jsonld",
+  "id": "https://degrees.example/bachelors-card.jsonld",
   "mediaType": "application/ld+json",
   "type": "TemplateRenderMethod",
-  "renderSuite": "json-card",
+  "renderSuite": "card",
   "digestMultibase": "zQmG270iEu5h6JqWAPdhyxz2dRerWC85Wg6wFl9znFCwYxAp"
 }
           </pre>
