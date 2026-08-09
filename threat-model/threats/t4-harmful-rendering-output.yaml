@@ -1,0 +1,43 @@
+id: T4
+name: Harmful Rendering Output
+elements: [P3, F1, O1, C2, C3]
+tags: [security]
+taxonomyName: STRIDE
+taxonomyClass: Denial of Service
+description: >-
+  Because a render template controls the visual, auditory, and tactile output
+  produced by the [=P3|Render=] process, a hostile template can be crafted to
+  harm the person viewing it rather than to inform them. A template can drive
+  the display with a rapidly flashing or strobing pattern capable of
+  triggering a seizure in a person with photosensitive epilepsy, or emit
+  sudden loud, screeching, or otherwise disruptive sound. The harm lands on
+  the human observing the rendering, in the physical environment around the
+  [=C2|holder system=] or [=C3|verifier system=], rather than on the data or
+  the software, and the underlying credential can be entirely authentic. The
+  ability of arbitrary displayed or played content to affect a susceptible
+  person is a real-world condition of any rendering technology and is outside
+  what the Render Method specification itself governs, so it is treated as an
+  external threat.
+response:
+  - id: R1
+    name: Acknowledge as an External Condition
+    type: Accept
+    description: >-
+      The possibility that arbitrary visual or auditory output can affect a
+      susceptible person exists for any technology that renders content and is
+      not something the Render Method specification eliminates. This threat is
+      documented so that implementers and deployers are aware of it and can
+      apply platform-level and accessibility protections appropriate to their
+      context.
+  - id: R2
+    name: Constrain and Vet Rendering Output
+    type: Reduce
+    description: >-
+      Deployers reduce exposure by favoring render suites and output modes
+      that constrain what a template can do to the person, such as the `card`
+      suite, which produces a standardized, static output rather than
+      animated or sound-producing content, and by honoring platform
+      accessibility settings that limit motion, flashing, and sound. Where
+      templates originate from parties a deployer does not trust, the
+      rendering output is reviewed or transformed to a safe static form before
+      it is shown.
