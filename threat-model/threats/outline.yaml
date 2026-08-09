@@ -21,7 +21,7 @@ categories:
     threats: [T2]
   - name: Deployment Threats
     id: threat-model-deployment-threats
-    threats: []
+    threats: [T3]
   - name: External Threats
     id: threat-model-external-threats
     threats: []
@@ -47,3 +47,4 @@ elements:
 files:
   - t1-uncontrolled-credential-presentation.yaml
   - t2-unsafe-rendering-of-untrusted-data.yaml
+  - t3-tracking-via-template-and-resource-fetches.yaml
