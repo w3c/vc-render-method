@@ -15,7 +15,7 @@
 categories:
   - name: Target Threats
     id: threat-model-target-threats
-    threats: []
+    threats: [T1]
   - name: Implementation Threats
     id: threat-model-implementation-threats
     threats: []
@@ -44,4 +44,5 @@ elements:
   C2: "C2: Holder System"
   C3: "C3: Verifier System"
 
-files: []
+files:
+  - t1-uncontrolled-credential-presentation.yaml
