@@ -24,7 +24,7 @@ categories:
     threats: [T3]
   - name: External Threats
     id: threat-model-external-threats
-    threats: []
+    threats: [T4]
   - name: Dependency Threats
     id: threat-model-dependency-threats
     threats: []
@@ -48,3 +48,4 @@ files:
   - t1-uncontrolled-credential-presentation.yaml
   - t2-unsafe-rendering-of-untrusted-data.yaml
   - t3-tracking-via-template-and-resource-fetches.yaml
+  - t4-harmful-rendering-output.yaml
