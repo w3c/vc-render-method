@@ -38,6 +38,7 @@ elements:
   P3: "P3: Render"
   F1: "F1: Retrieve Render Template"
   F2: "F2: Observe Rendering"
+  O1: "O1: Render Template"
   S1: "S1: Render Template Storage"
   C1: "C1: Issuer System"
   C2: "C2: Holder System"

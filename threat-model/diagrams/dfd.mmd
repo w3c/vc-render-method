@@ -1,0 +1,110 @@
+%% Data Flow Diagram — W3C Verifiable Credentials Render Method Threat Model
+%% Reused vc-data-model components are grayed with identifiers removed;
+%% Render Method components are colored and carry active identifiers.
+%%   E = External Entity (blue rectangle)   P = Process (green rounded rect)
+%%   F = Data Flow (labelled arrow)          S = Data Store (pink cylinder)
+%%   O = Data Object (mauve trapezoid)       C = Contained System (dashed box)
+flowchart LR
+
+  %% ---------- Issuer System (C1) ----------
+  subgraph C1["C1: Issuer System"]
+    direction TB
+    E1["E1: Issuer"]
+
+    %% -- reused context (grayed, unnumbered) --
+    GP1("Establish Confidence")
+    GP2("Assemble Verifiable Credential")
+    GP3("Issue Verifiable Credential")
+    GP4("Publish Status List")
+    GP5("Update Status List")
+    GS1[("Status List Storage")]
+
+    %% -- new render-method components --
+    P1("P1: Publish Render Template")
+    P2("P2: Update Render Template")
+    O1[/"O1: Render Template"/]
+    S1[("S1: Render Template Storage")]
+
+    GP1 --> GP2
+    GP2 --> GP3
+    GP4 --> GS1
+    GP5 --> GS1
+    P1 --> O1
+    P2 --> O1
+    O1 --> S1
+  end
+
+  %% ---------- Holder System (C2) ----------
+  subgraph C2["C2: Holder System"]
+    direction TB
+    E2["E2: Holder"]
+
+    %% -- reused context (grayed, unnumbered) --
+    GP6("Store Verifiable Credential")
+    GP7("Engage in Workflow (Holder)")
+    GP8("Generate Presentation")
+    GS2[("Holder Storage")]
+
+    %% -- new render-method components --
+    P3("P3: Render")
+
+    GP6 --> GS2
+    GS2 --> GP8
+    GP7 --> GP8
+  end
+
+  %% ---------- Verifier System (C3) ----------
+  subgraph C3["C3: Verifier System"]
+    direction TB
+    E3["E3: Verifier"]
+
+    %% -- reused context (grayed, unnumbered) --
+    GP9("Engage in Workflow (Verifier)")
+    GP10("Verify Presentation")
+    GP11("Verify Credential Status")
+    GP12("Validate Credential(s)")
+
+    %% -- new render-method components --
+    %% Same logical Render process (P3) as in the Holder System.
+    P3v("P3: Render")
+
+    GP9 --> GP10
+    GP10 --> GP11
+    GP11 --> GP12
+  end
+
+  %% ---------- Force C1 -> C2 -> C3 left-to-right ordering ----------
+  C1 ~~~ C2
+  C2 ~~~ C3
+
+  %% ---------- Reused cross-boundary flows (grayed, unnumbered) ----------
+  GP7 -. "Establish Confidence in Subject" .-> GP1
+  GP3 -. "Deliver Verifiable Credential" .-> GP6
+  GP8 -. "Exchange Presentation" .-> GP9
+  GP11 -. "Check Credential Status" .-> GS1
+
+  %% ---------- New render-method Data Flows (labelled arrows) ----------
+  %% F1 retrieves the Render Template (O1) from storage into the Render process.
+  P3 -- "F1: Retrieve Render Template (O1)" --> S1
+  P3v -- "F1: Retrieve Render Template (O1)" --> S1
+  P3 -- "F2: Observe Rendering" --> E2
+  P3v -- "F2: Observe Rendering" --> E3
+
+  %% ---------- Element styling ----------
+  classDef entity  fill:#c9daf8,stroke:#000,color:#000;
+  classDef process fill:#d9ead3,stroke:#000,color:#000,rx:10,ry:10;
+  classDef store   fill:#f4cccc,stroke:#000,color:#000;
+  classDef object  fill:#c27ba0,stroke:#000,color:#000;
+  classDef ctxProcess fill:#eeeeee,stroke:#999,color:#999,rx:10,ry:10;
+  classDef ctxStore   fill:#eeeeee,stroke:#999,color:#999;
+
+  class E1,E2,E3 entity;
+  class P1,P2,P3,P3v process;
+  class S1 store;
+  class O1 object;
+  class GP1,GP2,GP3,GP4,GP5,GP6,GP7,GP8,GP9,GP10,GP11,GP12 ctxProcess;
+  class GS1,GS2 ctxStore;
+
+  style C1 fill:#fff0e5,stroke:#333,stroke-dasharray:6 4;
+  style C2 fill:#fff0e5,stroke:#333,stroke-dasharray:6 4;
+  style C3 fill:#fff0e5,stroke:#333,stroke-dasharray:6 4;
