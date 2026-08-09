@@ -1,0 +1,51 @@
+id: T5
+name: Inherited Rendering Environment Attack Surface
+elements: [P3, C2, C3]
+tags: [security]
+taxonomyName: STRIDE
+taxonomyClass: Elevation of Privilege
+description: >-
+  The `html` render suite performs the [=P3|Render=] process by executing
+  template code inside a confined rendering environment and relies on that
+  environment's isolation mechanisms to keep the code from navigating away,
+  reaching the surrounding [=host page=], or contacting the network. The
+  specification defines these confinement requirements as security outcomes
+  and leaves the mechanism that enforces them to the implementation; a sandbox
+  can be provided in a variety of ways. A common realization is a browser,
+  which enforces confinement through the iframe `sandbox` attribute, Content
+  Security Policy, and `srcdoc` isolation, but other environments provide
+  equivalent isolation through different mechanisms. Whatever mechanism is
+  chosen, the safety of rendering inherits the security of that underlying
+  mechanism: a defect that lets the confinement be escaped, a policy be
+  bypassed, or the isolation between the template and the host be broken
+  becomes a defect in the render process, even when the render method is used
+  exactly as specified. The suite also inherits the ambient risk that a
+  rendering environment, or its configuration, does not enforce the required
+  outcomes faithfully. This is a dependency threat: the Render Method
+  specification does not implement these protections itself but depends on the
+  chosen environment enforcing them correctly and being available.
+response:
+  - id: R1
+    name: Rely on Maintained Rendering Environments
+    type: Transfer
+    description: >-
+      Deployers perform the [=P3|Render=] process using an actively maintained
+      rendering environment that receives timely security updates, such as a
+      current browser engine, so that responsibility for the correctness of
+      the environment's isolation mechanisms rests with its vendor and known
+      defects are patched promptly.
+  - id: R2
+    name: Defense in Depth Beyond a Single Mechanism
+    type: Reduce
+    description: >-
+      Rather than relying on a single isolation primitive, the rendering
+      environment combines the protections that achieve the specification's
+      required outcomes: confinement of the executing template, denial of
+      network egress, digest checking of retrieved template code, and
+      prevention of host access, so that a failure in one mechanism does not by
+      itself expose the [=C2|holder system=] or [=C3|verifier system=]. Because
+      the choice of sandboxing mechanism is an implementation detail, an
+      environment providing equivalent isolation is selected wherever the
+      render method runs, whether or not it is a browser, and constrained
+      suites such as `card` and `nfc`, which do not execute template code, are
+      preferred where they meet the use case.
