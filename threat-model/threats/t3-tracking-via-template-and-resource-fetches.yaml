@@ -35,7 +35,7 @@ response:
       specification requires this as a security outcome for the `html` render
       suite; how it is enforced is an implementation detail. A browser based
       implementation, for example, can enforce it with a Content Security
-      Policy applied by the [=wrapper code=], while other rendering
+      Policy applied by the wrapper code, while other rendering
       environments deny network egress by other means. Whatever the mechanism,
       blocking network access during rendering closes the linked-resource
       exfiltration vector for content loaded while the template runs.

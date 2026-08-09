@@ -35,12 +35,12 @@ response:
       specification defines this in terms of required security outcomes: the
       environment allows the template's JavaScript to render the credential
       while preventing it from navigating away, reaching the surrounding
-      [=host page=], and loading or contacting external content. How the
+      host page, and loading or contacting external content. How the
       environment enforces those outcomes is an implementation detail, and
       sandboxing can be achieved in a variety of ways. A browser based
       implementation, for example, can realize it by hosting the template in a
       sandboxed iframe that permits scripting but blocks navigation and
-      top-level access, together with [=wrapper code=] that adds a Content
+      top-level access, together with wrapper code that adds a Content
       Security Policy denying network requests; other environments provide
       equivalent isolation through different mechanisms. Whatever the
       mechanism, the environment further limits the resources and capabilities

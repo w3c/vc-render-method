@@ -8,7 +8,7 @@ description: >-
   The `html` render suite performs the [=P3|Render=] process by executing
   template code inside a confined rendering environment and relies on that
   environment's isolation mechanisms to keep the code from navigating away,
-  reaching the surrounding [=host page=], or contacting the network. The
+  reaching the surrounding host page, or contacting the network. The
   specification defines these confinement requirements as security outcomes
   and leaves the mechanism that enforces them to the implementation; a sandbox
   can be provided in a variety of ways. A common realization is a browser,
