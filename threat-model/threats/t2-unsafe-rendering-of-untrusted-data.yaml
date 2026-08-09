@@ -1,0 +1,64 @@
+id: T2
+name: Unsafe Rendering of Untrusted Data
+elements: [P3, F1, O1, S1, C2, C3]
+tags: [security]
+taxonomyName: STRIDE
+taxonomyClass: Elevation of Privilege
+description: >-
+  The [=P3|Render=] process combines a render template retrieved via
+  [=F1|Retrieve Render Template=] with claim values taken from a
+  [=verifiable credential=], and produces output a person perceives, which can
+  be visual, auditory, tactile, or textual. In the `html` render suite the
+  template is an HTML fragment that carries its own CSS and JavaScript, and
+  that code runs in order to render the credential. Both the template code and
+  the credential values placed in the data block are untrusted input from the
+  point of view of the software running the [=P3|Render=] process. Template
+  code, or a credential value it consumes, can attempt to reach the
+  surrounding [=C2|holder system=] or [=C3|verifier system=], navigate away, or
+  load and contact external locations, giving hostile content access to the
+  context in which it renders. Successful verification of the credential's
+  securing mechanism confirms that the content is authentic, not that it is
+  safe to render, so hostile content can arrive inside a well-formed, verified
+  credential. At the level of the data model this threat is a render-time
+  instance of
+  <a href="https://www.w3.org/TR/vc-data-model/threat-model/#t2-code-injection-via-credential-content">Code
+  Injection via Credential Content</a> in the [[[VC-DATA-MODEL-2.0]]] threat
+  model; the additional concern here is that the render method deliberately
+  executes template-supplied code as part of rendering.
+response:
+  - id: R1
+    name: Confine the Render Process
+    type: Reduce
+    description: >-
+      The `html` render suite runs the template code in a confined rendering
+      environment rather than disabling the code it relies on. The
+      specification defines this in terms of required security outcomes: the
+      environment allows the template's JavaScript to render the credential
+      while preventing it from navigating away, reaching the surrounding
+      [=host page=], and loading or contacting external content. How the
+      environment enforces those outcomes is an implementation detail, and
+      sandboxing can be achieved in a variety of ways. A browser based
+      implementation, for example, can realize it by hosting the template in a
+      sandboxed iframe that permits scripting but blocks navigation and
+      top-level access, together with [=wrapper code=] that adds a Content
+      Security Policy denying network requests; other environments provide
+      equivalent isolation through different mechanisms. Whatever the
+      mechanism, the environment further limits the resources and capabilities
+      exposed to the template so that hostile template code has as little to
+      act on as possible.
+  - id: R2
+    name: Validate Rendered Data and Prefer Constrained Suites
+    type: Reduce
+    description: >-
+      Software performing the [=P3|Render=] process treats all template and
+      credential content as untrusted regardless of verification outcome and
+      validates it against the expected shape for the render suite in use. The
+      `card` render suite constrains a template to data that produces a
+      standardized JSON output validated against a fixed schema, and the `nfc`
+      render suite carries a static payload, so neither executes
+      template-supplied code; selecting a constrained suite where it meets the
+      use case removes the code-execution surface entirely. Further analysis
+      and responses appear in
+      <a href="https://www.w3.org/TR/vc-data-model/threat-model/#t2-code-injection-via-credential-content">Code
+      Injection via Credential Content</a> in the [[[VC-DATA-MODEL-2.0]]]
+      threat model.

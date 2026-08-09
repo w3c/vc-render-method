@@ -18,7 +18,7 @@ categories:
     threats: [T1]
   - name: Implementation Threats
     id: threat-model-implementation-threats
-    threats: []
+    threats: [T2]
   - name: Deployment Threats
     id: threat-model-deployment-threats
     threats: []
@@ -46,3 +46,4 @@ elements:
 
 files:
   - t1-uncontrolled-credential-presentation.yaml
+  - t2-unsafe-rendering-of-untrusted-data.yaml
