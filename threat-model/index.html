@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Verifiable Credentials Render Method Threat Model</title>
+  <script src="https://www.w3.org/Tools/respec/respec-w3c"
+    class="remove"></script>
+  <script src="threats/js-yaml.min.js"></script>
+  <script src="threats/threat-model.js"></script>
+
+  <script class='remove'>
+    // See https://github.com/w3c/respec/wiki/ for how to configure ReSpec
+    var respecConfig = {
+      specStatus: "ED",
+      shortName: "vc-render-method",
+      group: "vc",
+      edDraftURI: "https://w3c.github.io/vc-render-method/threat-model/",
+      latestVersion: "https://www.w3.org/TR/vc-render-method/threat-model/",
+      github: {
+        repoURL: "https://github.com/w3c/vc-render-method/",
+        branch: "main"
+      },
+      editors: [{
+        name: "Manu Sporny",
+        company: "Digital Bazaar",
+        w3cid: 41758
+      }],
+      noRecTrack: "true",
+      maxTocLevel: 4,
+      xref: ["VC-DATA-MODEL-2.0", "CID", "DID", "VC-DATA-INTEGRITY"],
+      preProcess: [window.ThreatModel.render],
+      postProcess: [(config, document) => {
+        config.thisVersion =
+          config.thisVersion.replace(/\/$/, '') + '/threat-model/';
+        const link = document.querySelector(".head a.u-url");
+        if(link) {
+          link.href = config.thisVersion;
+          link.textContent = config.thisVersion;
+        }
+      }]
+    };
+  </script>
+  <link rel="stylesheet" href="threats/threat-model.css" />
+  <!--
+    The threat definitions are loaded at render time from
+    threats/outline.yaml and the YAML threat files it lists. When
+    previewing this document locally, serve the directory over HTTP (for
+    example, `npx http-server`); browsers cannot fetch() the YAML files
+    from a file:// URL.
+  -->
+</head>
+
+<body>
+  <section id="abstract">
+    <p>
+This document describes a threat model for the
+<a href="https://www.w3.org/TR/vc-render-method/">Verifiable Credentials
+Render Method</a> specification. It identifies and analyzes security and
+privacy threats specific to the publication, retrieval, and processing of
+[=render methods=] used to produce a human-readable rendering of a
+[=verifiable credential=].
+    </p>
+  </section>
+  <section id="sotd">
+    <p>
+This threat model is a work in progress. It is published alongside the
+Verifiable Credentials Render Method specification to inform implementers and
+ecosystem designers of the security and privacy considerations relevant to
+deployments of the specification. Feedback and proposed additions are
+welcome via the
+<a href="https://github.com/w3c/vc-render-method/issues">issue tracker</a>.
+    </p>
+  </section>
+  <section id="Introduction">
+    <h2>Introduction</h2>
+    <p>
+Threat modeling is a vital part of specification development. This document
+provides a threat model for the Verifiable Credentials Render Method
+specification, which defines how an [=issuer=] can associate one or more
+render templates with a [=verifiable credential=] so that a [=holder=] or
+[=verifier=] can produce a consistent, human-readable rendering of that
+credential.
+    </p>
+    <p>
+This threat model follows the methodology described in the
+<a href="https://www.w3.org/TR/threat-modeling-guide/">W3C Threat Modeling
+Guide</a> and classifies threats using the STRIDE taxonomy. Threats are
+grouped into five categories:
+    </p>
+    <ul>
+      <li>
+<strong>Target Threats</strong> are threats the specification was designed
+to address.
+      </li>
+      <li>
+<strong>Implementation Threats</strong> are threats that implementers must
+handle; the specification leaves the choice of mitigation open.
+      </li>
+      <li>
+<strong>Deployment Threats</strong> are threats that arise from how systems
+are configured and operated.
+      </li>
+      <li>
+<strong>External Threats</strong> are real-world risks acknowledged as out
+of scope for this version of the specification.
+      </li>
+      <li>
+<strong>Dependency Threats</strong> are threats inherited from technologies
+the specification depends upon.
+      </li>
+    </ul>
+
+    <section id="threat-model-description">
+      <h3>Description</h3>
+      <p>
+The Verifiable Credentials Render Method specification builds on the
+Verifiable Credentials Data Model. For this threat model, we consider a
+minimal instantiation focused on the render method lifecycle, consisting of
+three roles: the <strong>[=E1|Issuer=] (E1)</strong>, who publishes and
+maintains the render templates associated with a [=verifiable credential=];
+the <strong>[=E2|Holder=] (E2)</strong>, who renders a credential to review
+it; and the <strong>[=E3|Verifier=] (E3)</strong>, who renders a credential
+as part of evaluating it. The elements and flows introduced by the Render
+Method specification are shown in full color in the data flow diagram below;
+elements reused from the
+<a href="https://www.w3.org/TR/vc-data-model/threat-model/">Verifiable
+Credentials Data Model threat model</a> are shown grayed as context.
+      </p>
+      <p class="note" role="note">
+<span class="marker">Note:</span> We do NOT model potential attackers as
+first-class elements, as over-characterizing attackers can lead to analysis
+bias that is better avoided.
+      </p>
+    </section>
+
+    <section id="threat-model-data-flow-diagram">
+      <h3>Data Flow Diagram for the Render Method Ecosystem</h3>
+      <p>
+The data flow diagram below illustrates the key elements and data flows
+introduced by the Render Method specification. Within the
+[=C1|Issuer System=] (C1), the issuer runs the [=P1|Publish Render Template=]
+(P1) and [=P2|Update Render Template=] (P2) processes, which write to
+[=S1|Render Template Storage=] (S1). Within the [=C2|Holder System=] (C2)
+and the [=C3|Verifier System=] (C3), the [=P3|Render=] (P3) process
+retrieves a render template ([=F1|F1=]) and produces a rendering that the
+holder or verifier observes ([=F2|F2=]). Elements drawn from the Verifiable
+Credentials Data Model threat model are shown grayed for context and are not
+re-numbered here.
+      </p>
+
+      <img src="diagrams/dfd.svg"
+        alt="Data flow diagram showing three dashed system boundaries. The
+Issuer System (C1) contains the new Publish Render Template (P1) and Update
+Render Template (P2) processes, which write to the new Render Template
+Storage (S1); grayed context elements from the Verifiable Credentials Data
+Model threat model are also shown. The Holder System (C2) and Verifier
+System (C3) each contain the Render (P3) process. The Render process
+retrieves a render template from Render Template Storage via flow F1, and the
+Holder and Verifier observe the resulting rendering via flow F2.">
+
+      <p>
+The following notation is used in the diagram description and dictionary:
+      </p>
+      <ul>
+        <li>
+<strong>E</strong> denotes an External Entity (a human or legal person
+outside the system boundary)
+        </li>
+        <li>
+<strong>P</strong> denotes a Process (a running algorithm that transforms
+data)
+        </li>
+        <li>
+<strong>F</strong> denotes a Data Flow (movement of data between elements)
+        </li>
+        <li>
+<strong>S</strong> denotes a Data Store (persistent or ephemeral storage)
+        </li>
+        <li>
+<strong>O</strong> denotes a Data Object (a self-contained, transferable
+artifact)
+        </li>
+        <li>
+<strong>C</strong> denotes a Contained System Boundary (a collection of
+elements under a single authority)
+        </li>
+      </ul>
+    </section>
+
+    <section id="threat-model-architecture-dictionary">
+      <h3>Dictionary</h3>
+      <style>
+        table.dictionary,
+        table.dictionary th,
+        table.dictionary td {
+          border: thin solid rgb(176, 176, 176);
+          border-collapse: collapse;
+          padding: 5px;
+        }
+        table.dictionary td.left {
+          width: 12em;
+        }
+      </style>
+      <p>
+The dictionary defines the data flow diagram elements introduced by the
+Render Method specification. Elements reused from the
+<a href="https://www.w3.org/TR/vc-data-model/threat-model/">Verifiable
+Credentials Data Model threat model</a> appear grayed in the diagram for
+context and are defined in that document rather than repeated here.
+      </p>
+      <table class="dictionary">
+        <tbody>
+          <tr>
+            <td class="left">
+              <dfn data-lt="E1|Issuer">E1 Issuer</dfn>
+            </td>
+            <td>
+An entity that issues a [=verifiable credential=] and, using the Render
+Method specification, associates one or more render methods with it so that
+consumers have an issuer-intended way to present the credential. The issuer
+runs [=P1|Publish Render Template=] and [=P2|Update Render Template=] and
+operates [=S1|Render Template Storage=].
+            </td>
+          </tr>
+          <tr>
+            <td class="left">
+              <dfn data-lt="E2|Holder">E2 Holder</dfn>
+            </td>
+            <td>
+A person or organization that holds a [=verifiable credential=] and renders
+it, by way of the [=P3|Render=] process, in order to view or review it. The
+holder is the person who observes the rendering ([=F2|Observe Rendering=])
+within the [=C2|holder system=].
+            </td>
+          </tr>
+          <tr>
+            <td class="left">
+              <dfn data-lt="E3|Verifier">E3 Verifier</dfn>
+            </td>
+            <td>
+An entity that receives and evaluates a [=verifiable credential=] and renders
+it, by way of the [=P3|Render=] process, as part of reviewing it. The
+verifier is the person or operator who observes the rendering
+([=F2|Observe Rendering=]) within the [=C3|verifier system=].
+            </td>
+          </tr>
+          <tr>
+            <td class="left">
+              <dfn data-lt="P1|Publish Render Template">P1 Publish Render
+Template</dfn>
+            </td>
+            <td>
+The process by which an [=issuer=] creates a [=O1|render template=] and makes
+it available in [=S1|Render Template Storage=], whether by hosting it for
+later retrieval or by embedding it so that it travels inside the credential.
+            </td>
+          </tr>
+          <tr>
+            <td class="left">
+              <dfn data-lt="P2|Update Render Template">P2 Update Render
+Template</dfn>
+            </td>
+            <td>
+The process by which an [=issuer=] changes a previously published
+[=O1|render template=] in [=S1|Render Template Storage=], for example to
+update branding or layout over the lifetime of a long-lived credential.
+Updating a template that is not bound to the credential by a digest changes
+how previously issued credentials render.
+            </td>
+          </tr>
+          <tr>
+            <td class="left">
+              <dfn data-lt="P3|Render">P3 Render</dfn>
+            </td>
+            <td>
+The process that combines a [=O1|render template=] retrieved via
+[=F1|Retrieve Render Template=] with claim values from a
+[=verifiable credential=] and produces output a person perceives, which can
+be visual, auditory, tactile, or textual. This is the same logical process
+whether it runs within the [=C2|holder system=] or the [=C3|verifier
+system=]. For the `html` render suite it executes template-supplied code
+inside a confined rendering environment; for the `card` and `nfc` render
+suites it produces a standardized output or emits a static payload without
+executing template-supplied code. The specification defines the confinement
+for the `html` suite in terms of required security outcomes rather than a
+specific mechanism. A sandboxed browser iframe with a Content Security Policy
+is one common way to achieve those outcomes, but it is an implementation
+detail, and equivalent isolation can be provided by other means.
+            </td>
+          </tr>
+          <tr>
+            <td class="left">
+              <dfn data-lt="F1|Retrieve Render Template">F1 Retrieve Render
+Template</dfn>
+            </td>
+            <td>
+The data flow by which the [=P3|Render=] process obtains the
+[=O1|render template=] from [=S1|Render Template Storage=]. When the template
+is referenced by location, this flow is a network request that reveals to the
+[=issuer=] or template host that a credential is being rendered; when the
+template is embedded, the template travels inside the credential and no such
+request is made.
+            </td>
+          </tr>
+          <tr>
+            <td class="left">
+              <dfn data-lt="F2|Observe Rendering">F2 Observe Rendering</dfn>
+            </td>
+            <td>
+The data flow by which the output of the [=P3|Render=] process reaches the
+[=holder=] or [=verifier=] who observes it. This flow represents the
+rendered presentation as it is perceived by a person.
+            </td>
+          </tr>
+          <tr>
+            <td class="left">
+              <dfn data-lt="O1|Render Template">O1 Render Template</dfn>
+            </td>
+            <td>
+The self-contained, transferable artifact that determines how a
+[=verifiable credential=] is presented. Depending on the render suite it is a
+JSON template producing a standardized card output (`card`), an HTML fragment
+carrying its own CSS and JavaScript (`html`), or a static binary payload
+(`nfc`). A render template is produced by [=P1|Publish Render Template=],
+optionally changed by [=P2|Update Render Template=], held in
+[=S1|Render Template Storage=], carried by [=F1|Retrieve Render Template=],
+and consumed by [=P3|Render=]. It can be referenced by location or embedded
+in the credential, and it can be bound to the credential by a cryptographic
+digest.
+            </td>
+          </tr>
+          <tr>
+            <td class="left">
+              <dfn data-lt="S1|Render Template Storage">S1 Render Template
+Storage</dfn>
+            </td>
+            <td>
+The storage, within or operated by the [=C1|issuer system=], that holds
+published [=O1|render templates=] for retrieval by consumers. When a template
+is embedded in the credential rather than hosted, this storage is effectively
+the credential itself as it resides in the holder's possession.
+            </td>
+          </tr>
+          <tr>
+            <td class="left">
+              <dfn data-lt="C1|Issuer System">C1 Issuer System</dfn>
+            </td>
+            <td>
+The system boundary, typically a server or service operated by or for the
+[=issuer=], within which [=P1|Publish Render Template=] and
+[=P2|Update Render Template=] run and [=S1|Render Template Storage=] resides.
+            </td>
+          </tr>
+          <tr>
+            <td class="left">
+              <dfn data-lt="C2|Holder System">C2 Holder System</dfn>
+            </td>
+            <td>
+The system boundary, typically a mobile or desktop digital wallet
+application, within which the holder's instance of the [=P3|Render=] process
+runs and where the holder observes the rendering.
+            </td>
+          </tr>
+          <tr>
+            <td class="left">
+              <dfn data-lt="C3|Verifier System">C3 Verifier System</dfn>
+            </td>
+            <td>
+The system boundary, typically a verification application or service, within
+which the verifier's instance of the [=P3|Render=] process runs and where the
+verifier observes the rendering.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </section>
+
+  <section id="threat-model-stakeholders">
+    <h2>Stakeholders</h2>
+
+    <h3>E1 Issuer</h3>
+    <p>
+An issuer is an entity that issues [=verifiable credentials=] and, using the
+Render Method specification, associates render templates with them.
+      </p>
+    <p>
+The issuer's primary goal is that its credentials are presented to people in
+the way it intends, so that an observer forms an accurate understanding of
+what the issuer attested. The issuer also has an interest in controlling how
+that intended presentation evolves: some issuers want the presentation fixed
+at issuance and protected against modification, while others want to update
+branding or layout over the lifetime of a long-lived credential. Issuers that
+host their templates have a further interest in not turning template
+retrieval into a means of tracking where and when their credentials are
+displayed.
+    </p>
+
+    <h3>E2 Holder</h3>
+    <p>
+A holder is a person or organization that holds [=verifiable credentials=]
+and renders them to view or review them, typically within a digital wallet.
+    </p>
+    <p>
+The holder's primary goal is to see a faithful, usable rendering of a
+credential. Holders have a strong interest in privacy, in that rendering a
+credential does not reveal to the issuer or a third party that, when, or
+where the credential is being displayed. Holders also have an interest in
+safety and availability: rendering untrusted template content does not
+compromise their device or expose their data, and rendering works within the
+constraints of their device, including when offline.
+    </p>
+
+    <h3>E3 Verifier</h3>
+    <p>
+A verifier is an entity that evaluates [=verifiable credentials=] and renders
+them as part of reviewing them, for example to let a person confirm a
+credential against the issuer's intended presentation.
+    </p>
+    <p>
+The verifier's primary goal is that the rendering it shows accurately
+reflects the issuer's intent and the credential's actual claims, so that a
+person is not misled into accepting a credential that does not meet the
+verifier's purpose. Like the holder, the verifier has an interest in
+rendering untrusted content safely, without compromising the verifier
+system.
+    </p>
+  </section>
+
+  <section id="threat-model-threats">
+    <h2>Threats</h2>
+    <section class="tm-toc">
+    </section>
+    <section class="tm-details">
+    </section>
+  </section>
+
+  <section id="threat-model-contributing">
+    <h3>Contributing</h3>
+    <p>
+This threat model is maintained alongside the Verifiable Credentials Render
+Method specification. Feedback, bug reports, and proposed additions are
+welcome via the
+<a href="https://github.com/w3c/vc-render-method/issues/new">issue
+tracker</a>.
+    </p>
+    <section id="threat-model-adding-a-threat">
+      <h4>Adding a Threat</h4>
+      <p>
+To add a new threat to the model, provide the following components:
+      </p>
+      <ol>
+        <li>A short, descriptive name</li>
+        <li>
+A unique ID (letter <strong>T</strong> followed by an integer,
+e.g., <strong>T1</strong>)
+        </li>
+        <li>
+A description of the threat with enough detail for readers to understand
+its scope
+        </li>
+        <li>
+One or more responses, each with a name, unique ID (letter <strong>R
+</strong> followed by an integer), response type (Eliminate, Reduce,
+Transfer, or Accept), and description
+        </li>
+        <li>
+A list of affected DFD elements drawn from the dictionary above
+        </li>
+        <li>
+The threat taxonomy used (e.g., STRIDE) and the threat class within that
+taxonomy
+        </li>
+      </ol>
+      <p>
+Create a YAML file following the pattern of the Data Integrity threat
+model's threat files, then register it in <code>threats/outline.yaml</code>
+by adding its filename to the <code>files</code> list and its threat ID to
+the appropriate category in the <code>categories</code> list. No changes to
+<code>index.html</code> are required.
+      </p>
+    </section>
+  </section>
+
+</body>
+
+</html>
