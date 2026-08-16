@@ -757,64 +757,13 @@ schema before processing.
 
           </section>
 
-          <section>
-            <h4>Template Processing</h4>
-            <p>
-              When processing a `card` template, the following steps MUST be
-              performed:
-            </p>
+    <p>
+      In the example below, a fully embedded JSON template is used as the rendering
+      template. The template uses JSON pointer strings to reference credential data.
+    </p>
 
-            <ol class="algorithm">
-              <li>
-                Validate the template JSON object against the JSON template schema defined
-                above. If validation fails, processing MUST stop and an error MUST be
-                returned.
-              </li>
-              <li>
-                For each string value in the template object:
-                <ol class="algorithm">
-                  <li>
-                    If the string value starts with `/` (indicating it is a JSON pointer),
-                    evaluate it using the JSON Pointer algorithm [[[RFC6901]]] against the
-                    [=verifiable credential=] as the target document.
-                  </li>
-                  <li>
-                    If the JSON pointer evaluation succeeds, replace the JSON pointer string with
-                    the resolved value. If the resolved value is not a string, convert it to a
-                    string representation.
-                  </li>
-                  <li>
-                    If the JSON pointer evaluation fails or returns `null`, the behavior is
-                    implementation-specific. Implementations MAY use an empty string, leave the
-                    value as `null`, or signal an error.
-                  </li>
-                  <li>
-                    If the string value does not start with `/`, treat it as a literal string
-                    and leave it unchanged.
-                  </li>
-                </ol>
-              </li>
-              <li>
-                Validate the resulting JSON object against the `card` output schema. If
-                validation fails, processing MUST stop and an error MUST be returned.
-              </li>
-            </ol>
-
-            <p>
-              Note that compound data across multiple fields is not supported. Each field
-              in the template references a single JSON pointer that resolves to a single
-              value from the credential.
-            </p>
-
-          </section>
-
-          <p>
-            In the example below, a fully embedded JSON template is used as the rendering
-            template. The template uses JSON pointer strings to reference credential data.
-          </p>
-
-          <pre class="example nohighlight"
-               title="Basic usage of the card render suite">
+    <pre class="example nohighlight"
+          title="Basic usage of the card render suite">
 {
   <span class="comment">...</span>
   "renderMethod": {
@@ -1188,8 +1137,104 @@ on the `iframe`.
             </tr>
           </tbody>
         </table>
+      </section>
 
-        <h3>Algorithms</h3>
+      <section>
+        <h3>The `nfc` Render Suite</h3>
+        <p>
+The `nfc` render suite transmits a binary payload representing the
+[=verifiable credential=] over a wireless NFC connection.
+        </p>
+
+        <p>
+In the example below, a fully embedded NFC payload is used as the rendering
+template, which only discloses the barcode identifier associated with the
+credential.
+        </p>
+
+        <pre class="example nohighlight"
+              title="Usage of the nfc render suite">
+{
+<span class="comment">...</span>
+"renderMethod": {
+  "type": "TemplateRenderMethod",
+  "renderSuite": "nfc",
+  "name": "Tap to send",
+  <span class="comment">// the NFC payload is embedded</span>
+  "template": "data:application/octet-stream;base64,2QZkpQGDG...G8XJWnROcY4Biw",
+  <span class="comment">// only the barcode is transmitted over NFC</span>
+  "renderProperty": ["/credentialSubject/barcode"]
+}
+<span class="comment">...</span>
+}
+      </pre>
+
+    </section>
+
+    </section>
+  </section>
+
+  <section>
+    <h2>Algorithms</h2>
+
+    <p>
+The following sections outline the algorithms that is used by this specification
+for rendering methods.
+    </p>
+
+    <section>
+      <h4>Card Template Processing</h4>
+      <p>
+        When processing a `card` template, the following steps MUST be
+        performed:
+      </p>
+
+      <ol class="algorithm">
+        <li>
+          Validate the template JSON object against the JSON template schema defined
+          above. If validation fails, processing MUST stop and an error MUST be
+          returned.
+        </li>
+        <li>
+          For each string value in the template object:
+          <ol class="algorithm">
+            <li>
+              If the string value starts with `/` (indicating it is a JSON pointer),
+              evaluate it using the JSON Pointer algorithm [[[RFC6901]]] against the
+              [=verifiable credential=] as the target document.
+            </li>
+            <li>
+              If the JSON pointer evaluation succeeds, replace the JSON pointer string with
+              the resolved value. If the resolved value is not a string, convert it to a
+              string representation.
+            </li>
+            <li>
+              If the JSON pointer evaluation fails or returns `null`, the behavior is
+              implementation-specific. Implementations MAY use an empty string, leave the
+              value as `null`, or signal an error.
+            </li>
+            <li>
+              If the string value does not start with `/`, treat it as a literal string
+              and leave it unchanged.
+            </li>
+          </ol>
+        </li>
+        <li>
+          Validate the resulting JSON object against the `card` output schema. If
+          validation fails, processing MUST stop and an error MUST be returned.
+        </li>
+      </ol>
+
+      <p>
+        Note that compound data across multiple fields is not supported. Each field
+        in the template references a single JSON pointer that resolves to a single
+        value from the credential.
+      </p>
+
+    </section>
+
+    <section>
+      <h4>HTML Template Processing</h4>
         <p>
 The following sections outline the algorithms that are used by the `html` render
 suite to safely render the HTML template. Alternative algorithms MAY be used
@@ -1351,50 +1396,9 @@ via `port` with the error message.
           </ol>
         </li>
       </ol>
-      </section>
-
-      <section>
-        <h3>The `nfc` Render Suite</h3>
-        <p>
-The `nfc` render suite transmits a binary payload representing the
-[=verifiable credential=] over a wireless NFC connection.
-        </p>
-
-        <p>
-In the example below, a fully embedded NFC payload is used as the rendering
-template, which only discloses the barcode identifier associated with the
-credential.
-        </p>
-
-        <pre class="example nohighlight"
-              title="Usage of the nfc render suite">
-{
-<span class="comment">...</span>
-"renderMethod": {
-  "type": "TemplateRenderMethod",
-  "renderSuite": "nfc",
-  "name": "Tap to send",
-  <span class="comment">// the NFC payload is embedded</span>
-  "template": "data:application/octet-stream;base64,2QZkpQGDG...G8XJWnROcY4Biw",
-  <span class="comment">// only the barcode is transmitted over NFC</span>
-  "renderProperty": ["/credentialSubject/barcode"]
-}
-<span class="comment">...</span>
-}
-      </pre>
-
     </section>
 
     </section>
-  </section>
-
-  <section>
-    <h2>Algorithms</h2>
-
-    <p>
-The following sections outline the algorithms that is used by this specification
-for rendering methods.
-    </p>
   </section>
 
   <section class="appendix informative">
