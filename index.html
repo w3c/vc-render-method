@@ -132,6 +132,7 @@
         xref: ["INFRA", "VC-DATA-MODEL-2.0", "CID"]
       };
     </script>
+    <link rel="stylesheet" href="threat-model/threats/threat-model.css" />
     <style>
 code {
   color: rgb(199, 73, 0);
@@ -1397,6 +1398,100 @@ for rendering methods.
 
   <section class="appendix informative">
     <h2>Threat Model</h2>
+
+    <p>
+This section summarizes the threat model for this specification, covering the
+security and privacy considerations relevant to the publication, retrieval, and
+processing of render methods. The full analysis, including responses and the
+data flow diagram, is provided in the
+<a href="threat-model/index.html">Verifiable Credentials Render Method Threat
+Model</a>.
+    </p>
+
+    <p>
+Readers are urged to familiarize themselves with the general threat model
+provided in the
+<a data-cite="VC-DATA-MODEL-2.1#threat-model">Threat Model</a> section of the
+[[[VC-DATA-MODEL-2.1]]] specification before reading this section. Implementers
+are expected to apply the general analysis provided in that specification to
+each specific feature provided by this specification.
+    </p>
+
+    <section>
+      <h3>Target Threats</h3>
+      <ol class="threat-toc">
+        <li>
+          <a href="threat-model/index.html#t1-uncontrolled-credential-presentation">
+Uncontrolled Credential Presentation</a>
+          <span class="threat-tag threat-tag-security">security</span> -
+Without an issuer-asserted render method, the choice of how to display a
+[=verifiable credential=] falls entirely to [=holder=] or [=verifier=] software,
+which can omit claims, reorder or relabel fields, drop validity information, or
+apply misleading branding, so an observer forms an incorrect understanding of
+what the [=issuer=] attested even though the credential is authentic.
+        </li>
+      </ol>
+    </section>
+
+    <section>
+      <h3>Implementation Threats</h3>
+      <ol class="threat-toc">
+        <li>
+          <a href="threat-model/index.html#t2-unsafe-rendering-of-untrusted-data">
+Unsafe Rendering of Untrusted Data</a>
+          <span class="threat-tag threat-tag-security">security</span> -
+The `html` render suite executes template-supplied code and consumes credential
+values that are untrusted input, so hostile content arriving inside a
+well-formed, verified credential can attempt to reach the surrounding
+[=host page=], navigate away, or contact external locations during rendering.
+        </li>
+      </ol>
+    </section>
+
+    <section>
+      <h3>Deployment Threats</h3>
+      <ol class="threat-toc">
+        <li>
+          <a href="threat-model/index.html#t3-tracking-via-template-and-resource-fetches">
+Tracking via Template and Resource Fetches</a>
+          <span class="threat-tag threat-tag-privacy">privacy</span> -
+Retrieving a template or its referenced resources by location reveals to the
+[=issuer=] or host that a credential is being rendered, and per-credential
+locations or credential data encoded into outbound requests turn each render
+into a tracking or exfiltration signal.
+        </li>
+      </ol>
+    </section>
+
+    <section>
+      <h3>External Threats</h3>
+      <ol class="threat-toc">
+        <li>
+          <a href="threat-model/index.html#t4-harmful-rendering-output">
+Harmful Rendering Output</a>
+          <span class="threat-tag threat-tag-security">security</span> -
+Because a render template controls the visual, auditory, and tactile output, a
+hostile template can be crafted to harm the person viewing it, for example with
+a flashing pattern capable of triggering a seizure or a sudden disruptive sound,
+even when the underlying credential is authentic.
+        </li>
+      </ol>
+    </section>
+
+    <section>
+      <h3>Dependency Threats</h3>
+      <ol class="threat-toc">
+        <li>
+          <a href="threat-model/index.html#t5-inherited-rendering-environment-attack-surface">
+Inherited Rendering Environment Attack Surface</a>
+          <span class="threat-tag threat-tag-security">security</span> -
+The `html` render suite relies on the confinement provided by the chosen
+rendering environment, so a defect that lets the sandbox be escaped, a policy be
+bypassed, or the isolation between template and host be broken becomes a defect
+in the render process even when the render method is used exactly as specified.
+        </li>
+      </ol>
+    </section>
 
     <section class="notoc">
       <h3>Security Considerations</h4>
