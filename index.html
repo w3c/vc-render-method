@@ -1527,8 +1527,101 @@ considerations.
 
   <section class="appendix informative">
     <h2>Relationship to Other Technologies</h2>
-    <p class="issue" data-number="64">
+
+    <p>
+Several existing approaches and technologies were considered for conveying an
+issuer-preferred, human-perceivable presentation of a [=verifiable credential=].
+This section summarizes those alternatives and why the render method approach
+described in this specification was chosen.
     </p>
+
+    <section class="notoc">
+      <h3>Client-Determined Rendering</h3>
+      <p>
+Defining no mechanism and leaving presentation to the [=holder=] or [=verifier=]
+software requires no extra data, but gives the [=issuer=] no way to convey
+intended presentation, so credentials render inconsistently and claims or
+branding can be misrepresented, as described in
+<a href="threat-model/index.html#t1-uncontrolled-credential-presentation">Uncontrolled
+Credential Presentation</a>. Credential
+formats such as
+<a href="https://www.iso.org/standard/69084.html">ISO/IEC 18013-5 mobile driving
+licence (mDL)</a> and the JSON Web Tokens
+(<a href="https://www.rfc-editor.org/rfc/rfc7519">RFC 7519</a>) take this
+approach, defining the claims a credential carries but leaving their
+presentation to the consuming software. Microsoft's
+<a href="https://en.wikipedia.org/wiki/Information_Card">Information Card</a>
+(CardSpace), now discontinued, took a limited variant of this, letting an
+[=issuer=] supply only a card name and logo that the identity selector rendered
+in a uniform card chrome. This specification adds an issuer-asserted alternative
+rather than prohibiting client-determined rendering.
+      </p>
+    </section>
+
+    <section class="notoc">
+      <h3>Credential-Type-Specific Display Registries</h3>
+      <p>
+Standardizing presentation per credential type via a registry gives consistent
+renderings for well-known types but requires prior knowledge of each type, does
+not scale to custom credentials, and cannot express issuer-specific branding.
+Platform wallets such as
+<a href="https://developer.apple.com/documentation/walletpasses">Apple Wallet
+(PassKit)</a>,
+<a href="https://developers.google.com/wallet">Google Wallet</a>, and
+<a href="https://developer.samsung.com/wallet">Samsung Wallet</a> take this
+approach, rendering a fixed set of predefined pass or object types into
+fixed, platform-controlled layouts; an [=issuer=] fills in field values and
+assets but cannot express layout or branding outside the platform's catalog.
+The render method strategy defined by this specification instead travels with or
+is referenced from the credential, so even an unfamiliar type renders as its
+issuer intends.
+      </p>
+    </section>
+
+    <section class="notoc">
+      <h3>Presentation Formats Such as PDF, SVG, and HTML Documents</h3>
+      <p>
+Distributing a fully-rendered PDF, static SVG, or HTML document is
+self-contained and widely supported, but such snapshots do not adapt to
+selective disclosure, cannot be re-rendered from the verified data, and are
+not bound to what was secured; this specification reuses these formats as
+templates combined with claim values at render time rather than as finished
+documents.
+      </p>
+    </section>
+
+    <section class="notoc">
+      <h3>Data Integrity and Proof Mechanisms</h3>
+      <p>
+Rather than defining a new integrity mechanism, this specification relies on
+existing securing mechanisms such as [[[VC-DATA-INTEGRITY]]] and the
+`digestMultibase` property to bind a referenced template to the credential.
+Readers can learn about these general protection mechanisms by reading about
+the
+<a href="https://www.w3.org/TR/vc-data-model/threat-model/#t19-tampering-with-unprotected-external-resources">
+Tampering with Unprotected External Resources</a> threat in the
+[[[VC-DATA-MODEL-2.1]]] threat model.
+      </p>
+    </section>
+
+    <section class="notoc">
+      <h3>SD-JWT VC Type Metadata Rendering</h3>
+      <p>
+<a href="https://www.ietf.org/archive/id/draft-ietf-oauth-sd-jwt-vc-18.html#section-4.5.1">
+SD-JWT VC</a> defines a `rendering` property offering a `simple`
+method (a fixed set of styling attributes) and an `svg_templates` method that
+substitutes claim values into text placeholders in an SVG while
+forbidding any code execution. The group explored the SVG approach and found it
+too limited for real-world use cases: because placeholders appear only in text
+nodes and no code runs, data-driven presentation such as conditional fields,
+variable-length lists, value formatting, and responsive layout, common in
+sectors such as retail, cannot be expressed. This specification instead defines
+render suites spanning a code-free declarative `card` suite, a data-driven
+`html` suite executed in a confined environment, and a static `nfc` suite, and
+is not tied to a single credential serialization.
+      </p>
+    </section>
+
   </section>
 
   </body>
