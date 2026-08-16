@@ -868,38 +868,6 @@ schema before processing.
 
         </section>
 
-        <section>
-          <h3>The `nfc` Render Suite</h3>
-          <p>
-The `nfc` render suite transmits a binary payload representing the
-[=verifiable credential=] over a wireless NFC connection.
-          </p>
-
-          <p>
-In the example below, a fully embedded NFC payload is used as the rendering
-template, which only discloses the barcode identifier associated with the
-credential.
-          </p>
-
-          <pre class="example nohighlight"
-               title="Usage of the nfc render suite">
-{
-  <span class="comment">...</span>
-  "renderMethod": {
-    "type": "TemplateRenderMethod",
-    "renderSuite": "nfc",
-    "name": "Tap to send",
-    <span class="comment">// the NFC payload is embedded</span>
-    "template": "data:application/octet-stream;base64,2QZkpQGDG...G8XJWnROcY4Biw",
-    <span class="comment">// only the barcode is transmitted over NFC</span>
-    "renderProperty": ["/credentialSubject/barcode"]
-  }
-  <span class="comment">...</span>
-}
-        </pre>
-
-      </section>
-
       <section>
         <h3>The `html` Render Suite</h3>
         <p>
@@ -1384,6 +1352,39 @@ via `port` with the error message.
         </li>
       </ol>
       </section>
+
+      <section>
+        <h3>The `nfc` Render Suite</h3>
+        <p>
+The `nfc` render suite transmits a binary payload representing the
+[=verifiable credential=] over a wireless NFC connection.
+        </p>
+
+        <p>
+In the example below, a fully embedded NFC payload is used as the rendering
+template, which only discloses the barcode identifier associated with the
+credential.
+        </p>
+
+        <pre class="example nohighlight"
+              title="Usage of the nfc render suite">
+{
+<span class="comment">...</span>
+"renderMethod": {
+  "type": "TemplateRenderMethod",
+  "renderSuite": "nfc",
+  "name": "Tap to send",
+  <span class="comment">// the NFC payload is embedded</span>
+  "template": "data:application/octet-stream;base64,2QZkpQGDG...G8XJWnROcY4Biw",
+  <span class="comment">// only the barcode is transmitted over NFC</span>
+  "renderProperty": ["/credentialSubject/barcode"]
+}
+<span class="comment">...</span>
+}
+      </pre>
+
+    </section>
+
     </section>
   </section>
 
