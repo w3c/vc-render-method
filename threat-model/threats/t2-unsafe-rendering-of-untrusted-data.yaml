@@ -46,19 +46,3 @@ response:
       mechanism, the environment further limits the resources and capabilities
       exposed to the template so that hostile template code has as little to
       act on as possible.
-  - id: R2
-    name: Validate Rendered Data and Prefer Constrained Suites
-    type: Reduce
-    description: >-
-      Software performing the [=P3|Render=] process treats all template and
-      credential content as untrusted regardless of verification outcome and
-      validates it against the expected shape for the render suite in use. The
-      `card` render suite constrains a template to data that produces a
-      standardized JSON output validated against a fixed schema, and the `nfc`
-      render suite carries a static payload, so neither executes
-      template-supplied code; selecting a constrained suite where it meets the
-      use case removes the code-execution surface entirely. Further analysis
-      and responses appear in
-      <a href="https://www.w3.org/TR/vc-data-model/threat-model/#t2-code-injection-via-credential-content">Code
-      Injection via Credential Content</a> in the [[[VC-DATA-MODEL-2.0]]]
-      threat model.
