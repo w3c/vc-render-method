@@ -1395,71 +1395,29 @@ for rendering methods.
     </p>
   </section>
 
-    <section class="appendix informative">
-      <h2>Security Considerations</h2>
+  <section class="appendix informative">
+    <h2>Threat Model</h2>
 
-      <p class="issue" title="Summary of Security Considerations">
-The list of security considerations listed below need to be converted into
-sections:
+    <section class="notoc">
+      <h3>Security Considerations</h4>
+      <p>
+W3C is migrating to a holistic threat modelling approach and is in the process
+of deprecating the Security Considerations sections in new specifications.
+Please refer to Appendix [[[#threat-model]]] for documentation related to
+security considerations.
       </p>
-
-      <ul>
-        <li>
-If a cryptographic hash for a display template isn't provided, you can't know
-if it has been tampered with since issuance. There are good reasons an issuer
-might allow for this, such as being able to update the look/feel of a
-long-lived credential over time.
-        </li>
-        <li>
-If a cryptographic hash for a display template is provided, implementations
-that don't check it run the risk of display attacks, which might sound benign,
-but they aren't; Verifiers might use verifiable displays to show what the
-issuer intended, and if those displays don't check the cryptographic hash,
-they might show the wrong info to an individual checking the credential on
-the verifiable display.
-        </li>
-        <li>
-Fetching resources from external locations can be used as a denial-of-service
-attack vector where the resource is never served, or served at a very slow pace.
-        </li>
-      </ul>
-
     </section>
 
-    <section class="appendix informative">
-      <h2>Privacy Considerations</h2>
-
-      <p class="issue" title="Summary of Privacy Considerations">
-The list of privacy considerations listed below need to be converted into
-sections:
+    <section class="notoc">
+      <h3>Privacy Considerations</h4>
+      <p>
+W3C is migrating to a holistic threat modelling approach and is in the process
+of deprecating the Privacy Considerations sections in new specifications. Please
+refer to Appendix [[[#threat-model]]] for documentation related to privacy
+considerations.
       </p>
-
-      <ul>
-        <li>
-An issuer could use a rendering method `id` to track individuals. These
-values should be aggressively cached client-side, or looked up using a
-mixnet or proxy service.
-        </li>
-      </ul>
-
     </section>
-
-    <section class="appendix informative">
-      <h2>Internationalization Considerations</h2>
-
-      <p class="issue" title="Summary of Internationalization Considerations">
-The list of internationalization considerations listed below need to be
-converted into sections:
-      </p>
-
-      <ul>
-        <li>
-Are we allowed to use media queries to detect language and provide different
-displays based on language?
-        </li>
-      </ul>
-
-    </section>
+  </section>
 
   </body>
 </html>
