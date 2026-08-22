@@ -1539,7 +1539,7 @@ described in this specification was chosen.
       <h3>Client-Determined Rendering</h3>
       <p>
 Defining no mechanism and leaving presentation to the [=holder=] or [=verifier=]
-requires no extra data, but gives the [=issuer=] no way to convey
+software requires no extra data, but gives the [=issuer=] no way to convey
 intended presentation, so credentials render inconsistently and claims or
 branding can be misrepresented, as described in
 <a href="threat-model/index.html#t1-uncontrolled-credential-presentation">Uncontrolled
@@ -1577,10 +1577,11 @@ is referenced from the credential, so even an unfamiliar type can be rendered as
 intended by its issuer.
       </p>
       <p>
-Such a centralized, controlled, registry-focused solution also flies in the
-face of the distributed, decentralized, and permissionless patterns otherwise
-specified to be part of the ecosystem of Controlled Identifiers (CIDs), 
-Decentralized identifiers (DIDs), Verifiable Credentials (VCs), etc. 
+Such a centralized, controlled, registry-focused solution also works against
+the distributed, decentralized, and permissionless patterns otherwise
+specified to be part of the ecosystem of
+[[[DID|Decentralized Identifiers (DIDs)]]] and
+[[[VC-DATA-MODEL|Verifiable Credentials (VCs)]]].
       </p>
     </section>
 
@@ -1601,30 +1602,32 @@ documents.
       <p>
 Rather than defining a new integrity mechanism, this specification relies on
 existing securing mechanisms such as [[[VC-DATA-INTEGRITY]]] and the
-`digestMultibase` property to bind a referenced template to the credential.
-Readers can learn about these general protection mechanisms by reading about
-the
+[[[VC-DATA-INTEGRITY#resource-integrity|digestMultibase]]] property to bind a
+referenced template to the credential. Readers can learn about these general
+protection mechanisms by reading about the
 <a href="https://www.w3.org/TR/vc-data-model/threat-model/#t19-tampering-with-unprotected-external-resources">
 Tampering with Unprotected External Resources</a> threat in the
-[[[VC-DATA-MODEL-2.1]]] threat model.
+<a href="https://www.w3.org/TR/vc-data-model/threat-model/">
+Verifiable Credential Threat Model</a>.
       </p>
     </section>
 
     <section class="notoc">
       <h3>SD-JWT VC Type Metadata Rendering</h3>
       <p>
-<a href="https://www.ietf.org/archive/id/draft-ietf-oauth-sd-jwt-vc-18.html#section-4.5.1"
->SD-JWT VC</a> defines a `rendering` property to choose between a `simple` method
-that supports a fixed set of styling attributes, and an `svg_templates` method that
-forbids any code execution and substitutes claim values into text placeholders in
-an SVG. The group explored the SVG approach and found it too limited for real-world
+<a href="https://www.ietf.org/archive/id/draft-ietf-oauth-sd-jwt-vc-18.html#section-4.5.1">SD-JWT VC</a>
+defines a `rendering` property to choose between a `simple` method that supports
+a fixed set of styling attributes, and an `svg_templates` method that forbids
+any code execution and substitutes claim values into text placeholders in an
+SVG. The group explored this approach and found it too limited for real-world
 use cases: because placeholders appear only in text nodes and no code can run,
-data-driven presentation tools such as conditional fields, variable-length lists,
-value formatting, and responsive layout — all common in sectors such as retail —
-cannot be expressed. In contrast, this specification is not tied to a single
-credential serialization, and instead defines render suites that span a code-free
-declarative `card` suite, a data-driven `html` suite executed in a confined,
-"sandboxed" environment, and a static `nfc` suite.
+data-driven presentation tools such as conditional fields, variable-length
+lists, value formatting, and responsive layout cannot be expressed. These
+features are requirements in sectors such as healthcare, retail, and
+banking/finance. In contrast, this specification is not tied to a single
+credential serialization, and instead defines render suites that span a
+code-free declarative `card` suite, a data-driven `html` suite executed in a
+confined, "sandboxed" environment, and a static `nfc` suite.
       </p>
     </section>
 
