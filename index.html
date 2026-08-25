@@ -438,179 +438,106 @@ natively support a specific credential type.
           </p>
 
           <p>
-The template is a JSON object that matches the `card` output structure.
-String values in the template can be JSON pointer strings (as specified in
-[[[RFC6901]]]) that reference fields in the [=verifiable credential=]. When
-processing the template, JSON pointer strings are evaluated against the
-credential data and replaced with the resolved values. The template MUST
-conform to the JSON template schema defined below, and the resulting output
-MUST conform to the `card` output schema. Compound data across multiple
-fields is not supported; each field references a single JSON pointer.
+The template and the rendered output are both JSON objects that share a
+single definition, the card object, given below. String values in the
+template can be JSON pointer strings (as specified in [[[RFC6901]]]) that
+reference values in the [=verifiable credential=]. When processing the
+template, JSON pointer strings are evaluated against the credential data
+and replaced with the resolved values. Both the template and the resulting
+output MUST conform to the card object definition. Compound data across
+multiple fields is not supported; each field references a single JSON
+pointer.
           </p>
 
+          <section id="card-object">
+            <h4>The Card Object</h4>
+            <p>
+A card object is a JSON object [[RFC8259]] with the members defined below.
+The same definition applies to the template and to the rendered output. In
+a template, the value of any member defined as a string MAY instead be a
+JSON pointer string (starting with `/`, as specified in [[[RFC6901]]]) that
+references a value in the [=verifiable credential=], except where noted for
+the `label` and `value` members of field objects. In the rendered output,
+every JSON pointer has been replaced by its resolved value.
+            </p>
+
+            <dl>
+              <dt><code>name</code></dt>
+              <dd>
+A REQUIRED string containing the display name for the credential card.
+              </dd>
+              <dt><code>description</code></dt>
+              <dd>
+A REQUIRED string containing the description text for the credential card.
+              </dd>
+              <dt><code>icon</code></dt>
+              <dd>
+An OPTIONAL string containing a [=URL=] or `data:` URL [[RFC2397]] for an
+icon or image to display on the card.
+              </dd>
+              <dt><code>theme</code></dt>
+              <dd>
+An OPTIONAL color theme object with the following members:
+                <dl>
+                  <dt><code>primaryColor</code></dt>
+                  <dd>
+An OPTIONAL string containing the primary color for backgrounds and
+highlights.
+                  </dd>
+                  <dt><code>accentColor</code></dt>
+                  <dd>
+An OPTIONAL string containing the accent color for highlights and emphasis.
+                  </dd>
+                </dl>
+              </dd>
+              <dt><code>fields</code></dt>
+              <dd>
+A REQUIRED array of custom data fields, in display order. Each field is an
+object with the following members:
+                <dl>
+                  <dt><code>label</code></dt>
+                  <dd>
+A REQUIRED string containing the field label. In a template, the label MUST
+be a literal string; a JSON pointer is not allowed here.
+                  </dd>
+                  <dt><code>value</code></dt>
+                  <dd>
+A REQUIRED string containing the field value. In a template, the value MUST
+be a JSON pointer string (for example, <code>"/issuer"</code>).
+                  </dd>
+                  <dt><code>language</code></dt>
+                  <dd>
+An OPTIONAL language tag (as specified in [[[BCP47]]]) indicating the
+language of the field's label and/or value.
+                  </dd>
+                  <dt><code>direction</code></dt>
+                  <dd>
+An OPTIONAL direction tag (as specified in [[[STRING-META]]]) indicating
+the text direction of the field's label and/or value.
+                  </dd>
+                </dl>
+              </dd>
+              <dt><code>validFrom</code></dt>
+              <dd>
+An OPTIONAL ISO 8601 date string indicating when the credential becomes
+valid.
+              </dd>
+              <dt><code>validUntil</code></dt>
+              <dd>
+An OPTIONAL ISO 8601 date string indicating when the credential ceases to
+be valid.
+              </dd>
+            </dl>
+
+            <p>
+A template SHOULD be validated against the card object definition above
+before processing. A non-normative JSON Schema for card templates is
+provided in [[[#card-template-json-schema]]].
+            </p>
+          </section>
+
           <section>
-            <h4>JSON Template Schema</h4>
-            <p>
-The template for a `card` render suite MUST be a JSON object that
-conforms to the following structure. The template structure matches the
-output structure, but string values can be either literal strings or JSON
-pointer strings (starting with `/`) that reference fields in the
-[=verifiable credential=]. The template SHOULD be validated against this
-schema before processing.
-            </p>
-
-            <table class="simple">
-              <thead>
-              <tr>
-                <th style="white-space: nowrap">Property</th>
-                <th>Type</th>
-                <th>Description</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr>
-                <td>name</td>
-                <td>[=string=]</td>
-                <td>
-                  A REQUIRED string that is either a literal display name or a JSON pointer
-                  string (e.g., <code>"/credentialSubject/degree/name"</code>) that references
-                  the credential data.
-                </td>
-              </tr>
-              <tr>
-                <td>description</td>
-                <td>[=string=]</td>
-                <td>
-                  A REQUIRED string that is either a literal description or a JSON pointer
-                  string that references the credential data.
-                </td>
-              </tr>
-              <tr>
-                <td>icon</td>
-                <td>[=string=]</td>
-                <td>
-                  An OPTIONAL string that is either a literal URL/data URI or a JSON pointer
-                  string that references the credential data.
-                </td>
-              </tr>
-              <tr>
-                <td>theme</td>
-                <td>[=ordered map|map=]</td>
-                <td>
-                  An OPTIONAL color theme object with the following properties:
-                  <ul>
-                    <li><code>primaryColor</code> ([=string=]): Primary color as a literal string or JSON pointer</li>
-                    <li><code>accentColor</code> ([=string=]): Accent color as a literal string or JSON pointer</li>
-                  </ul>
-                </td>
-              </tr>
-              <tr>
-                <td>fields</td>
-                <td>[=list=]</td>
-                <td>
-                  A REQUIRED ordered list of custom data fields. Each field is an object with:
-                  <ul>
-                    <li><code>label</code> ([=string=]): The field label (MUST be a literal string, not a JSON pointer)</li>
-                    <li><code>value</code> ([=string=]): The field value as a JSON pointer string (e.g., <code>"/issuer"</code>)</li>
-                    <li><code>language</code> ([=string=]): An OPTIONAL language tag (as specified in [[[BCP47]]]) indicating the language of the field's label and/or value</li>
-                    <li><code>direction</code> ([=string=]): An OPTIONAL direction tag (as specified in [[[STRING-META]]]) indicating the text direction of the field's label and/or value</li>
-                  </ul>
-                </td>
-              </tr>
-              <tr>
-                <td>validFrom</td>
-                <td>[=string=]</td>
-                <td>
-                  An OPTIONAL string that is either a literal ISO 8601 date or a JSON pointer
-                  string that references the credential data (validity start date).
-                </td>
-              </tr>
-              <tr>
-                <td>validUntil</td>
-                <td>[=string=]</td>
-                <td>
-                  An OPTIONAL string that is either a literal ISO 8601 date or a JSON pointer
-                  string that references the credential data (validity end date).
-                </td>
-              </tr>
-              </tbody>
-            </table>
-
-            <p>
-              The following JSON Schema implements the template structure rules defined
-              above:
-            </p>
-
-            <pre class="example nohighlight"
-                 title="JSON Schema for card template">
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "type": "object",
-  "required": ["name", "description", "fields"],
-  "properties": {
-    "name": {
-      "type": "string",
-      "description": "Display name as a literal string or JSON pointer (e.g., \"/credentialSubject/degree/name\")"
-    },
-    "description": {
-      "type": "string",
-      "description": "Description as a literal string or JSON pointer"
-    },
-    "icon": {
-      "type": "string",
-      "description": "Icon URL/data URI as a literal string or JSON pointer"
-    },
-    "theme": {
-      "type": "object",
-      "properties": {
-        "primaryColor": {
-          "type": "string",
-          "description": "Primary color as a literal string or JSON pointer"
-        },
-        "accentColor": {
-          "type": "string",
-          "description": "Accent color as a literal string or JSON pointer"
-        }
-      },
-      "additionalProperties": false
-    },
-    "fields": {
-      "type": "array",
-      "minItems": 1,
-      "items": {
-        "type": "object",
-        "required": ["label", "value"],
-        "properties": {
-          "label": {
-            "type": "string",
-            "description": "Field label (MUST be a literal string, not a JSON pointer)"
-          },
-          "value": {
-            "type": "string",
-            "pattern": "^/",
-            "description": "Field value as a JSON pointer string (MUST start with \"/\")"
-          },
-          "language": {
-            "type": "string",
-            "description": "Optional BCP 47 language tag for the field"
-          }
-        },
-        "additionalProperties": false
-      }
-    },
-    "validFrom": {
-      "type": "string",
-      "description": "Validity start date as a literal ISO 8601 date string or JSON pointer"
-    },
-    "validUntil": {
-      "type": "string",
-      "description": "Validity end date as a literal ISO 8601 date string or JSON pointer"
-    }
-  },
-  "additionalProperties": false
-}
-            </pre>
-
+            <h4>Card Examples</h4>
             <p>
               The following example shows a valid `card` template with JSON pointer
               strings:
@@ -645,86 +572,6 @@ schema before processing.
 }
             </pre>
 
-          </section>
-
-          <section>
-            <h4>Card Output Schema</h4>
-            <p>
-              The output of a `card` template MUST be a JSON object that conforms to
-              the following structure:
-            </p>
-
-            <table class="simple">
-              <thead>
-              <tr>
-                <th style="white-space: nowrap">Property</th>
-                <th>Type</th>
-                <th>Description</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr>
-                <td>name</td>
-                <td>[=string=]</td>
-                <td>
-                  A REQUIRED display name for the credential card.
-                </td>
-              </tr>
-              <tr>
-                <td>description</td>
-                <td>[=string=]</td>
-                <td>
-                  A REQUIRED description text for the credential card.
-                </td>
-              </tr>
-              <tr>
-                <td>icon</td>
-                <td>[=string=]</td>
-                <td>
-                  An OPTIONAL URL or data URI for an icon or image to display on the card.
-                </td>
-              </tr>
-              <tr>
-                <td>theme</td>
-                <td>[=ordered map|map=]</td>
-                <td>
-                  An OPTIONAL color theme object with the following properties:
-                  <ul>
-                    <li><code>primaryColor</code> ([=string=]): Primary color for backgrounds and highlights</li>
-                    <li><code>accentColor</code> ([=string=]): Accent color for highlights and emphasis</li>
-                  </ul>
-                </td>
-              </tr>
-              <tr>
-                <td>fields</td>
-                <td>[=list=]</td>
-                <td>
-                  A REQUIRED ordered list of custom data fields. Each field is an object with:
-                  <ul>
-                    <li><code>label</code> ([=string=]): The field label</li>
-                    <li><code>value</code> ([=string=]): The field value</li>
-                    <li><code>language</code> ([=string=]): An OPTIONAL language tag (as specified in [[[BCP47]]]) indicating the language of the field</li>
-                    <li><code>direction</code> ([=string=]): An OPTIONAL direction tag (as specified in [[[STRING-META]]]) indicating the text direction of the field's label and/or value</li>
-                  </ul>
-                </td>
-              </tr>
-              <tr>
-                <td>validFrom</td>
-                <td>[=string=]</td>
-                <td>
-                  An OPTIONAL ISO 8601 date string indicating when the credential becomes valid.
-                </td>
-              </tr>
-              <tr>
-                <td>validUntil</td>
-                <td>[=string=]</td>
-                <td>
-                  An OPTIONAL ISO 8601 date string indicating when the credential ceases to be valid.
-                </td>
-              </tr>
-              </tbody>
-            </table>
-
             <p>
               The following example shows a valid `card` output:
             </p>
@@ -758,11 +605,9 @@ schema before processing.
 }
             </pre>
 
-          </section>
-
     <p>
-      In the example below, a fully embedded JSON template is used as the rendering
-      template. The template uses JSON pointer strings to reference credential data.
+      In the example below, the JSON template is embedded directly in the
+      [=verifiable credential=] as a `data:` URL [[RFC2397]].
     </p>
 
     <pre class="example nohighlight"
@@ -817,6 +662,8 @@ schema before processing.
   "digestMultibase": "zQmG270iEu5h6JqWAPdhyxz2dRerWC85Wg6wFl9znFCwYxAp"
 }
           </pre>
+
+          </section>
 
         </section>
 
@@ -1194,9 +1041,9 @@ for rendering methods.
 
       <ol class="algorithm">
         <li>
-          Validate the template JSON object against the JSON template schema defined
-          above. If validation fails, processing MUST stop and an error MUST be
-          returned.
+          Validate the template against the card object definition in
+          [[[#card-object]]]. If validation fails, processing MUST stop and an
+          error MUST be returned.
         </li>
         <li>
           For each string value in the template object:
@@ -1223,8 +1070,9 @@ for rendering methods.
           </ol>
         </li>
         <li>
-          Validate the resulting JSON object against the `card` output schema. If
-          validation fails, processing MUST stop and an error MUST be returned.
+          Validate the resulting JSON object against the card object definition
+          in [[[#card-object]]]. If validation fails, processing MUST stop and
+          an error MUST be returned.
         </li>
       </ol>
 
@@ -1399,8 +1247,6 @@ via `port` with the error message.
           </ol>
         </li>
       </ol>
-    </section>
-
     </section>
   </section>
 
@@ -1628,6 +1474,89 @@ confined, "sandboxed" environment, and a static `nfc` suite.
       </p>
     </section>
 
+  </section>
+
+  <section class="appendix informative" id="card-template-json-schema">
+    <h2>Card Template JSON Schema</h2>
+    <p>
+The following JSON Schema implements the card object rules defined in
+[[[#card-object]]], as they apply to card templates. This schema is
+non-normative.
+    </p>
+
+    <pre class="example nohighlight"
+         title="JSON Schema for card templates">
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["name", "description", "fields"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Display name as a literal string or JSON pointer (e.g., \"/credentialSubject/degree/name\")"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description as a literal string or JSON pointer"
+    },
+    "icon": {
+      "type": "string",
+      "description": "Icon URL or data: URL as a literal string or JSON pointer"
+    },
+    "theme": {
+      "type": "object",
+      "properties": {
+        "primaryColor": {
+          "type": "string",
+          "description": "Primary color as a literal string or JSON pointer"
+        },
+        "accentColor": {
+          "type": "string",
+          "description": "Accent color as a literal string or JSON pointer"
+        }
+      },
+      "additionalProperties": false
+    },
+    "fields": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["label", "value"],
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Field label (a literal string; a JSON pointer is not allowed)"
+          },
+          "value": {
+            "type": "string",
+            "pattern": "^/",
+            "description": "Field value as a JSON pointer string (starts with \"/\")"
+          },
+          "language": {
+            "type": "string",
+            "description": "Optional BCP 47 language tag for the field"
+          },
+          "direction": {
+            "type": "string",
+            "description": "Optional text direction tag for the field"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "validFrom": {
+      "type": "string",
+      "description": "Validity start date as a literal ISO 8601 date string or JSON pointer"
+    },
+    "validUntil": {
+      "type": "string",
+      "description": "Validity end date as a literal ISO 8601 date string or JSON pointer"
+    }
+  },
+  "additionalProperties": false
+}
+    </pre>
   </section>
 
   </body>
