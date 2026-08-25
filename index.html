@@ -516,22 +516,6 @@ schema before processing.
                   </ul>
                 </td>
               </tr>
-              <tr>
-                <td>validFrom</td>
-                <td>[=string=]</td>
-                <td>
-                  An OPTIONAL string that is either a literal ISO 8601 date or a JSON pointer
-                  string that references the credential data (validity start date).
-                </td>
-              </tr>
-              <tr>
-                <td>validUntil</td>
-                <td>[=string=]</td>
-                <td>
-                  An OPTIONAL string that is either a literal ISO 8601 date or a JSON pointer
-                  string that references the credential data (validity end date).
-                </td>
-              </tr>
               </tbody>
             </table>
 
@@ -596,14 +580,6 @@ schema before processing.
         },
         "additionalProperties": false
       }
-    },
-    "validFrom": {
-      "type": "string",
-      "description": "Validity start date as a literal ISO 8601 date string or JSON pointer"
-    },
-    "validUntil": {
-      "type": "string",
-      "description": "Validity end date as a literal ISO 8601 date string or JSON pointer"
     }
   },
   "additionalProperties": false
@@ -638,9 +614,7 @@ schema before processing.
       "label": "Issue Date",
       "value": "/validFrom"
     }
-  ],
-  "validFrom": "/validFrom",
-  "validUntil": "/validUntil"
+  ]
 }
             </pre>
 
@@ -707,20 +681,6 @@ schema before processing.
                   </ul>
                 </td>
               </tr>
-              <tr>
-                <td>validFrom</td>
-                <td>[=string=]</td>
-                <td>
-                  An OPTIONAL ISO 8601 date string indicating when the credential becomes valid.
-                </td>
-              </tr>
-              <tr>
-                <td>validUntil</td>
-                <td>[=string=]</td>
-                <td>
-                  An OPTIONAL ISO 8601 date string indicating when the credential ceases to be valid.
-                </td>
-              </tr>
               </tbody>
             </table>
 
@@ -751,9 +711,7 @@ schema before processing.
       "label": "Graduation Date",
       "value": "2010-05-15"
     }
-  ],
-  "validFrom": "2010-01-01T19:23:24Z",
-  "validUntil": null
+  ]
 }
             </pre>
 
