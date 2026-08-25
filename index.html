@@ -916,11 +916,33 @@ privacy harms.
         </p>
 
         <p>
+The environment MUST also expose to the [=template code=] all
+internationalization and accessibility settings that are available in the
+user's environment. This allows a template to honor the language, text size,
+contrast, and motion preferences that an individual has already expressed to
+their user agent or operating system. Examples of such settings include those
+reflected in CSS, such as the `rem` unit and media queries like
+`prefers-contrast`, `prefers-reduced-motion`, and `forced-colors`, as well as
+those available to JavaScript, such as the locale information provided by
+`Intl` and `Navigator.language`.
+        </p>
+
+        <p>
 Browser based implementations, for example, can provide such an environment
 using a combination of Content Security Policy [[CSP3]] restrictions on a
 [=host page=], sandboxing of an `iframe` hosting the HTML template, and wrapper
 code that wraps the HTML template to add additional CSP restrictions and
 provides ready and error event communication with the [=host page=].
+        </p>
+
+        <p>
+A sandboxed `iframe` meets the internationalization and accessibility
+requirements above by default. The sandbox and CSP restrictions described in
+this section do not interfere with CSS media queries or with JavaScript APIs
+such as `Intl` and `Navigator.language`. Alternate rendering environments for
+the `html` render suite are possible, such as a WebView on a mobile platform.
+Any such environment MUST provide the [=template code=] with equivalent access
+to the current locale information and accessibility preferences.
         </p>
 
         <figure>
