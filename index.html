@@ -349,7 +349,7 @@ A REQUIRED [=string=] that MUST be the value `SuiteRenderMethod`.
 A REQUIRED [=string=] that identifies the render suite, that is, the set of
 algorithms used for generating the concrete rendering. The value is a plain
 JSON string and is compared using exact, case-sensitive matching. This
-specification defines the values `summary`, `html`, and `nfc`. Implementations
+specification defines the values `static`, `summary`, and `html`. Implementations
 MUST ignore any `renderMethod` entry whose `renderSuite` value they do not
 recognize or support.
               </td>
@@ -1098,10 +1098,11 @@ on the `iframe`.
       </section>
 
       <section>
-        <h3>The `nfc` Render Suite</h3>
+        <h3>The `static` Render Suite</h3>
         <p>
-The `nfc` render suite transmits a binary payload representing the
-[=verifiable credential=] over a wireless NFC connection.
+The `static` render suite is used to delivery binary payloads representing the
+[=verifiable credential=] in various static or pre-rendered binary formats,
+such as images, PDFs, or embedded NFC payloads.
         </p>
 
         <p>
@@ -1111,12 +1112,13 @@ credential.
         </p>
 
         <pre class="example nohighlight"
-              title="Usage of the nfc render suite">
+              title="Usage of the 'static' render suite">
 {
 <span class="comment">...</span>
 "renderMethod": {
   "type": "SuiteRenderMethod",
-  "renderSuite": "nfc",
+  "renderSuite": "static",
+  "deliveryMode": "nfc",
   "name": "Tap to send",
   <span class="comment">// the NFC payload is embedded</span>
   "template": "data:application/octet-stream;base64,2QZkpQGDG...G8XJWnROcY4Biw",
@@ -1129,7 +1131,7 @@ credential.
 
         <h4>Use of Common Properties</h4>
         <p>
-The `nfc` render suite uses the common render method properties as follows:
+The `static` render suite uses the common render method properties as follows:
         </p>
         <table class="simple">
           <thead>
@@ -1142,14 +1144,23 @@ The `nfc` render suite uses the common render method properties as follows:
             <tr>
               <td>template</td>
               <td>
-Provides the binary NFC payload, typically embedded as a `data:` URL.
+Provides the static binary payload, typically embedded as a `data:` URL.
+              </td>
+            </tr>
+            <tr>
+              <td>deliveryMode</td>
+              <td>
+Designates the intended delivery method for the rendered template, such as `nfc`
+for transmission over a wireless NFC channel.
+              </td>
+            </tr>
               </td>
             </tr>
             <tr>
               <td>renderProperty</td>
               <td>
-MAY be provided to limit which [=verifiable credential=] data is transmitted
-over the NFC connection.
+MAY be provided to limit which [=verifiable credential=] data is represented
+in the rendered template.
               </td>
             </tr>
             <tr>
@@ -1612,7 +1623,7 @@ features are requirements in sectors such as healthcare, retail, and
 banking/finance. In contrast, this specification is not tied to a single
 credential serialization, and instead defines render suites that span a
 code-free declarative `summary` suite, a data-driven `html` suite executed in a
-confined, "sandboxed" environment, and a static `nfc` suite.
+confined, "sandboxed" environment, or the `static` suite.
       </p>
     </section>
 
