@@ -1118,7 +1118,7 @@ credential.
 "renderMethod": {
   "type": "SuiteRenderMethod",
   "renderSuite": "static",
-  "deliveryMethod": "nfc",
+  "deliveryMode": "nfc",
   "name": "Tap to send",
   <span class="comment">// the NFC payload is embedded</span>
   "template": "data:application/octet-stream;base64,2QZkpQGDG...G8XJWnROcY4Biw",
@@ -1148,7 +1148,7 @@ Provides the static binary payload, typically embedded as a `data:` URL.
               </td>
             </tr>
             <tr>
-              <td>deliveryMethod</td>
+              <td>deliveryMode</td>
               <td>
 Designates the intended delivery method for the rendered template, such as `nfc`
 for transmission over a wireless NFC channel.
