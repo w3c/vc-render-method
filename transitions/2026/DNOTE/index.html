@@ -1,0 +1,1597 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8">
+<meta name="generator" content="ReSpec 37.4.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<style>
+.issue-label{text-transform:initial}
+.warning>p:first-child{margin-top:0}
+.warning{padding:.5em;border-left-width:.5em;border-left-style:solid}
+span.warning{padding:.1em .5em .15em}
+.issue.closed span.issue-number{text-decoration:line-through}
+.issue.closed span.issue-number::after{content:" (Closed)";font-size:smaller}
+.warning{border-color:#f11;border-color:var(--warning-border,#f11);border-width:.2em;border-style:solid;background:#fbe9e9;background:var(--warning-bg,#fbe9e9);color:#000;color:var(--text,#000)}
+.warning-title:before{content:"⚠";font-size:1.3em;float:left;padding-right:.3em;margin-top:-.3em}
+li.task-list-item{list-style:none}
+input.task-list-item-checkbox{margin:0 .35em .25em -1.6em;vertical-align:middle}
+.issue a.respec-gh-label{padding:5px;margin:0 2px 0 2px;font-size:10px;text-transform:none;text-decoration:none;font-weight:700;border-radius:4px;position:relative;bottom:2px;border:none;display:inline-block}
+</style>
+<style>
+dfn{cursor:pointer}
+.dfn-panel{position:absolute;z-index:35;min-width:300px;max-width:500px;padding:.5em .75em;margin-top:.6em;font-family:"Helvetica Neue",sans-serif;font-size:small;background:#fff;background:var(--indextable-hover-bg,#fff);color:#000;color:var(--text,#000);box-shadow:0 1em 3em -.4em rgba(0,0,0,.3),0 0 1px 1px rgba(0,0,0,.05);box-shadow:0 1em 3em -.4em var(--tocsidebar-shadow,rgba(0,0,0,.3)),0 0 1px 1px var(--tocsidebar-shadow,rgba(0,0,0,.05));border-radius:2px}
+.dfn-panel:not(.docked)>.caret{position:absolute;top:-9px}
+.dfn-panel:not(.docked)>.caret::after,.dfn-panel:not(.docked)>.caret::before{content:"";position:absolute;border:10px solid transparent;border-top:0;border-bottom:10px solid #fff;border-bottom-color:var(--indextable-hover-bg,#fff);top:0}
+.dfn-panel:not(.docked)>.caret::before{border-bottom:9px solid #a2a9b1;border-bottom-color:var(--indextable-hover-bg,#a2a9b1)}
+.dfn-panel *{margin:0}
+.dfn-panel b{display:block;color:#000;color:var(--text,#000);margin-top:.25em}
+.dfn-panel ul a[href]{color:#333;color:var(--text,#333)}
+.dfn-panel>div{display:flex}
+.dfn-panel a.self-link{font-weight:700;margin-right:auto}
+.dfn-panel .marker{padding:.1em;margin-left:.5em;border-radius:.2em;text-align:center;white-space:nowrap;font-size:90%;color:#040b1c}
+.dfn-panel .marker.dfn-exported{background:#d1edfd;box-shadow:0 0 0 .125em #1ca5f940}
+.dfn-panel .marker.idl-block{background:#8ccbf2;box-shadow:0 0 0 .125em #0670b161}
+.dfn-panel .marker.cddl-block{background:#8ccbf2;box-shadow:0 0 0 .125em #0670b161}
+.dfn-panel a:not(:hover){text-decoration:none!important;border-bottom:none!important}
+.dfn-panel a[href]:hover{border-bottom-width:1px}
+.dfn-panel ul{padding:0}
+.dfn-panel li{margin-left:1em}
+.dfn-panel.docked{position:fixed;left:.5em;top:unset;bottom:2em;margin:0 auto;max-width:calc(100vw - .75em * 2 - .5em - .2em * 2);max-height:30vh;overflow:auto}
+</style>
+
+
+<title>Verifiable Credentials Render Method Threat Model</title>
+
+<style id="respec-mainstyle">
+@keyframes pop{
+0%{transform:scale(1,1)}
+25%{transform:scale(1.25,1.25);opacity:.75}
+100%{transform:scale(1,1)}
+}
+a.internalDFN{color:inherit;border-bottom:1px solid #99c;text-decoration:none}
+a.externalDFN{color:inherit;border-bottom:1px dotted #ccc;text-decoration:none}
+a.bibref{text-decoration:none}
+.respec-offending-element:target{animation:pop .25s ease-in-out 0s 1}
+.respec-offending-element,a[href].respec-offending-element{text-decoration:red wavy underline}
+@supports not (text-decoration:red wavy underline){
+.respec-offending-element:not(pre){display:inline-block}
+.respec-offending-element{background:url(data:image/gif;base64,R0lGODdhBAADAPEAANv///8AAP///wAAACwAAAAABAADAEACBZQjmIAFADs=) bottom repeat-x}
+}
+#references :target{background:#eaf3ff;animation:pop .4s ease-in-out 0s 1}
+@media (prefers-color-scheme:dark){
+#references :target{background:color-mix(in srgb, #eaf3ff 15%, transparent)}
+}
+body:has(input[name=color-scheme][value=dark]:checked) #references :target{background:color-mix(in srgb, #eaf3ff 15%, transparent)}
+cite .bibref{font-style:italic}
+a[href].orcid{padding-left:4px;padding-right:4px}
+a[href].orcid>svg{margin-bottom:-2px}
+ol.tof,ul.tof{list-style:none outside none}
+.caption{margin-top:.5em;font-style:italic}
+#issue-summary>ul{column-count:2}
+#issue-summary li{list-style:none}
+details.respec-tests-details{margin-left:1em;display:inline-block;vertical-align:top}
+details.respec-tests-details>*{padding-right:2em}
+details.respec-tests-details[open]{z-index:999999;position:absolute;border:thin solid #cad3e2;border-radius:.3em;background-color:#fff;padding-bottom:.5em}
+details.respec-tests-details[open]>summary{border-bottom:thin solid #cad3e2;padding-left:1em;margin-bottom:1em;line-height:2em}
+details.respec-tests-details>ul{width:100%;margin-top:-.3em}
+details.respec-tests-details>li{padding-left:1em}
+.self-link:hover{opacity:1;text-decoration:none;background-color:transparent}
+aside.example .marker>a.self-link{color:inherit}
+.header-wrapper{display:flex;align-items:baseline}
+:is(h2,h3,h4,h5,h6):not(:where(#toc>h2,#abstract>h2,#sotd>h2,.head>h2)):has(+a.self-link){position:relative;left:-.5em}
+:is(h2,h3,h4,h5,h6):not(:where(#toch2))+a.self-link{color:inherit;order:-1;position:relative;left:-1.1em;font-size:1rem;opacity:.8;text-decoration:none}
+:is(h2,h3,h4,h5,h6)+a.self-link::before{content:"§"}
+:is(h2,h3)+a.self-link{top:-.2em}
+:is(h2,h3)+a.self-link::before{color:var(--heading-text)}
+@media (max-width:767px){
+dd{margin-left:0}
+}
+@media print{
+.removeOnSave{display:none}
+}
+body:has(input[name=color-scheme][value=light]:checked),head:not(:has(meta[name=color-scheme][content~=dark]))+body{color-scheme:light}
+body:has(input[name=color-scheme][value=dark]:checked){color-scheme:dark}
+</style>
+
+<link rel="stylesheet" href="threats/threat-model.css">
+
+<meta name="color-scheme" content="light">
+<meta name="description" content="This document describes a threat model for the
+Verifiable Credentials
+Render Method specification. It identifies and analyzes security and
+privacy threats specific to the publication, retrieval, and processing of
+render methods used to produce a human-readable rendering of a
+verifiable credential.">
+<link rel="canonical" href="https://www.w3.org/TR/vc-render-method/threat-model/">
+<style>
+var:hover{text-decoration:underline;cursor:pointer}
+var.respec-hl{color:var(--color,#000);background-color:var(--bg-color);box-shadow:0 0 0 2px var(--bg-color)}
+@media (prefers-color-scheme:dark){
+var.respec-hl{filter:saturate(.9) brightness(.9)}
+}
+var.respec-hl-c1{--bg-color:#f4d200}
+var.respec-hl-c2{--bg-color:#ff87a2}
+var.respec-hl-c3{--bg-color:#96e885}
+var.respec-hl-c4{--bg-color:#3eeed2}
+var.respec-hl-c5{--bg-color:#eacfb6}
+var.respec-hl-c6{--bg-color:#82ddff}
+var.respec-hl-c7{--bg-color:#ffbcf2}
+@media print{
+var.respec-hl{background:0 0;color:#000;box-shadow:unset}
+}
+</style>
+<style>
+var[data-type]{position:relative}
+var[data-type]::after,var[data-type]::before{position:absolute;left:50%;top:-6px;opacity:0;transition:opacity .4s;pointer-events:none}
+var[data-type]::before{content:"";transform:translateX(-50%);border-width:4px 6px 0 6px;border-style:solid;border-color:transparent;border-top-color:#222}
+var[data-type]::after{content:attr(data-type);transform:translateX(-50%) translateY(-100%);background:#222;text-align:center;font-family:"Dank Mono","Fira Code",monospace;font-style:normal;padding:6px;border-radius:3px;color:#daca88;text-indent:0;font-weight:400}
+var[data-type]:hover::after,var[data-type]:hover::before{opacity:1}
+</style>
+<script id="initialUserConfig" type="application/json">{
+  "specStatus": "DNOTE",
+  "shortName": "vc-render-method-threat-model-1.0",
+  "group": "vc",
+  "publishDate": "2026-10-08",
+  "edDraftURI": "https://w3c.github.io/vc-render-method/threat-model/",
+  "latestVersion": "https://www.w3.org/TR/vc-render-method/threat-model/",
+  "github": {
+    "repoURL": "https://github.com/w3c/vc-render-method/",
+    "branch": "main"
+  },
+  "editors": [
+    {
+      "name": "Manu Sporny",
+      "company": "Digital Bazaar",
+      "w3cid": 41758
+    }
+  ],
+  "noRecTrack": "true",
+  "maxTocLevel": 4,
+  "xref": [
+    "VC-DATA-MODEL-2.0",
+    "CID",
+    "DID",
+    "VC-DATA-INTEGRITY"
+  ],
+  "preProcess": [
+    null
+  ],
+  "postProcess": [
+    null
+  ],
+  "_ijt": "gplbqqs13q7cho2ja471lgdiab",
+  "_ij_reload": "RELOAD_ON_SAVE",
+  "publishISODate": "2026-10-08T00:00:00.000Z",
+  "generatedSubtitle": "W3C Group Note Draft 08 October 2026"
+}</script>
+<link rel="stylesheet" href="https://www.w3.org/StyleSheets/TR/2021/W3C-DNOTE">
+<link rel="stylesheet" href="https://www.w3.org/StyleSheets/TR/2021/dark.css" disabled=""></head>
+
+<body class="h-entry informative" data-cite="VC-DATA-MODEL-2.0 CID DID VC-DATA-INTEGRITY"><div class="head">
+    <p class="logos"><a class="logo" href="https://www.w3.org/"><img crossorigin="" alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2021/logos/W3C" width="72">
+  </a></p>
+    <h1 id="title" class="title">Verifiable Credentials Render Method Threat Model</h1>
+    <p id="w3c-state"><a href="https://www.w3.org/standards/types#DNOTE">W3C Group Note Draft</a> <time class="dt-published" datetime="2026-10-08">08 October 2026</time></p>
+    <details open="">
+      <summary>More details about this document</summary>
+      <dl>
+        <dt>This version:</dt><dd>
+                  <a class="u-url" href="https://www.w3.org/TR/2026/DNOTE-vc-render-method-threat-model-1.0-20261008/threat-model/">https://www.w3.org/TR/2026/DNOTE-vc-render-method-threat-model-1.0-20261008/threat-model/</a>
+                </dd>
+        <dt>Latest published version:</dt><dd>
+                  <a href="https://www.w3.org/TR/vc-render-method/threat-model/">https://www.w3.org/TR/vc-render-method/threat-model/</a>
+                </dd>
+        <dt>Latest editor's draft:</dt><dd><a href="https://w3c.github.io/vc-render-method/threat-model/">https://w3c.github.io/vc-render-method/threat-model/</a></dd>
+        <dt>History:</dt><dd>
+                        <a href="https://www.w3.org/standards/history/vc-render-method-threat-model-1.0/">https://www.w3.org/standards/history/vc-render-method-threat-model-1.0/</a>
+                      </dd><dd>
+                        <a href="https://github.com/w3c/vc-render-method/commits/main">Commit history</a>
+                      </dd>
+
+
+
+
+
+        <dt>
+                  Editor:
+                </dt><dd class="editor p-author h-card vcard" data-editor-id="41758">
+    <span class="p-name fn">Manu Sporny</span> (<span class="p-org org h-org">Digital Bazaar</span>)
+  </dd>
+
+
+        <dt>Feedback:</dt><dd>
+        <a href="https://github.com/w3c/vc-render-method/">GitHub w3c/vc-render-method</a>
+        (<a href="https://github.com/w3c/vc-render-method/pulls/">pull requests</a>,
+        <a href="https://github.com/w3c/vc-render-method/issues/new/choose">new issue</a>,
+        <a href="https://github.com/w3c/vc-render-method/issues/">open issues</a>)
+      </dd>
+
+
+      </dl>
+    </details>
+
+
+    <p class="copyright">
+    <a href="https://www.w3.org/policies/#copyright">Copyright</a>
+    ©
+    2026
+
+    <a href="https://www.w3.org/">World Wide Web Consortium</a>.
+    <abbr title="World Wide Web Consortium">W3C</abbr><sup>®</sup>
+    <a href="https://www.w3.org/policies/#Legal_Disclaimer">liability</a>,
+    <a href="https://www.w3.org/policies/#W3C_Trademarks">trademark</a> and
+    <a rel="license" href="https://www.w3.org/copyright/software-license-2023/" title="W3C Software and Document Notice and License">permissive document license</a> rules apply.
+  </p>
+    <hr title="Separator for header">
+  </div>
+  <section id="abstract" class="introductory"><h2>Abstract</h2>
+    <p>
+This document describes a threat model for the
+<a href="https://www.w3.org/TR/vc-render-method/">Verifiable Credentials
+Render Method</a> specification. It identifies and analyzes security and
+privacy threats specific to the publication, retrieval, and processing of
+render methods used to produce a human-readable rendering of a
+<a data-link-type="dfn" href="https://www.w3.org/TR/vc-data-model-2.0/#dfn-verifiable-credential">verifiable credential</a>.
+    </p>
+  </section>
+  <section id="sotd" class="introductory"><h2>Status of This Document</h2><p><em>This section describes the status of this
+      document at the time of its publication. A list of current <abbr title="World Wide Web Consortium">W3C</abbr>
+      publications and the latest revision of this technical report can be found
+      in the
+      <a href="https://www.w3.org/TR/"><abbr title="World Wide Web Consortium">W3C</abbr> standards and drafts index</a>.</em></p>
+    <p>
+This threat model is a work in progress. It is published alongside the
+Verifiable Credentials Render Method specification to inform implementers and
+ecosystem designers of the security and privacy considerations relevant to
+deployments of the specification. Feedback and proposed additions are
+welcome via the
+<a href="https://github.com/w3c/vc-render-method/issues">issue tracker</a>.
+    </p>
+  <p>
+    This document was published by the <a href="https://www.w3.org/groups/wg/vc">Verifiable Credentials Working Group</a> as
+    a Group Note Draft using the
+        <a href="https://www.w3.org/policies/process/20250818/#recs-and-notes">Note
+          track</a>.
+  </p><p>Group Note Drafts are not endorsed by
+        <abbr title="World Wide Web Consortium">W3C</abbr> nor its Members. </p><p>
+    This is a draft document and may be updated, replaced, or obsoleted by other
+    documents at any time. It is inappropriate to cite this document as other
+    than a work in progress.
+
+  </p><p data-deliverer="98922">
+
+        The
+        <a href="https://www.w3.org/policies/patent-policy/"><abbr title="World Wide Web Consortium">W3C</abbr> Patent
+          Policy</a>
+        does not carry any licensing requirements or commitments on this
+        document.
+
+
+  </p><p>
+                          This document is governed by the
+                          <a id="w3c_process_revision" href="https://www.w3.org/policies/process/20250818/">18 August 2025 <abbr title="World Wide Web Consortium">W3C</abbr> Process Document</a>.
+                        </p></section><nav id="toc"><h2 class="introductory" id="table-of-contents">Table of Contents</h2><ol class="toc"><li class="tocline"><a class="tocxref" href="#abstract">Abstract</a></li><li class="tocline"><a class="tocxref" href="#sotd">Status of This Document</a></li><li class="tocline"><a class="tocxref" href="#Introduction"><bdi class="secno">1. </bdi>Introduction</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#threat-model-description"><bdi class="secno">1.1 </bdi>Description</a></li><li class="tocline"><a class="tocxref" href="#threat-model-data-flow-diagram"><bdi class="secno">1.2 </bdi>Data Flow Diagram for the Render Method Ecosystem</a></li><li class="tocline"><a class="tocxref" href="#threat-model-architecture-dictionary"><bdi class="secno">1.3 </bdi>Dictionary</a></li></ol></li><li class="tocline"><a class="tocxref" href="#threat-model-stakeholders"><bdi class="secno">2. </bdi>Stakeholders</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#e1-issuer"><bdi class="secno">2.1 </bdi>E1 Issuer</a></li><li class="tocline"><a class="tocxref" href="#e2-holder"><bdi class="secno">2.2 </bdi>E2 Holder</a></li><li class="tocline"><a class="tocxref" href="#e3-verifier"><bdi class="secno">2.3 </bdi>E3 Verifier</a></li></ol></li><li class="tocline"><a class="tocxref" href="#threat-model-threats"><bdi class="secno">3. </bdi>Threats</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#threat-list"><bdi class="secno">3.1 </bdi>Threat List</a></li><li class="tocline"><a class="tocxref" href="#threat-details"><bdi class="secno">3.2 </bdi>Threat Details</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#t1-uncontrolled-credential-presentation"><bdi class="secno">3.2.1 </bdi>T1. Uncontrolled Credential Presentation</a></li><li class="tocline"><a class="tocxref" href="#t2-unsafe-rendering-of-untrusted-data"><bdi class="secno">3.2.2 </bdi>T2. Unsafe Rendering of Untrusted Data</a></li><li class="tocline"><a class="tocxref" href="#t3-tracking-via-template-and-resource-fetches"><bdi class="secno">3.2.3 </bdi>T3. Tracking via Template and Resource Fetches</a></li><li class="tocline"><a class="tocxref" href="#t4-harmful-rendering-output"><bdi class="secno">3.2.4 </bdi>T4. Harmful Rendering Output</a></li><li class="tocline"><a class="tocxref" href="#t5-inherited-rendering-environment-attack-surface"><bdi class="secno">3.2.5 </bdi>T5. Inherited Rendering Environment Attack Surface</a></li></ol></li></ol></li><li class="tocline"><a class="tocxref" href="#threat-model-contributing"><bdi class="secno">4. </bdi>Contributing</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#threat-model-adding-a-threat"><bdi class="secno">4.1 </bdi>Adding a Threat</a></li></ol></li><li class="tocline"><a class="tocxref" href="#references"><bdi class="secno">A. </bdi>References</a><ol class="toc"><li class="tocline"><a class="tocxref" href="#informative-references"><bdi class="secno">A.1 </bdi>Informative references</a></li></ol></li></ol></nav>
+  <section id="Introduction"><div class="header-wrapper"><h2 id="x1-introduction"><bdi class="secno">1. </bdi>Introduction</h2><a class="self-link" href="#Introduction" aria-label="Permalink for Section 1."></a></div>
+
+    <p>
+Threat modeling is a vital part of specification development. This document
+provides a threat model for the Verifiable Credentials Render Method
+specification, which defines how an <a data-link-type="dfn|abstract-op" href="#dfn-e1" class="internalDFN" id="ref-for-dfn-e1-1">issuer</a> can associate one or more
+render templates with a <a data-link-type="dfn" href="https://www.w3.org/TR/vc-data-model-2.0/#dfn-verifiable-credential">verifiable credential</a> so that a <a data-link-type="dfn|abstract-op" href="#dfn-e2" class="internalDFN" id="ref-for-dfn-e2-1">holder</a> or
+<a data-link-type="dfn|abstract-op" href="#dfn-e3" class="internalDFN" id="ref-for-dfn-e3-1">verifier</a> can produce a consistent, human-readable rendering of that
+credential.
+    </p>
+    <p>
+This threat model follows the methodology described in the
+<a href="https://www.w3.org/TR/threat-modeling-guide/"><abbr title="World Wide Web Consortium">W3C</abbr> Threat Modeling
+Guide</a> and classifies threats using the STRIDE taxonomy. Threats are
+grouped into five categories:
+    </p>
+    <ul>
+      <li>
+<strong>Target Threats</strong> are threats the specification was designed
+to address.
+      </li>
+      <li>
+<strong>Implementation Threats</strong> are threats that implementers must
+handle; the specification leaves the choice of mitigation open.
+      </li>
+      <li>
+<strong>Deployment Threats</strong> are threats that arise from how systems
+are configured and operated.
+      </li>
+      <li>
+<strong>External Threats</strong> are real-world risks acknowledged as out
+of scope for this version of the specification.
+      </li>
+      <li>
+<strong>Dependency Threats</strong> are threats inherited from technologies
+the specification depends upon.
+      </li>
+    </ul>
+
+    <section id="threat-model-description"><div class="header-wrapper"><h3 id="x1-1-description"><bdi class="secno">1.1 </bdi>Description</h3><a class="self-link" href="#threat-model-description" aria-label="Permalink for Section 1.1"></a></div>
+
+      <p>
+The Verifiable Credentials Render Method specification builds on the
+Verifiable Credentials Data Model. For this threat model, we consider a
+minimal instantiation focused on the render method lifecycle, consisting of
+three roles: the <strong><a data-link-type="dfn|abstract-op" data-lt="E1" href="#dfn-e1" class="internalDFN" id="ref-for-dfn-e1-2">Issuer</a> (E1)</strong>, who publishes and
+maintains the render templates associated with a <a data-link-type="dfn" href="https://www.w3.org/TR/vc-data-model-2.0/#dfn-verifiable-credential">verifiable credential</a>;
+the <strong><a data-link-type="dfn|abstract-op" data-lt="E2" href="#dfn-e2" class="internalDFN" id="ref-for-dfn-e2-2">Holder</a> (E2)</strong>, who renders a credential to review
+it; and the <strong><a data-link-type="dfn|abstract-op" data-lt="E3" href="#dfn-e3" class="internalDFN" id="ref-for-dfn-e3-2">Verifier</a> (E3)</strong>, who renders a credential
+as part of evaluating it. The elements and flows introduced by the Render
+Method specification are shown in full color in the data flow diagram below;
+elements reused from the
+<a href="https://www.w3.org/TR/vc-data-model/threat-model/">Verifiable
+Credentials Data Model threat model</a> are shown grayed as context.
+      </p>
+      <div class="note" role="note" id="issue-container-generatedID"><div class="note-title marker" id="h-note"><span>Note</span></div><p class="" role="note">
+<span class="marker">Note:</span> We do NOT model potential attackers as
+first-class elements, as over-characterizing attackers can lead to analysis
+bias that is better avoided.
+      </p></div>
+    </section>
+
+    <section id="threat-model-data-flow-diagram"><div class="header-wrapper"><h3 id="x1-2-data-flow-diagram-for-the-render-method-ecosystem"><bdi class="secno">1.2 </bdi>Data Flow Diagram for the Render Method Ecosystem</h3><a class="self-link" href="#threat-model-data-flow-diagram" aria-label="Permalink for Section 1.2"></a></div>
+
+      <p>
+The data flow diagram below illustrates the key elements and data flows
+introduced by the Render Method specification. Within the
+<a data-link-type="dfn|abstract-op" data-lt="C1" href="#dfn-c1" class="internalDFN" id="ref-for-dfn-c1-1">Issuer System</a> (C1), the issuer runs the <a data-link-type="dfn|abstract-op" data-lt="P1" href="#dfn-p1" class="internalDFN" id="ref-for-dfn-p1-1">Publish Render Template</a>
+(P1) and <a data-link-type="dfn|abstract-op" data-lt="P2" href="#dfn-p2" class="internalDFN" id="ref-for-dfn-p2-1">Update Render Template</a> (P2) processes, which write to
+<a data-link-type="dfn|abstract-op" data-lt="S1" href="#dfn-s1" class="internalDFN" id="ref-for-dfn-s1-1">Render Template Storage</a> (S1). Within the <a data-link-type="dfn|abstract-op" data-lt="C2" href="#dfn-c2" class="internalDFN" id="ref-for-dfn-c2-1">Holder System</a> (C2)
+and the <a data-link-type="dfn|abstract-op" data-lt="C3" href="#dfn-c3" class="internalDFN" id="ref-for-dfn-c3-1">Verifier System</a> (C3), the <a data-link-type="dfn|abstract-op" data-lt="P3" href="#dfn-p3" class="internalDFN" id="ref-for-dfn-p3-1">Render</a> (P3) process
+retrieves a render template (<a data-link-type="dfn|abstract-op" data-lt="F1" href="#dfn-f1" class="internalDFN" id="ref-for-dfn-f1-1">F1</a>) and produces a rendering that the
+holder or verifier observes (<a data-link-type="dfn|abstract-op" data-lt="F2" href="#dfn-f2" class="internalDFN" id="ref-for-dfn-f2-1">F2</a>). Elements drawn from the Verifiable
+Credentials Data Model threat model are shown grayed for context and are not
+re-numbered here.
+      </p>
+
+      <img src="diagrams/dfd.svg" alt="Data flow diagram showing three dashed system boundaries. The
+Issuer System (C1) contains the new Publish Render Template (P1) and Update
+Render Template (P2) processes, which write to the new Render Template
+Storage (S1); grayed context elements from the Verifiable Credentials Data
+Model threat model are also shown. The Holder System (C2) and Verifier
+System (C3) each contain the Render (P3) process. The Render process
+retrieves a render template from Render Template Storage via flow F1, and the
+Holder and Verifier observe the resulting rendering via flow F2.">
+
+      <p>
+The following notation is used in the diagram description and dictionary:
+      </p>
+      <ul>
+        <li>
+<strong>E</strong> denotes an External Entity (a human or legal person
+outside the system boundary)
+        </li>
+        <li>
+<strong>P</strong> denotes a Process (a running algorithm that transforms
+data)
+        </li>
+        <li>
+<strong>F</strong> denotes a Data Flow (movement of data between elements)
+        </li>
+        <li>
+<strong>S</strong> denotes a Data Store (persistent or ephemeral storage)
+        </li>
+        <li>
+<strong>O</strong> denotes a Data Object (a self-contained, transferable
+artifact)
+        </li>
+        <li>
+<strong>C</strong> denotes a Contained System Boundary (a collection of
+elements under a single authority)
+        </li>
+      </ul>
+    </section>
+
+    <section id="threat-model-architecture-dictionary"><div class="header-wrapper"><h3 id="x1-3-dictionary"><bdi class="secno">1.3 </bdi>Dictionary</h3><a class="self-link" href="#threat-model-architecture-dictionary" aria-label="Permalink for Section 1.3"></a></div>
+
+      <p>
+The dictionary defines the data flow diagram elements introduced by the
+Render Method specification. Elements reused from the
+<a href="https://www.w3.org/TR/vc-data-model/threat-model/">Verifiable
+Credentials Data Model threat model</a> appear grayed in the diagram for
+context and are defined in that document rather than repeated here.
+      </p>
+      <table class="dictionary">
+        <tbody>
+          <tr>
+            <td class="left">
+              <dfn data-lt="E1|Issuer|E1 Issuer" id="dfn-e1" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">E1 Issuer</dfn>
+            </td>
+            <td>
+An entity that issues a <a data-link-type="dfn" href="https://www.w3.org/TR/vc-data-model-2.0/#dfn-verifiable-credential">verifiable credential</a> and, using the Render
+Method specification, associates one or more render methods with it so that
+consumers have an issuer-intended way to present the credential. The issuer
+runs <a data-link-type="dfn|abstract-op" data-lt="P1" href="#dfn-p1" class="internalDFN" id="ref-for-dfn-p1-2">Publish Render Template</a> and <a data-link-type="dfn|abstract-op" data-lt="P2" href="#dfn-p2" class="internalDFN" id="ref-for-dfn-p2-2">Update Render Template</a> and
+operates <a data-link-type="dfn|abstract-op" data-lt="S1" href="#dfn-s1" class="internalDFN" id="ref-for-dfn-s1-2">Render Template Storage</a>.
+            </td>
+          </tr>
+          <tr>
+            <td class="left">
+              <dfn data-lt="E2|Holder|E2 Holder" id="dfn-e2" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">E2 Holder</dfn>
+            </td>
+            <td>
+A person or organization that holds a <a data-link-type="dfn" href="https://www.w3.org/TR/vc-data-model-2.0/#dfn-verifiable-credential">verifiable credential</a> and renders
+it, by way of the <a data-link-type="dfn|abstract-op" data-lt="P3" href="#dfn-p3" class="internalDFN" id="ref-for-dfn-p3-2">Render</a> process, in order to view or review it. The
+holder is the person who observes the rendering (<a data-link-type="dfn|abstract-op" data-lt="F2" href="#dfn-f2" class="internalDFN" id="ref-for-dfn-f2-2">Observe Rendering</a>)
+within the <a data-link-type="dfn|abstract-op" data-lt="C2" href="#dfn-c2" class="internalDFN" id="ref-for-dfn-c2-2">holder system</a>.
+            </td>
+          </tr>
+          <tr>
+            <td class="left">
+              <dfn data-lt="E3|Verifier|E3 Verifier" id="dfn-e3" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">E3 Verifier</dfn>
+            </td>
+            <td>
+An entity that receives and evaluates a <a data-link-type="dfn" href="https://www.w3.org/TR/vc-data-model-2.0/#dfn-verifiable-credential">verifiable credential</a> and renders
+it, by way of the <a data-link-type="dfn|abstract-op" data-lt="P3" href="#dfn-p3" class="internalDFN" id="ref-for-dfn-p3-3">Render</a> process, as part of reviewing it. The
+verifier is the person or operator who observes the rendering
+(<a data-link-type="dfn|abstract-op" data-lt="F2" href="#dfn-f2" class="internalDFN" id="ref-for-dfn-f2-3">Observe Rendering</a>) within the <a data-link-type="dfn|abstract-op" data-lt="C3" href="#dfn-c3" class="internalDFN" id="ref-for-dfn-c3-2">verifier system</a>.
+            </td>
+          </tr>
+          <tr>
+            <td class="left">
+              <dfn data-lt="P1|Publish Render Template|P1 Publish Render Template" id="dfn-p1" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">P1 Publish Render
+Template</dfn>
+            </td>
+            <td>
+The process by which an <a data-link-type="dfn|abstract-op" href="#dfn-e1" class="internalDFN" id="ref-for-dfn-e1-3">issuer</a> creates a <a data-link-type="dfn|abstract-op" data-lt="O1" href="#dfn-o1" class="internalDFN" id="ref-for-dfn-o1-1">render template</a> and makes
+it available in <a data-link-type="dfn|abstract-op" data-lt="S1" href="#dfn-s1" class="internalDFN" id="ref-for-dfn-s1-3">Render Template Storage</a>, whether by hosting it for
+later retrieval or by embedding it so that it travels inside the credential.
+            </td>
+          </tr>
+          <tr>
+            <td class="left">
+              <dfn data-lt="P2|Update Render Template|P2 Update Render Template" id="dfn-p2" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">P2 Update Render
+Template</dfn>
+            </td>
+            <td>
+The process by which an <a data-link-type="dfn|abstract-op" href="#dfn-e1" class="internalDFN" id="ref-for-dfn-e1-4">issuer</a> changes a previously published
+<a data-link-type="dfn|abstract-op" data-lt="O1" href="#dfn-o1" class="internalDFN" id="ref-for-dfn-o1-2">render template</a> in <a data-link-type="dfn|abstract-op" data-lt="S1" href="#dfn-s1" class="internalDFN" id="ref-for-dfn-s1-4">Render Template Storage</a>, for example to
+update branding or layout over the lifetime of a long-lived credential.
+Updating a template that is not bound to the credential by a digest changes
+how previously issued credentials render.
+            </td>
+          </tr>
+          <tr>
+            <td class="left">
+              <dfn data-lt="P3|Render|P3 Render" id="dfn-p3" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">P3 Render</dfn>
+            </td>
+            <td>
+The process that combines a <a data-link-type="dfn|abstract-op" data-lt="O1" href="#dfn-o1" class="internalDFN" id="ref-for-dfn-o1-3">render template</a> retrieved via
+<a data-link-type="dfn|abstract-op" data-lt="F1" href="#dfn-f1" class="internalDFN" id="ref-for-dfn-f1-2">Retrieve Render Template</a> with claim values from a
+<a data-link-type="dfn" href="https://www.w3.org/TR/vc-data-model-2.0/#dfn-verifiable-credential">verifiable credential</a> and produces output a person perceives, which can
+be visual, auditory, tactile, or textual. This is the same logical process
+whether it runs within the <a data-link-type="dfn|abstract-op" data-lt="C2" href="#dfn-c2" class="internalDFN" id="ref-for-dfn-c2-3">holder system</a> or the <a data-link-type="dfn|abstract-op" data-lt="C3" href="#dfn-c3" class="internalDFN" id="ref-for-dfn-c3-3">verifier system</a>. For the <code>html</code> render suite it executes template-supplied code
+inside a confined rendering environment; for the <code>card</code> and <code>nfc</code> render
+suites it produces a standardized output or emits a static payload without
+executing template-supplied code. The specification defines the confinement
+for the <code>html</code> suite in terms of required security outcomes rather than a
+specific mechanism. A sandboxed browser iframe with a Content Security Policy
+is one common way to achieve those outcomes, but it is an implementation
+detail, and equivalent isolation can be provided by other means.
+            </td>
+          </tr>
+          <tr>
+            <td class="left">
+              <dfn data-lt="F1|Retrieve Render Template|F1 Retrieve Render Template" id="dfn-f1" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">F1 Retrieve Render
+Template</dfn>
+            </td>
+            <td>
+The data flow by which the <a data-link-type="dfn|abstract-op" data-lt="P3" href="#dfn-p3" class="internalDFN" id="ref-for-dfn-p3-4">Render</a> process obtains the
+<a data-link-type="dfn|abstract-op" data-lt="O1" href="#dfn-o1" class="internalDFN" id="ref-for-dfn-o1-4">render template</a> from <a data-link-type="dfn|abstract-op" data-lt="S1" href="#dfn-s1" class="internalDFN" id="ref-for-dfn-s1-5">Render Template Storage</a>. When the template
+is referenced by location, this flow is a network request that reveals to the
+<a data-link-type="dfn|abstract-op" href="#dfn-e1" class="internalDFN" id="ref-for-dfn-e1-5">issuer</a> or template host that a credential is being rendered; when the
+template is embedded, the template travels inside the credential and no such
+request is made.
+            </td>
+          </tr>
+          <tr>
+            <td class="left">
+              <dfn data-lt="F2|Observe Rendering|F2 Observe Rendering" id="dfn-f2" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">F2 Observe Rendering</dfn>
+            </td>
+            <td>
+The data flow by which the output of the <a data-link-type="dfn|abstract-op" data-lt="P3" href="#dfn-p3" class="internalDFN" id="ref-for-dfn-p3-5">Render</a> process reaches the
+<a data-link-type="dfn|abstract-op" href="#dfn-e2" class="internalDFN" id="ref-for-dfn-e2-3">holder</a> or <a data-link-type="dfn|abstract-op" href="#dfn-e3" class="internalDFN" id="ref-for-dfn-e3-3">verifier</a> who observes it. This flow represents the
+rendered presentation as it is perceived by a person.
+            </td>
+          </tr>
+          <tr>
+            <td class="left">
+              <dfn data-lt="O1|Render Template|O1 Render Template" data-plurals="render templates" id="dfn-o1" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">O1 Render Template</dfn>
+            </td>
+            <td>
+The self-contained, transferable artifact that determines how a
+<a data-link-type="dfn" href="https://www.w3.org/TR/vc-data-model-2.0/#dfn-verifiable-credential">verifiable credential</a> is presented. Depending on the render suite it is a
+JSON template producing a standardized card output (<code>card</code>), an HTML fragment
+carrying its own CSS and JavaScript (<code>html</code>), or a static binary payload
+(<code>nfc</code>). A render template is produced by <a data-link-type="dfn|abstract-op" data-lt="P1" href="#dfn-p1" class="internalDFN" id="ref-for-dfn-p1-3">Publish Render Template</a>,
+optionally changed by <a data-link-type="dfn|abstract-op" data-lt="P2" href="#dfn-p2" class="internalDFN" id="ref-for-dfn-p2-3">Update Render Template</a>, held in
+<a data-link-type="dfn|abstract-op" data-lt="S1" href="#dfn-s1" class="internalDFN" id="ref-for-dfn-s1-6">Render Template Storage</a>, carried by <a data-link-type="dfn|abstract-op" data-lt="F1" href="#dfn-f1" class="internalDFN" id="ref-for-dfn-f1-3">Retrieve Render Template</a>,
+and consumed by <a data-link-type="dfn|abstract-op" data-lt="P3" href="#dfn-p3" class="internalDFN" id="ref-for-dfn-p3-6">Render</a>. It can be referenced by location or embedded
+in the credential, and it can be bound to the credential by a cryptographic
+digest.
+            </td>
+          </tr>
+          <tr>
+            <td class="left">
+              <dfn data-lt="S1|Render Template Storage|S1 Render Template Storage" id="dfn-s1" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">S1 Render Template
+Storage</dfn>
+            </td>
+            <td>
+The storage, within or operated by the <a data-link-type="dfn|abstract-op" data-lt="C1" href="#dfn-c1" class="internalDFN" id="ref-for-dfn-c1-2">issuer system</a>, that holds
+published <a data-link-type="dfn|abstract-op" data-lt="O1" href="#dfn-o1" class="internalDFN" id="ref-for-dfn-o1-5">render templates</a> for retrieval by consumers. When a template
+is embedded in the credential rather than hosted, this storage is effectively
+the credential itself as it resides in the holder's possession.
+            </td>
+          </tr>
+          <tr>
+            <td class="left">
+              <dfn data-lt="C1|Issuer System|C1 Issuer System" id="dfn-c1" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">C1 Issuer System</dfn>
+            </td>
+            <td>
+The system boundary, typically a server or service operated by or for the
+<a data-link-type="dfn|abstract-op" href="#dfn-e1" class="internalDFN" id="ref-for-dfn-e1-6">issuer</a>, within which <a data-link-type="dfn|abstract-op" data-lt="P1" href="#dfn-p1" class="internalDFN" id="ref-for-dfn-p1-4">Publish Render Template</a> and
+<a data-link-type="dfn|abstract-op" data-lt="P2" href="#dfn-p2" class="internalDFN" id="ref-for-dfn-p2-4">Update Render Template</a> run and <a data-link-type="dfn|abstract-op" data-lt="S1" href="#dfn-s1" class="internalDFN" id="ref-for-dfn-s1-7">Render Template Storage</a> resides.
+            </td>
+          </tr>
+          <tr>
+            <td class="left">
+              <dfn data-lt="C2|Holder System|C2 Holder System" id="dfn-c2" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">C2 Holder System</dfn>
+            </td>
+            <td>
+The system boundary, typically a mobile or desktop digital wallet
+application, within which the holder's instance of the <a data-link-type="dfn|abstract-op" data-lt="P3" href="#dfn-p3" class="internalDFN" id="ref-for-dfn-p3-7">Render</a> process
+runs and where the holder observes the rendering.
+            </td>
+          </tr>
+          <tr>
+            <td class="left">
+              <dfn data-lt="C3|Verifier System|C3 Verifier System" id="dfn-c3" tabindex="0" aria-haspopup="dialog" data-dfn-type="dfn">C3 Verifier System</dfn>
+            </td>
+            <td>
+The system boundary, typically a verification application or service, within
+which the verifier's instance of the <a data-link-type="dfn|abstract-op" data-lt="P3" href="#dfn-p3" class="internalDFN" id="ref-for-dfn-p3-8">Render</a> process runs and where the
+verifier observes the rendering.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+  </section>
+
+  <section id="threat-model-stakeholders"><div class="header-wrapper"><h2 id="x2-stakeholders"><bdi class="secno">2. </bdi>Stakeholders</h2><a class="self-link" href="#threat-model-stakeholders" aria-label="Permalink for Section 2."></a></div>
+
+
+    <section id="e1-issuer"><div class="header-wrapper"><h3 id="x2-1-e1-issuer"><bdi class="secno">2.1 </bdi>E1 Issuer</h3><a class="self-link" href="#e1-issuer" aria-label="Permalink for Section 2.1"></a></div>
+    <p>
+An issuer is an entity that issues <a data-link-type="dfn" href="https://www.w3.org/TR/vc-data-model-2.0/#dfn-verifiable-credential">verifiable credentials</a> and, using the
+Render Method specification, associates render templates with them.
+      </p>
+    <p>
+The issuer's primary goal is that its credentials are presented to people in
+the way it intends, so that an observer forms an accurate understanding of
+what the issuer attested. The issuer also has an interest in controlling how
+that intended presentation evolves: some issuers want the presentation fixed
+at issuance and protected against modification, while others want to update
+branding or layout over the lifetime of a long-lived credential. Issuers that
+host their templates have a further interest in not turning template
+retrieval into a means of tracking where and when their credentials are
+displayed.
+    </p>
+
+    </section><section id="e2-holder"><div class="header-wrapper"><h3 id="x2-2-e2-holder"><bdi class="secno">2.2 </bdi>E2 Holder</h3><a class="self-link" href="#e2-holder" aria-label="Permalink for Section 2.2"></a></div>
+    <p>
+A holder is a person or organization that holds <a data-link-type="dfn" href="https://www.w3.org/TR/vc-data-model-2.0/#dfn-verifiable-credential">verifiable credentials</a>
+and renders them to view or review them, typically within a digital wallet.
+    </p>
+    <p>
+The holder's primary goal is to see a faithful, usable rendering of a
+credential. Holders have a strong interest in privacy, in that rendering a
+credential does not reveal to the issuer or a third party that, when, or
+where the credential is being displayed. Holders also have an interest in
+safety and availability: rendering untrusted template content does not
+compromise their device or expose their data, and rendering works within the
+constraints of their device, including when offline.
+    </p>
+
+    </section><section id="e3-verifier"><div class="header-wrapper"><h3 id="x2-3-e3-verifier"><bdi class="secno">2.3 </bdi>E3 Verifier</h3><a class="self-link" href="#e3-verifier" aria-label="Permalink for Section 2.3"></a></div>
+    <p>
+A verifier is an entity that evaluates <a data-link-type="dfn" href="https://www.w3.org/TR/vc-data-model-2.0/#dfn-verifiable-credential">verifiable credentials</a> and renders
+them as part of reviewing them, for example to let a person confirm a
+credential against the issuer's intended presentation.
+    </p>
+    <p>
+The verifier's primary goal is that the rendering it shows accurately
+reflects the issuer's intent and the credential's actual claims, so that a
+person is not misled into accepting a credential that does not meet the
+verifier's purpose. Like the holder, the verifier has an interest in
+rendering untrusted content safely, without compromising the verifier
+system.
+    </p>
+  </section></section>
+
+  <section id="threat-model-threats"><div class="header-wrapper"><h2 id="x3-threats"><bdi class="secno">3. </bdi>Threats</h2><a class="self-link" href="#threat-model-threats" aria-label="Permalink for Section 3."></a></div>
+
+    <section class="tm-toc" id="threat-list-0"><div class="header-wrapper"><h3 id="threat-list"><bdi class="secno">3.1 </bdi>Threat List</h3><a class="self-link" href="#threat-list" aria-label="Permalink for Section 3.1"></a></div>
+
+
+        <p class="threatCategory">Target Threats</p>
+        <ol class="threat-toc">
+          <li value="1"><a href="#t1-uncontrolled-credential-presentation">Uncontrolled Credential Presentation</a>
+          <span class="threat-tag threat-tag-security">security</span>
+
+    </li>
+        </ol>
+
+        <p class="threatCategory">Implementation Threats</p>
+        <ol class="threat-toc">
+          <li value="2"><a href="#t2-unsafe-rendering-of-untrusted-data">Unsafe Rendering of Untrusted Data</a>
+          <span class="threat-tag threat-tag-security">security</span>
+
+    </li>
+        </ol>
+
+        <p class="threatCategory">Deployment Threats</p>
+        <ol class="threat-toc">
+          <li value="3"><a href="#t3-tracking-via-template-and-resource-fetches">Tracking via Template and Resource Fetches</a>
+          <span class="threat-tag threat-tag-privacy">privacy</span>
+
+    </li>
+        </ol>
+
+        <p class="threatCategory">External Threats</p>
+        <ol class="threat-toc">
+          <li value="4"><a href="#t4-harmful-rendering-output">Harmful Rendering Output</a>
+          <span class="threat-tag threat-tag-security">security</span>
+
+    </li>
+        </ol>
+
+        <p class="threatCategory">Dependency Threats</p>
+        <ol class="threat-toc">
+          <li value="5"><a href="#t5-inherited-rendering-environment-attack-surface">Inherited Rendering Environment Attack Surface</a>
+          <span class="threat-tag threat-tag-security">security</span>
+
+    </li>
+        </ol>
+
+      </section>
+    <section class="tm-details" id="threat-details"><div class="header-wrapper"><h3 id="x3-2-threat-details"><bdi class="secno">3.2 </bdi>Threat Details</h3><a class="self-link" href="#threat-details" aria-label="Permalink for Section 3.2"></a></div>
+
+
+        <p class="threatCategory">Target Threats</p>
+
+      <section class="threatDetail" id="t1-uncontrolled-credential-presentation-0"><div class="header-wrapper"><h4 id="t1-uncontrolled-credential-presentation"><bdi class="secno">3.2.1 </bdi>T1. Uncontrolled Credential Presentation</h4><a class="self-link" href="#t1-uncontrolled-credential-presentation" aria-label="Permalink for Section 3.2.1"></a></div>
+
+      </section>
+        <table class="threat">
+
+          <tbody><tr>
+            <td class="threat-name">
+              <section>
+                <div class="header-wrapper"><h4 id="T1.inner">T1. Uncontrolled Credential Presentation
+
+          <span class="threat-tag threat-tag-security">security</span>
+
+                </h4><a class="self-link" href="#T1.inner" aria-label="Permalink for this Section"></a></div>
+                <span class="index-link">[<a href="#threat-list">Threat List</a>]</span>
+              </section>
+            </td>
+          </tr>
+
+        <tr>
+          <td class="threat-description">
+            An <a data-link-type="dfn|abstract-op" data-lt="E1" href="#dfn-e1" class="internalDFN" id="ref-for-dfn-e1-7">issuer</a> generally has a strong interest in how the <a data-link-type="dfn" href="https://www.w3.org/TR/vc-data-model-2.0/#dfn-verifiable-credential">verifiable credentials</a> it issues are presented to people. Without a render method asserted by the issuer, the choice of how to display a credential falls entirely to the <a data-link-type="dfn|abstract-op" data-lt="E2" href="#dfn-e2" class="internalDFN" id="ref-for-dfn-e2-4">holder</a> or <a data-link-type="dfn|abstract-op" data-lt="E3" href="#dfn-e3" class="internalDFN" id="ref-for-dfn-e3-4">verifier</a> software that performs the <a data-link-type="dfn|abstract-op" data-lt="P3" href="#dfn-p3" class="internalDFN" id="ref-for-dfn-p3-9">Render</a> process. That software can introduce data integrity risks, either intentionally or unintentionally by altering the  presentation layer of a credential. If the client application modifies the layout, it may violate the issuer's security or schema requirements. Specifically, it can cause payload omission by omitting or de-emphasizing important claims, schema mutation by reordering or relabeling fields, metadata deletion by dropping disclaimers or validity information, or UI spoofing by applying branding that misrepresents the issuer. The person viewing the credential then forms an incorrect understanding of what the issuer actually attested, even though the underlying credential is authentic and unmodified. This is the primary threat the Render Method specification is designed to address: it gives the issuer a way to assert, within the credential itself, a correct and intended presentation, published during <a data-link-type="dfn|abstract-op" data-lt="P1" href="#dfn-p1" class="internalDFN" id="ref-for-dfn-p1-5">Publish Render Template</a> to <a data-link-type="dfn|abstract-op" data-lt="S1" href="#dfn-s1" class="internalDFN" id="ref-for-dfn-s1-8">Render Template Storage</a> and retrieved by consumers via <a data-link-type="dfn|abstract-op" data-lt="F1" href="#dfn-f1" class="internalDFN" id="ref-for-dfn-f1-4">Retrieve Render Template</a>.
+          </td>
+        </tr>
+
+
+
+          <tr>
+        <td class="response-name">R1. Issuer-Asserted Render Method (Reduce)</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          The <a data-link-type="dfn|abstract-op" data-lt="E1" href="#dfn-e1" class="internalDFN" id="ref-for-dfn-e1-8">issuer</a> asserts one or more render methods in the <a data-link-type="dfn" href="https://www.w3.org/TR/vc-data-model-2.0/#dfn-verifiable-credential">verifiable credential</a>, giving consumers an issuer-intended way to present the credential rather than inventing their own. This does not compel a consumer to use the issuer's presentation, but it makes the issuer's intended rendering available and unambiguous.
+        </td>
+          </tr>
+
+          <tr>
+        <td class="response-name">R2. Bind the Presentation to the Credential (Reduce)</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          So that the asserted presentation is not silently substituted or altered, the issuer treats the render template as an integrity-protected external resource. Because the render template is an external resource whose content affects how the credential is presented, the integrity considerations for it are a subset of <a href="https://www.w3.org/TR/vc-data-model/threat-model/#t19-tampering-with-unprotected-external-resources">Tampering with Unprotected External Resources</a> in the <cite><a data-matched-text="[[[VC-DATA-MODEL-2.0]]]" href="https://www.w3.org/TR/vc-data-model-2.0/">Verifiable Credentials Data Model v2.0</a></cite> threat model; readers are referred there for the full analysis and responses. An issuer that intends to update branding or layout over time instead deliberately leaves the template mutable, accepting that previously issued credentials render using the updated template.
+        </td>
+          </tr>
+
+          <tr>
+          <td class="affected-component">Affected Components: <a data-link-type="dfn|abstract-op" data-lt="E1" href="#dfn-e1" class="internalDFN" id="ref-for-dfn-e1-9">E1: Issuer</a>, <a data-link-type="dfn|abstract-op" data-lt="P1" href="#dfn-p1" class="internalDFN" id="ref-for-dfn-p1-6">P1: Publish Render Template</a>, <a data-link-type="dfn|abstract-op" data-lt="O1" href="#dfn-o1" class="internalDFN" id="ref-for-dfn-o1-6">O1: Render Template</a>, <a data-link-type="dfn|abstract-op" data-lt="S1" href="#dfn-s1" class="internalDFN" id="ref-for-dfn-s1-9">S1: Render Template Storage</a>, <a data-link-type="dfn|abstract-op" data-lt="P3" href="#dfn-p3" class="internalDFN" id="ref-for-dfn-p3-10">P3: Render</a>, <a data-link-type="dfn|abstract-op" data-lt="F1" href="#dfn-f1" class="internalDFN" id="ref-for-dfn-f1-5">F1: Retrieve Render Template</a>, <a data-link-type="dfn|abstract-op" data-lt="C1" href="#dfn-c1" class="internalDFN" id="ref-for-dfn-c1-3">C1: Issuer System</a></td>
+        </tr>
+
+          <tr>
+            <td class="taxonomy">Threat Taxonomy: STRIDE (Tampering)</td>
+          </tr>
+        </tbody></table>
+        <p class="threatCategory">Implementation Threats</p>
+
+      <section class="threatDetail" id="t2-unsafe-rendering-of-untrusted-data-0"><div class="header-wrapper"><h4 id="t2-unsafe-rendering-of-untrusted-data"><bdi class="secno">3.2.2 </bdi>T2. Unsafe Rendering of Untrusted Data</h4><a class="self-link" href="#t2-unsafe-rendering-of-untrusted-data" aria-label="Permalink for Section 3.2.2"></a></div>
+
+      </section>
+        <table class="threat">
+
+          <tbody><tr>
+            <td class="threat-name">
+              <section>
+                <div class="header-wrapper"><h4 id="T2.inner">T2. Unsafe Rendering of Untrusted Data
+
+          <span class="threat-tag threat-tag-security">security</span>
+
+                </h4><a class="self-link" href="#T2.inner" aria-label="Permalink for this Section"></a></div>
+                <span class="index-link">[<a href="#threat-list">Threat List</a>]</span>
+              </section>
+            </td>
+          </tr>
+
+        <tr>
+          <td class="threat-description">
+            The <a data-link-type="dfn|abstract-op" data-lt="P3" href="#dfn-p3" class="internalDFN" id="ref-for-dfn-p3-11">Render</a> process combines a render template retrieved via <a data-link-type="dfn|abstract-op" data-lt="F1" href="#dfn-f1" class="internalDFN" id="ref-for-dfn-f1-6">Retrieve Render Template</a> with claim values taken from a <a data-link-type="dfn" href="https://www.w3.org/TR/vc-data-model-2.0/#dfn-verifiable-credential">verifiable credential</a>, and produces output a person perceives, which can be visual, auditory, tactile, or textual. In the <code>html</code> render suite the template is an HTML fragment that carries its own CSS and JavaScript, and that code runs in order to render the credential. Both the template code and the credential values placed in the data block are untrusted input from the point of view of the software running the <a data-link-type="dfn|abstract-op" data-lt="P3" href="#dfn-p3" class="internalDFN" id="ref-for-dfn-p3-12">Render</a> process. Template code, or a credential value it consumes, can attempt to reach the surrounding <a data-link-type="dfn|abstract-op" data-lt="C2" href="#dfn-c2" class="internalDFN" id="ref-for-dfn-c2-4">holder system</a> or <a data-link-type="dfn|abstract-op" data-lt="C3" href="#dfn-c3" class="internalDFN" id="ref-for-dfn-c3-4">verifier system</a>, navigate away, or load and contact external locations, giving hostile content access to the context in which it renders. Successful verification of the credential's securing mechanism confirms that the content is authentic, not that it is safe to render, so hostile content can arrive inside a well-formed, verified credential. At the level of the data model this threat is a render-time instance of <a href="https://www.w3.org/TR/vc-data-model/threat-model/#t2-code-injection-via-credential-content">Code Injection via Credential Content</a> in the <cite><a data-matched-text="[[[VC-DATA-MODEL-2.0]]]" href="https://www.w3.org/TR/vc-data-model-2.0/">Verifiable Credentials Data Model v2.0</a></cite> threat model; the additional concern here is that the render method deliberately executes template-supplied code as part of rendering.
+          </td>
+        </tr>
+
+
+
+          <tr>
+        <td class="response-name">R1. Confine the Render Process (Reduce)</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          The <code>html</code> render suite runs the template code in a confined rendering environment rather than disabling the code it relies on. The specification defines this in terms of required security outcomes: the environment allows the template's JavaScript to render the credential while preventing it from navigating away, reaching the surrounding host page, and loading or contacting external content. How the environment enforces those outcomes is an implementation detail, and sandboxing can be achieved in a variety of ways. A browser based implementation, for example, can realize it by hosting the template in a sandboxed iframe that permits scripting but blocks navigation and top-level access, together with wrapper code that adds a Content Security Policy denying network requests; other environments provide equivalent isolation through different mechanisms. Whatever the mechanism, the environment further limits the resources and capabilities exposed to the template so that hostile template code has as little to act on as possible.
+        </td>
+          </tr>
+
+          <tr>
+          <td class="affected-component">Affected Components: <a data-link-type="dfn|abstract-op" data-lt="P3" href="#dfn-p3" class="internalDFN" id="ref-for-dfn-p3-13">P3: Render</a>, <a data-link-type="dfn|abstract-op" data-lt="F1" href="#dfn-f1" class="internalDFN" id="ref-for-dfn-f1-7">F1: Retrieve Render Template</a>, <a data-link-type="dfn|abstract-op" data-lt="O1" href="#dfn-o1" class="internalDFN" id="ref-for-dfn-o1-7">O1: Render Template</a>, <a data-link-type="dfn|abstract-op" data-lt="S1" href="#dfn-s1" class="internalDFN" id="ref-for-dfn-s1-10">S1: Render Template Storage</a>, <a data-link-type="dfn|abstract-op" data-lt="C2" href="#dfn-c2" class="internalDFN" id="ref-for-dfn-c2-5">C2: Holder System</a>, <a data-link-type="dfn|abstract-op" data-lt="C3" href="#dfn-c3" class="internalDFN" id="ref-for-dfn-c3-5">C3: Verifier System</a></td>
+        </tr>
+
+          <tr>
+            <td class="taxonomy">Threat Taxonomy: STRIDE (Elevation of Privilege)</td>
+          </tr>
+        </tbody></table>
+        <p class="threatCategory">Deployment Threats</p>
+
+      <section class="threatDetail" id="t3-tracking-via-template-and-resource-fetches-0"><div class="header-wrapper"><h4 id="t3-tracking-via-template-and-resource-fetches"><bdi class="secno">3.2.3 </bdi>T3. Tracking via Template and Resource Fetches</h4><a class="self-link" href="#t3-tracking-via-template-and-resource-fetches" aria-label="Permalink for Section 3.2.3"></a></div>
+
+      </section>
+        <table class="threat">
+
+          <tbody><tr>
+            <td class="threat-name">
+              <section>
+                <div class="header-wrapper"><h4 id="T3.inner">T3. Tracking via Template and Resource Fetches
+
+          <span class="threat-tag threat-tag-privacy">privacy</span>
+
+                </h4><a class="self-link" href="#T3.inner" aria-label="Permalink for this Section"></a></div>
+                <span class="index-link">[<a href="#threat-list">Threat List</a>]</span>
+              </section>
+            </td>
+          </tr>
+
+        <tr>
+          <td class="threat-description">
+            A render method can reference its template, and the template can in turn reference further resources such as images, by location rather than embedding them. When the <a data-link-type="dfn|abstract-op" data-lt="P3" href="#dfn-p3" class="internalDFN" id="ref-for-dfn-p3-14">Render</a> process resolves such a reference over the network via <a data-link-type="dfn|abstract-op" data-lt="F1" href="#dfn-f1" class="internalDFN" id="ref-for-dfn-f1-8">Retrieve Render Template</a>, the request reveals to the <a data-link-type="dfn|abstract-op" data-lt="E1" href="#dfn-e1" class="internalDFN" id="ref-for-dfn-e1-10">issuer</a> or to whoever hosts the resource that a particular credential is being rendered, along with the requester's network address, timing, and other request metadata. An issuer that assigns a distinct template or resource location per credential turns each render into a signal that identifies the specific credential and correlates the times and places it is displayed. In the <code>html</code> render suite, a template that is permitted to load external content could also encode credential data into the URLs of resources it fetches, such as image requests, exfiltrating rendered data to an external location. Embedding the template and its resources in the credential avoids the network requests entirely, at the cost of increasing the size of the credential, which can be significant for constrained devices. This threat is the render-time expression of <a href="https://www.w3.org/TR/vc-data-model/threat-model/#t10-device-tracking-and-fingerprinting">Device Tracking and Fingerprinting</a> in the <cite><a data-matched-text="[[[VC-DATA-MODEL-2.0]]]" href="https://www.w3.org/TR/vc-data-model-2.0/">Verifiable Credentials Data Model v2.0</a></cite> threat model, to which readers are referred for the general analysis.
+          </td>
+        </tr>
+
+
+
+          <tr>
+        <td class="response-name">R1. Block Network Access During Rendering (Reduce)</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          The rendering environment prevents the template from initiating its own network requests, so that a template cannot fetch per-user resources or encode credential data into outbound requests while rendering. The specification requires this as a security outcome for the <code>html</code> render suite; how it is enforced is an implementation detail. A browser based implementation, for example, can enforce it with a Content Security Policy applied by the wrapper code, while other rendering environments deny network egress by other means. Whatever the mechanism, blocking network access during rendering closes the linked-resource exfiltration vector for content loaded while the template runs.
+        </td>
+          </tr>
+
+          <tr>
+        <td class="response-name">R2. Embed, Cache, or Relay Template Retrieval (Reduce)</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          Where the retrieval of a template cannot be avoided, the requester protects it rather than revealing each render to the host. As the specification notes, template references are aggressively cached on the client so that a template is fetched at most once, and retrieval is performed through Oblivious HTTP or a similar relay that disassociates the requester from the requested origin. An issuer that prioritizes offline use and unlinkability embeds the template and its resources in the credential, accepting the increase in credential size. The general responses in <a href="https://www.w3.org/TR/vc-data-model/threat-model/#t10-device-tracking-and-fingerprinting">Device Tracking and Fingerprinting</a> in the <cite><a data-matched-text="[[[VC-DATA-MODEL-2.0]]]" href="https://www.w3.org/TR/vc-data-model-2.0/">Verifiable Credentials Data Model v2.0</a></cite> threat model apply here as well.
+        </td>
+          </tr>
+
+          <tr>
+          <td class="affected-component">Affected Components: <a data-link-type="dfn|abstract-op" data-lt="P3" href="#dfn-p3" class="internalDFN" id="ref-for-dfn-p3-15">P3: Render</a>, <a data-link-type="dfn|abstract-op" data-lt="F1" href="#dfn-f1" class="internalDFN" id="ref-for-dfn-f1-9">F1: Retrieve Render Template</a>, <a data-link-type="dfn|abstract-op" data-lt="O1" href="#dfn-o1" class="internalDFN" id="ref-for-dfn-o1-8">O1: Render Template</a>, <a data-link-type="dfn|abstract-op" data-lt="S1" href="#dfn-s1" class="internalDFN" id="ref-for-dfn-s1-11">S1: Render Template Storage</a>, <a data-link-type="dfn|abstract-op" data-lt="E1" href="#dfn-e1" class="internalDFN" id="ref-for-dfn-e1-11">E1: Issuer</a>, <a data-link-type="dfn|abstract-op" data-lt="C1" href="#dfn-c1" class="internalDFN" id="ref-for-dfn-c1-4">C1: Issuer System</a></td>
+        </tr>
+
+          <tr>
+            <td class="taxonomy">Threat Taxonomy: STRIDE (Information Disclosure)</td>
+          </tr>
+        </tbody></table>
+        <p class="threatCategory">External Threats</p>
+
+      <section class="threatDetail" id="t4-harmful-rendering-output-0"><div class="header-wrapper"><h4 id="t4-harmful-rendering-output"><bdi class="secno">3.2.4 </bdi>T4. Harmful Rendering Output</h4><a class="self-link" href="#t4-harmful-rendering-output" aria-label="Permalink for Section 3.2.4"></a></div>
+
+      </section>
+        <table class="threat">
+
+          <tbody><tr>
+            <td class="threat-name">
+              <section>
+                <div class="header-wrapper"><h4 id="T4.inner">T4. Harmful Rendering Output
+
+          <span class="threat-tag threat-tag-security">security</span>
+
+                </h4><a class="self-link" href="#T4.inner" aria-label="Permalink for this Section"></a></div>
+                <span class="index-link">[<a href="#threat-list">Threat List</a>]</span>
+              </section>
+            </td>
+          </tr>
+
+        <tr>
+          <td class="threat-description">
+            Because a render template controls the visual, auditory, and tactile output produced by the <a data-link-type="dfn|abstract-op" data-lt="P3" href="#dfn-p3" class="internalDFN" id="ref-for-dfn-p3-16">Render</a> process, a hostile template can be crafted to harm the person viewing it rather than to inform them. A template can drive the display with a rapidly flashing or strobing pattern capable of triggering a seizure in a person with photosensitive epilepsy, or emit sudden loud, screeching, or otherwise disruptive sound. The harm lands on the human observing the rendering, in the physical environment around the <a data-link-type="dfn|abstract-op" data-lt="C2" href="#dfn-c2" class="internalDFN" id="ref-for-dfn-c2-6">holder system</a> or <a data-link-type="dfn|abstract-op" data-lt="C3" href="#dfn-c3" class="internalDFN" id="ref-for-dfn-c3-6">verifier system</a>, rather than on the data or the software, and the underlying credential can be entirely authentic. The ability of arbitrary displayed or played content to affect a susceptible person is a real-world condition of any rendering technology and is outside what the Render Method specification itself governs, so it is treated as an external threat.
+          </td>
+        </tr>
+
+
+
+          <tr>
+        <td class="response-name">R1. Acknowledge as an External Condition (Accept)</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          The possibility that arbitrary visual or auditory output can affect a susceptible person exists for any technology that renders content and is not something the Render Method specification eliminates. This threat is documented so that implementers and deployers are aware of it and can apply platform-level and accessibility protections appropriate to their context.
+        </td>
+          </tr>
+
+          <tr>
+        <td class="response-name">R2. Constrain and Vet Rendering Output (Reduce)</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          Deployers reduce exposure by favoring render suites and output modes that constrain what a template can do to the person, such as the <code>card</code> suite, which produces a standardized, static output rather than animated or sound-producing content, and by honoring platform accessibility settings that limit motion, flashing, and sound. Where templates originate from parties a deployer does not trust, the rendering output is reviewed or transformed to a safe static form before it is shown.
+        </td>
+          </tr>
+
+          <tr>
+          <td class="affected-component">Affected Components: <a data-link-type="dfn|abstract-op" data-lt="P3" href="#dfn-p3" class="internalDFN" id="ref-for-dfn-p3-17">P3: Render</a>, <a data-link-type="dfn|abstract-op" data-lt="F1" href="#dfn-f1" class="internalDFN" id="ref-for-dfn-f1-10">F1: Retrieve Render Template</a>, <a data-link-type="dfn|abstract-op" data-lt="O1" href="#dfn-o1" class="internalDFN" id="ref-for-dfn-o1-9">O1: Render Template</a>, <a data-link-type="dfn|abstract-op" data-lt="C2" href="#dfn-c2" class="internalDFN" id="ref-for-dfn-c2-7">C2: Holder System</a>, <a data-link-type="dfn|abstract-op" data-lt="C3" href="#dfn-c3" class="internalDFN" id="ref-for-dfn-c3-7">C3: Verifier System</a></td>
+        </tr>
+
+          <tr>
+            <td class="taxonomy">Threat Taxonomy: STRIDE (Denial of Service)</td>
+          </tr>
+        </tbody></table>
+        <p class="threatCategory">Dependency Threats</p>
+
+      <section class="threatDetail" id="t5-inherited-rendering-environment-attack-surface-0"><div class="header-wrapper"><h4 id="t5-inherited-rendering-environment-attack-surface"><bdi class="secno">3.2.5 </bdi>T5. Inherited Rendering Environment Attack Surface</h4><a class="self-link" href="#t5-inherited-rendering-environment-attack-surface" aria-label="Permalink for Section 3.2.5"></a></div>
+
+      </section>
+        <table class="threat">
+
+          <tbody><tr>
+            <td class="threat-name">
+              <section>
+                <div class="header-wrapper"><h4 id="T5.inner">T5. Inherited Rendering Environment Attack Surface
+
+          <span class="threat-tag threat-tag-security">security</span>
+
+                </h4><a class="self-link" href="#T5.inner" aria-label="Permalink for this Section"></a></div>
+                <span class="index-link">[<a href="#threat-list">Threat List</a>]</span>
+              </section>
+            </td>
+          </tr>
+
+        <tr>
+          <td class="threat-description">
+            The <code>html</code> render suite performs the <a data-link-type="dfn|abstract-op" data-lt="P3" href="#dfn-p3" class="internalDFN" id="ref-for-dfn-p3-18">Render</a> process by executing template code inside a confined rendering environment and relies on that environment's isolation mechanisms to keep the code from navigating away, reaching the surrounding host page, or contacting the network. The specification defines these confinement requirements as security outcomes and leaves the mechanism that enforces them to the implementation; a sandbox can be provided in a variety of ways. A common realization is a browser, which enforces confinement through the iframe <code>sandbox</code> attribute, Content Security Policy, and <code>srcdoc</code> isolation, but other environments provide equivalent isolation through different mechanisms. Whatever mechanism is chosen, the safety of rendering inherits the security of that underlying mechanism: a defect that lets the confinement be escaped, a policy be bypassed, or the isolation between the template and the host be broken becomes a defect in the render process, even when the render method is used exactly as specified. The suite also inherits the ambient risk that a rendering environment, or its configuration, does not enforce the required outcomes faithfully. This is a dependency threat: the Render Method specification does not implement these protections itself but depends on the chosen environment enforcing them correctly and being available.
+          </td>
+        </tr>
+
+
+
+          <tr>
+        <td class="response-name">R1. Rely on Maintained Rendering Environments (Transfer)</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          Deployers perform the <a data-link-type="dfn|abstract-op" data-lt="P3" href="#dfn-p3" class="internalDFN" id="ref-for-dfn-p3-19">Render</a> process using an actively maintained rendering environment that receives timely security updates, such as a current browser engine, so that responsibility for the correctness of the environment's isolation mechanisms rests with its vendor and known defects are patched promptly.
+        </td>
+          </tr>
+
+          <tr>
+        <td class="response-name">R2. Defense in Depth Beyond a Single Mechanism (Reduce)</td>
+          </tr>
+          <tr>
+        <td class="response-desc">
+          Rather than relying on a single isolation primitive, the rendering environment combines the protections that achieve the specification's required outcomes: confinement of the executing template, denial of network egress, digest checking of retrieved template code, and prevention of host access, so that a failure in one mechanism does not by itself expose the <a data-link-type="dfn|abstract-op" data-lt="C2" href="#dfn-c2" class="internalDFN" id="ref-for-dfn-c2-8">holder system</a> or <a data-link-type="dfn|abstract-op" data-lt="C3" href="#dfn-c3" class="internalDFN" id="ref-for-dfn-c3-8">verifier system</a>. Because the choice of sandboxing mechanism is an implementation detail, an environment providing equivalent isolation is selected wherever the render method runs, whether or not it is a browser, and constrained suites such as <code>card</code> and <code>nfc</code>, which do not execute template code, are preferred where they meet the use case.
+        </td>
+          </tr>
+
+          <tr>
+          <td class="affected-component">Affected Components: <a data-link-type="dfn|abstract-op" data-lt="P3" href="#dfn-p3" class="internalDFN" id="ref-for-dfn-p3-20">P3: Render</a>, <a data-link-type="dfn|abstract-op" data-lt="C2" href="#dfn-c2" class="internalDFN" id="ref-for-dfn-c2-9">C2: Holder System</a>, <a data-link-type="dfn|abstract-op" data-lt="C3" href="#dfn-c3" class="internalDFN" id="ref-for-dfn-c3-9">C3: Verifier System</a></td>
+        </tr>
+
+          <tr>
+            <td class="taxonomy">Threat Taxonomy: STRIDE (Elevation of Privilege)</td>
+          </tr>
+        </tbody></table>
+      </section>
+  </section>
+
+  <section id="threat-model-contributing"><div class="header-wrapper"><h2 id="x4-contributing"><bdi class="secno">4. </bdi>Contributing</h2><a class="self-link" href="#threat-model-contributing" aria-label="Permalink for Section 4."></a></div>
+
+    <p>
+This threat model is maintained alongside the Verifiable Credentials Render
+Method specification. Feedback, bug reports, and proposed additions are
+welcome via the
+<a href="https://github.com/w3c/vc-render-method/issues/new">issue
+tracker</a>.
+    </p>
+    <section id="threat-model-adding-a-threat"><div class="header-wrapper"><h3 id="x4-1-adding-a-threat"><bdi class="secno">4.1 </bdi>Adding a Threat</h3><a class="self-link" href="#threat-model-adding-a-threat" aria-label="Permalink for Section 4.1"></a></div>
+
+      <p>
+To add a new threat to the model, provide the following components:
+      </p>
+      <ol>
+        <li>A short, descriptive name</li>
+        <li>
+A unique ID (letter <strong>T</strong> followed by an integer,
+e.g., <strong>T1</strong>)
+        </li>
+        <li>
+A description of the threat with enough detail for readers to understand
+its scope
+        </li>
+        <li>
+One or more responses, each with a name, unique ID (letter <strong>R
+</strong> followed by an integer), response type (Eliminate, Reduce,
+Transfer, or Accept), and description
+        </li>
+        <li>
+A list of affected DFD elements drawn from the dictionary above
+        </li>
+        <li>
+The threat taxonomy used (e.g., STRIDE) and the threat class within that
+taxonomy
+        </li>
+      </ol>
+      <p>
+Create a YAML file following the pattern of the Data Integrity threat
+model's threat files, then register it in <code>threats/outline.yaml</code>
+by adding its filename to the <code>files</code> list and its threat ID to
+the appropriate category in the <code>categories</code> list. No changes to
+<code>index.html</code> are required.
+      </p>
+    </section>
+  </section>
+
+
+
+
+<div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-e1" aria-label="Links in this document to definition: E1 Issuer">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-e1" aria-label="Permalink for definition: E1 Issuer. Activate to close this dialog.">Permalink</a>
+
+
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-e1-1" title="§ 1. Introduction">§ 1. Introduction</a>
+    </li><li>
+      <a href="#ref-for-dfn-e1-2" title="§ 1.1 Description">§ 1.1 Description</a>
+    </li><li>
+      <a href="#ref-for-dfn-e1-3" title="§ 1.3 Dictionary">§ 1.3 Dictionary</a> <a href="#ref-for-dfn-e1-4" title="Reference 2">(2)</a> <a href="#ref-for-dfn-e1-5" title="Reference 3">(3)</a> <a href="#ref-for-dfn-e1-6" title="Reference 4">(4)</a>
+    </li><li>
+      <a href="#ref-for-dfn-e1-7" title="§ 3.2 Threat Details">§ 3.2 Threat Details</a> <a href="#ref-for-dfn-e1-8" title="Reference 2">(2)</a> <a href="#ref-for-dfn-e1-9" title="Reference 3">(3)</a> <a href="#ref-for-dfn-e1-10" title="Reference 4">(4)</a> <a href="#ref-for-dfn-e1-11" title="Reference 5">(5)</a>
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-e2" aria-label="Links in this document to definition: E2 Holder">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-e2" aria-label="Permalink for definition: E2 Holder. Activate to close this dialog.">Permalink</a>
+
+
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-e2-1" title="§ 1. Introduction">§ 1. Introduction</a>
+    </li><li>
+      <a href="#ref-for-dfn-e2-2" title="§ 1.1 Description">§ 1.1 Description</a>
+    </li><li>
+      <a href="#ref-for-dfn-e2-3" title="§ 1.3 Dictionary">§ 1.3 Dictionary</a>
+    </li><li>
+      <a href="#ref-for-dfn-e2-4" title="§ 3.2 Threat Details">§ 3.2 Threat Details</a>
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-e3" aria-label="Links in this document to definition: E3 Verifier">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-e3" aria-label="Permalink for definition: E3 Verifier. Activate to close this dialog.">Permalink</a>
+
+
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-e3-1" title="§ 1. Introduction">§ 1. Introduction</a>
+    </li><li>
+      <a href="#ref-for-dfn-e3-2" title="§ 1.1 Description">§ 1.1 Description</a>
+    </li><li>
+      <a href="#ref-for-dfn-e3-3" title="§ 1.3 Dictionary">§ 1.3 Dictionary</a>
+    </li><li>
+      <a href="#ref-for-dfn-e3-4" title="§ 3.2 Threat Details">§ 3.2 Threat Details</a>
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-p1" aria-label="Links in this document to definition: P1 Publish Render Template">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-p1" aria-label="Permalink for definition: P1 Publish Render Template. Activate to close this dialog.">Permalink</a>
+
+
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-p1-1" title="§ 1.2 Data Flow Diagram for the Render Method Ecosystem">§ 1.2 Data Flow Diagram for the Render Method Ecosystem</a>
+    </li><li>
+      <a href="#ref-for-dfn-p1-2" title="§ 1.3 Dictionary">§ 1.3 Dictionary</a> <a href="#ref-for-dfn-p1-3" title="Reference 2">(2)</a> <a href="#ref-for-dfn-p1-4" title="Reference 3">(3)</a>
+    </li><li>
+      <a href="#ref-for-dfn-p1-5" title="§ 3.2 Threat Details">§ 3.2 Threat Details</a> <a href="#ref-for-dfn-p1-6" title="Reference 2">(2)</a>
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-p2" aria-label="Links in this document to definition: P2 Update Render Template">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-p2" aria-label="Permalink for definition: P2 Update Render Template. Activate to close this dialog.">Permalink</a>
+
+
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-p2-1" title="§ 1.2 Data Flow Diagram for the Render Method Ecosystem">§ 1.2 Data Flow Diagram for the Render Method Ecosystem</a>
+    </li><li>
+      <a href="#ref-for-dfn-p2-2" title="§ 1.3 Dictionary">§ 1.3 Dictionary</a> <a href="#ref-for-dfn-p2-3" title="Reference 2">(2)</a> <a href="#ref-for-dfn-p2-4" title="Reference 3">(3)</a>
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-p3" aria-label="Links in this document to definition: P3 Render">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-p3" aria-label="Permalink for definition: P3 Render. Activate to close this dialog.">Permalink</a>
+
+
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-p3-1" title="§ 1.2 Data Flow Diagram for the Render Method Ecosystem">§ 1.2 Data Flow Diagram for the Render Method Ecosystem</a>
+    </li><li>
+      <a href="#ref-for-dfn-p3-2" title="§ 1.3 Dictionary">§ 1.3 Dictionary</a> <a href="#ref-for-dfn-p3-3" title="Reference 2">(2)</a> <a href="#ref-for-dfn-p3-4" title="Reference 3">(3)</a> <a href="#ref-for-dfn-p3-5" title="Reference 4">(4)</a> <a href="#ref-for-dfn-p3-6" title="Reference 5">(5)</a> <a href="#ref-for-dfn-p3-7" title="Reference 6">(6)</a> <a href="#ref-for-dfn-p3-8" title="Reference 7">(7)</a>
+    </li><li>
+      <a href="#ref-for-dfn-p3-9" title="§ 3.2 Threat Details">§ 3.2 Threat Details</a> <a href="#ref-for-dfn-p3-10" title="Reference 2">(2)</a> <a href="#ref-for-dfn-p3-11" title="Reference 3">(3)</a> <a href="#ref-for-dfn-p3-12" title="Reference 4">(4)</a> <a href="#ref-for-dfn-p3-13" title="Reference 5">(5)</a> <a href="#ref-for-dfn-p3-14" title="Reference 6">(6)</a> <a href="#ref-for-dfn-p3-15" title="Reference 7">(7)</a> <a href="#ref-for-dfn-p3-16" title="Reference 8">(8)</a> <a href="#ref-for-dfn-p3-17" title="Reference 9">(9)</a> <a href="#ref-for-dfn-p3-18" title="Reference 10">(10)</a> <a href="#ref-for-dfn-p3-19" title="Reference 11">(11)</a> <a href="#ref-for-dfn-p3-20" title="Reference 12">(12)</a>
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-f1" aria-label="Links in this document to definition: F1 Retrieve Render Template">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-f1" aria-label="Permalink for definition: F1 Retrieve Render Template. Activate to close this dialog.">Permalink</a>
+
+
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-f1-1" title="§ 1.2 Data Flow Diagram for the Render Method Ecosystem">§ 1.2 Data Flow Diagram for the Render Method Ecosystem</a>
+    </li><li>
+      <a href="#ref-for-dfn-f1-2" title="§ 1.3 Dictionary">§ 1.3 Dictionary</a> <a href="#ref-for-dfn-f1-3" title="Reference 2">(2)</a>
+    </li><li>
+      <a href="#ref-for-dfn-f1-4" title="§ 3.2 Threat Details">§ 3.2 Threat Details</a> <a href="#ref-for-dfn-f1-5" title="Reference 2">(2)</a> <a href="#ref-for-dfn-f1-6" title="Reference 3">(3)</a> <a href="#ref-for-dfn-f1-7" title="Reference 4">(4)</a> <a href="#ref-for-dfn-f1-8" title="Reference 5">(5)</a> <a href="#ref-for-dfn-f1-9" title="Reference 6">(6)</a> <a href="#ref-for-dfn-f1-10" title="Reference 7">(7)</a>
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-f2" aria-label="Links in this document to definition: F2 Observe Rendering">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-f2" aria-label="Permalink for definition: F2 Observe Rendering. Activate to close this dialog.">Permalink</a>
+
+
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-f2-1" title="§ 1.2 Data Flow Diagram for the Render Method Ecosystem">§ 1.2 Data Flow Diagram for the Render Method Ecosystem</a>
+    </li><li>
+      <a href="#ref-for-dfn-f2-2" title="§ 1.3 Dictionary">§ 1.3 Dictionary</a> <a href="#ref-for-dfn-f2-3" title="Reference 2">(2)</a>
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-o1" aria-label="Links in this document to definition: O1 Render Template">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-o1" aria-label="Permalink for definition: O1 Render Template. Activate to close this dialog.">Permalink</a>
+
+
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-o1-1" title="§ 1.3 Dictionary">§ 1.3 Dictionary</a> <a href="#ref-for-dfn-o1-2" title="Reference 2">(2)</a> <a href="#ref-for-dfn-o1-3" title="Reference 3">(3)</a> <a href="#ref-for-dfn-o1-4" title="Reference 4">(4)</a> <a href="#ref-for-dfn-o1-5" title="Reference 5">(5)</a>
+    </li><li>
+      <a href="#ref-for-dfn-o1-6" title="§ 3.2 Threat Details">§ 3.2 Threat Details</a> <a href="#ref-for-dfn-o1-7" title="Reference 2">(2)</a> <a href="#ref-for-dfn-o1-8" title="Reference 3">(3)</a> <a href="#ref-for-dfn-o1-9" title="Reference 4">(4)</a>
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-s1" aria-label="Links in this document to definition: S1 Render Template Storage">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-s1" aria-label="Permalink for definition: S1 Render Template Storage. Activate to close this dialog.">Permalink</a>
+
+
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-s1-1" title="§ 1.2 Data Flow Diagram for the Render Method Ecosystem">§ 1.2 Data Flow Diagram for the Render Method Ecosystem</a>
+    </li><li>
+      <a href="#ref-for-dfn-s1-2" title="§ 1.3 Dictionary">§ 1.3 Dictionary</a> <a href="#ref-for-dfn-s1-3" title="Reference 2">(2)</a> <a href="#ref-for-dfn-s1-4" title="Reference 3">(3)</a> <a href="#ref-for-dfn-s1-5" title="Reference 4">(4)</a> <a href="#ref-for-dfn-s1-6" title="Reference 5">(5)</a> <a href="#ref-for-dfn-s1-7" title="Reference 6">(6)</a>
+    </li><li>
+      <a href="#ref-for-dfn-s1-8" title="§ 3.2 Threat Details">§ 3.2 Threat Details</a> <a href="#ref-for-dfn-s1-9" title="Reference 2">(2)</a> <a href="#ref-for-dfn-s1-10" title="Reference 3">(3)</a> <a href="#ref-for-dfn-s1-11" title="Reference 4">(4)</a>
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-c1" aria-label="Links in this document to definition: C1 Issuer System">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-c1" aria-label="Permalink for definition: C1 Issuer System. Activate to close this dialog.">Permalink</a>
+
+
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-c1-1" title="§ 1.2 Data Flow Diagram for the Render Method Ecosystem">§ 1.2 Data Flow Diagram for the Render Method Ecosystem</a>
+    </li><li>
+      <a href="#ref-for-dfn-c1-2" title="§ 1.3 Dictionary">§ 1.3 Dictionary</a>
+    </li><li>
+      <a href="#ref-for-dfn-c1-3" title="§ 3.2 Threat Details">§ 3.2 Threat Details</a> <a href="#ref-for-dfn-c1-4" title="Reference 2">(2)</a>
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-c2" aria-label="Links in this document to definition: C2 Holder System">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-c2" aria-label="Permalink for definition: C2 Holder System. Activate to close this dialog.">Permalink</a>
+
+
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-c2-1" title="§ 1.2 Data Flow Diagram for the Render Method Ecosystem">§ 1.2 Data Flow Diagram for the Render Method Ecosystem</a>
+    </li><li>
+      <a href="#ref-for-dfn-c2-2" title="§ 1.3 Dictionary">§ 1.3 Dictionary</a> <a href="#ref-for-dfn-c2-3" title="Reference 2">(2)</a>
+    </li><li>
+      <a href="#ref-for-dfn-c2-4" title="§ 3.2 Threat Details">§ 3.2 Threat Details</a> <a href="#ref-for-dfn-c2-5" title="Reference 2">(2)</a> <a href="#ref-for-dfn-c2-6" title="Reference 3">(3)</a> <a href="#ref-for-dfn-c2-7" title="Reference 4">(4)</a> <a href="#ref-for-dfn-c2-8" title="Reference 5">(5)</a> <a href="#ref-for-dfn-c2-9" title="Reference 6">(6)</a>
+    </li>
+  </ul>
+    </div><div class="dfn-panel" hidden="" role="dialog" aria-modal="true" id="dfn-panel-for-dfn-c3" aria-label="Links in this document to definition: C3 Verifier System">
+      <span class="caret"></span>
+      <div>
+        <a class="self-link" href="#dfn-c3" aria-label="Permalink for definition: C3 Verifier System. Activate to close this dialog.">Permalink</a>
+
+
+      </div>
+      <p><b>Referenced in:</b></p>
+      <ul>
+    <li>
+      <a href="#ref-for-dfn-c3-1" title="§ 1.2 Data Flow Diagram for the Render Method Ecosystem">§ 1.2 Data Flow Diagram for the Render Method Ecosystem</a>
+    </li><li>
+      <a href="#ref-for-dfn-c3-2" title="§ 1.3 Dictionary">§ 1.3 Dictionary</a> <a href="#ref-for-dfn-c3-3" title="Reference 2">(2)</a>
+    </li><li>
+      <a href="#ref-for-dfn-c3-4" title="§ 3.2 Threat Details">§ 3.2 Threat Details</a> <a href="#ref-for-dfn-c3-5" title="Reference 2">(2)</a> <a href="#ref-for-dfn-c3-6" title="Reference 3">(3)</a> <a href="#ref-for-dfn-c3-7" title="Reference 4">(4)</a> <a href="#ref-for-dfn-c3-8" title="Reference 5">(5)</a> <a href="#ref-for-dfn-c3-9" title="Reference 6">(6)</a>
+    </li>
+  </ul>
+    </div><script>
+(function() {
+  var ws = new WebSocket('ws://' + window.location.host +
+             '/jb-server-page?reloadMode=RELOAD_ON_SAVE&'+
+             'referrer=' + encodeURIComponent(window.location.pathname));
+  ws.onmessage = function (msg) {
+      if (msg.data === 'reload') {
+          window.location.reload();
+      }
+      if (msg.data.startsWith('update-css ')) {
+          var messageId = msg.data.substring(11);
+          var links = document.getElementsByTagName('link');
+          for (var i = 0; i < links.length; i++) {
+              var link = links[i];
+              if (link.rel !== 'stylesheet') continue;
+              var clonedLink = link.cloneNode(true);
+              var newHref = link.href.replace(/(&|\?)jbUpdateLinksId=\d+/, "$1jbUpdateLinksId=" + messageId);
+              if (newHref !== link.href) {
+                clonedLink.href = newHref;
+              }
+              else {
+                var indexOfQuest = newHref.indexOf('?');
+                if (indexOfQuest >= 0) {
+                  // to support ?foo#hash
+                  clonedLink.href = newHref.substring(0, indexOfQuest + 1) + 'jbUpdateLinksId=' + messageId + '&' +
+                                    newHref.substring(indexOfQuest + 1);
+                }
+                else {
+                  clonedLink.href += '?' + 'jbUpdateLinksId=' + messageId;
+                }
+              }
+              link.replaceWith(clonedLink);
+          }
+      }
+  };
+})();
+</script><section id="references" class="appendix"><div class="header-wrapper"><h2 id="a-references"><bdi class="secno">A. </bdi>References</h2><a class="self-link" href="#references" aria-label="Permalink for Appendix A."></a></div><section id="informative-references"><div class="header-wrapper"><h3 id="a-1-informative-references"><bdi class="secno">A.1 </bdi>Informative references</h3><a class="self-link" href="#informative-references" aria-label="Permalink for Appendix A.1"></a></div>
+
+    <dl class="bibliography"><dt id="bib-vc-data-model-2-0">[VC-DATA-MODEL-2.0]</dt><dd>
+      <a href="https://www.w3.org/TR/vc-data-model-2.0/"><cite>Verifiable Credentials Data Model v2.0</cite></a>. Ivan Herman; Michael Jones; Manu Sporny; Ted Thibodeau Jr; Gabe Cohen.  W3C. 15 May 2025. W3C Recommendation. URL: <a href="https://www.w3.org/TR/vc-data-model-2.0/">https://www.w3.org/TR/vc-data-model-2.0/</a>
+    </dd></dl>
+  </section></section><p role="navigation" id="back-to-top">
+    <a href="#title"><abbr title="Back to Top">↑</abbr></a>
+  </p><script id="respec-highlight-vars">(() => {
+// @ts-check
+
+if (document.respec) {
+  document.respec.ready.then(setupVarHighlighter);
+} else {
+  setupVarHighlighter();
+}
+
+function setupVarHighlighter() {
+  document
+    .querySelectorAll("var")
+    .forEach(varElem => varElem.addEventListener("click", highlightListener));
+}
+
+/**
+ * @param {MouseEvent} ev
+ */
+function highlightListener(ev) {
+  ev.stopPropagation();
+  const varElem = /** @type {HTMLElement} */ (ev.target);
+  const hightligtedElems = highlightVars(varElem);
+  const resetListener = () => {
+    const hlColor = getHighlightColor(varElem);
+    hightligtedElems.forEach(el => removeHighlight(el, hlColor));
+    [...HL_COLORS.keys()].forEach(key => HL_COLORS.set(key, true));
+  };
+  if (hightligtedElems.length) {
+    document.body.addEventListener("click", resetListener, { once: true });
+  }
+}
+
+// availability of highlight colors. colors from var.css
+const HL_COLORS = new Map([
+  ["respec-hl-c1", true],
+  ["respec-hl-c2", true],
+  ["respec-hl-c3", true],
+  ["respec-hl-c4", true],
+  ["respec-hl-c5", true],
+  ["respec-hl-c6", true],
+  ["respec-hl-c7", true],
+]);
+
+/**
+ * @param {HTMLElement} target
+ */
+function getHighlightColor(target) {
+  // return current colors if applicable
+  const { value } = target.classList;
+  const re = /respec-hl-\w+/;
+  const activeClass = re.test(value) && value.match(re);
+  if (activeClass) return activeClass[0];
+
+  // first color preference
+  if (HL_COLORS.get("respec-hl-c1") === true) return "respec-hl-c1";
+
+  // otherwise get some other available color
+  return [...HL_COLORS.keys()].find(c => HL_COLORS.get(c)) || "respec-hl-c1";
+}
+
+/**
+ * @param {HTMLElement} varElem
+ */
+function highlightVars(varElem) {
+  const textContent = norm(varElem.textContent);
+  const parent = /** @type {HTMLElement} */ (
+    varElem.closest(".algorithm, section")
+  );
+  if (!parent) return [];
+  const highlightColor = getHighlightColor(varElem);
+
+  const varsToHighlight = [...parent.querySelectorAll("var")].filter(
+    el =>
+      norm(el.textContent) === textContent &&
+      el.closest(".algorithm, section") === parent
+  );
+
+  // update availability of highlight color
+  const colorStatus = varsToHighlight[0].classList.contains("respec-hl");
+  HL_COLORS.set(highlightColor, colorStatus);
+
+  // highlight vars
+  if (colorStatus) {
+    varsToHighlight.forEach(el => removeHighlight(el, highlightColor));
+    return [];
+  } else {
+    varsToHighlight.forEach(el => addHighlight(el, highlightColor));
+  }
+  return varsToHighlight;
+}
+
+/**
+ * @param {HTMLElement} el
+ * @param {string} highlightColor
+ */
+function removeHighlight(el, highlightColor) {
+  el.classList.remove("respec-hl", highlightColor);
+  // clean up empty class attributes so they don't come in export
+  if (!el.classList.length) el.removeAttribute("class");
+}
+
+/**
+ * @param {HTMLElement} elem
+ * @param {string} highlightColor
+ */
+function addHighlight(elem, highlightColor) {
+  elem.classList.add("respec-hl", highlightColor);
+}
+
+/**
+ * Same as `norm` from src/core/utils, but our build process doesn't allow
+ * imports in runtime scripts, so duplicated here.
+ * @param {string} str
+ */
+function norm(str) {
+  return str.trim().replace(/\s+/g, " ");
+}
+})()</script><script id="respec-dfn-panel">(() => {
+// @ts-check
+if (document.respec) {
+  document.respec.ready.then(setupPanel);
+} else {
+  setupPanel();
+}
+
+function setupPanel() {
+  const listener = panelListener();
+  document.body.addEventListener("keydown", listener);
+  document.body.addEventListener("click", listener);
+}
+
+function panelListener() {
+  /** @type {HTMLElement | null} */
+  let panel = null;
+  /**
+   * @param {KeyboardEvent|MouseEvent} event
+   */
+  return event => {
+    const { target, type } = event;
+
+    if (!(target instanceof HTMLElement)) return;
+
+    // For keys, we only care about Enter key to activate the panel
+    // otherwise it's activated via a click.
+    if (
+      type === "keydown" &&
+      /** @type {KeyboardEvent} */ (event).key !== "Enter"
+    )
+      return;
+
+    const action = deriveAction(event);
+
+    switch (action) {
+      case "show": {
+        hidePanel(panel);
+        /** @type {HTMLElement | null} */
+        const dfn = target.closest("dfn, .index-term");
+        if (!dfn?.id) break;
+        panel = document.getElementById(`dfn-panel-for-${dfn.id}`);
+        if (!panel) break;
+        const coords = deriveCoordinates(
+          /** @type {MouseEvent|KeyboardEvent} */ (event)
+        );
+        displayPanel(dfn, panel, coords);
+        break;
+      }
+      case "dock": {
+        if (panel) {
+          panel.style.left = "";
+          panel.style.top = "";
+          panel.classList.add("docked");
+        }
+        break;
+      }
+      case "hide": {
+        hidePanel(panel);
+        panel = null;
+        break;
+      }
+    }
+  };
+}
+
+/**
+ * @param {MouseEvent|KeyboardEvent} event
+ */
+function deriveCoordinates(event) {
+  const target = /** @type HTMLElement */ (event.target);
+
+  // We prevent synthetic AT clicks from putting
+  // the dialog in a weird place. The AT events sometimes
+  // lack coordinates, so they have clientX/Y = 0
+  const rect = target.getBoundingClientRect();
+  if (
+    event instanceof MouseEvent &&
+    event.clientX >= rect.left &&
+    event.clientY >= rect.top
+  ) {
+    // The event probably happened inside the bounding rect...
+    return { x: event.clientX, y: event.clientY };
+  }
+
+  // Offset to the middle of the element
+  const x = rect.x + rect.width / 2;
+  // Placed at the bottom of the element
+  const y = rect.y + rect.height;
+  return { x, y };
+}
+
+/**
+ * @param {Event} event
+ */
+function deriveAction(event) {
+  const target = /** @type {HTMLElement} */ (event.target);
+  const hitALink = !!target.closest("a");
+  if (target.closest("dfn:not([data-cite]), .index-term")) {
+    return hitALink ? "none" : "show";
+  }
+  if (target.closest(".dfn-panel")) {
+    if (hitALink) {
+      return target.classList.contains("self-link") ? "hide" : "dock";
+    }
+
+    const panel = /** @type {HTMLElement} */ (target.closest(".dfn-panel"));
+    return panel.classList.contains("docked") ? "hide" : "none";
+  }
+  if (document.querySelector(".dfn-panel:not([hidden])")) {
+    return "hide";
+  }
+  return "none";
+}
+
+/**
+ * @param {HTMLElement} dfn
+ * @param {HTMLElement} panel
+ * @param {{ x: number, y: number }} clickPosition
+ */
+function displayPanel(dfn, panel, { x, y }) {
+  panel.hidden = false;
+  // distance (px) between edge of panel and the pointing triangle (caret)
+  const MARGIN = 20;
+
+  const dfnRects = dfn.getClientRects();
+  // Find the `top` offset when the `dfn` can be spread across multiple lines
+  let closestTop = 0;
+  let minDiff = Infinity;
+  for (const rect of dfnRects) {
+    const { top, bottom } = rect;
+    const diffFromClickY = Math.abs((top + bottom) / 2 - y);
+    if (diffFromClickY < minDiff) {
+      minDiff = diffFromClickY;
+      closestTop = top;
+    }
+  }
+
+  const top = window.scrollY + closestTop + dfnRects[0].height;
+  const left = x - MARGIN;
+  panel.style.left = `${left}px`;
+  panel.style.top = `${top}px`;
+
+  // Find if the panel is flowing out of the window
+  const panelRect = panel.getBoundingClientRect();
+  const SCREEN_WIDTH = Math.min(window.innerWidth, window.screen.width);
+  if (panelRect.right > SCREEN_WIDTH) {
+    const newLeft = Math.max(MARGIN, x + MARGIN - panelRect.width);
+    const newCaretOffset = left - newLeft;
+    panel.style.left = `${newLeft}px`;
+    /** @type {HTMLElement | null} */
+    const caret = panel.querySelector(".caret");
+    if (caret) caret.style.left = `${newCaretOffset}px`;
+  }
+
+  // As it's a dialog, we trap focus.
+  // TODO: when <dialog> becomes a implemented, we should really
+  // use that.
+  trapFocus(panel, dfn);
+}
+
+/**
+ * @param {HTMLElement} panel
+ * @param {HTMLElement} dfn
+ * @returns
+ */
+function trapFocus(panel, dfn) {
+  /** @type NodeListOf<HTMLAnchorElement> elements */
+  const anchors = panel.querySelectorAll("a[href]");
+  // No need to trap focus
+  if (!anchors.length) return;
+
+  // Move focus to first anchor element
+  const first = anchors.item(0);
+  first.focus();
+
+  const trapListener = createTrapListener(anchors, panel, dfn);
+  panel.addEventListener("keydown", trapListener);
+
+  // Hiding the panel releases the trap
+  const mo = new MutationObserver(records => {
+    const [record] = records;
+    const target = /** @type HTMLElement */ (record.target);
+    if (target.hidden) {
+      panel.removeEventListener("keydown", trapListener);
+      mo.disconnect();
+    }
+  });
+  mo.observe(panel, { attributes: true, attributeFilter: ["hidden"] });
+}
+
+/**
+ *
+ * @param {NodeListOf<HTMLAnchorElement>} anchors
+ * @param {HTMLElement} panel
+ * @param {HTMLElement} dfn
+ * @returns
+ */
+function createTrapListener(anchors, panel, dfn) {
+  const lastIndex = anchors.length - 1;
+  let currentIndex = 0;
+  /**
+   * @param {KeyboardEvent} event
+   */
+  return event => {
+    switch (event.key) {
+      // Hitting "Tab" traps us in a nice loop around elements.
+      case "Tab": {
+        event.preventDefault();
+        currentIndex += event.shiftKey ? -1 : +1;
+        if (currentIndex < 0) {
+          currentIndex = lastIndex;
+        } else if (currentIndex > lastIndex) {
+          currentIndex = 0;
+        }
+        anchors.item(currentIndex).focus();
+        break;
+      }
+
+      // Hitting "Enter" on an anchor releases the trap.
+      case "Enter":
+        hidePanel(panel);
+        break;
+
+      // Hitting "Escape" returns focus to dfn.
+      case "Escape":
+        hidePanel(panel);
+        dfn.focus();
+        return;
+    }
+  };
+}
+
+/** @param {HTMLElement | null} panel */
+function hidePanel(panel) {
+  if (!panel) return;
+  panel.hidden = true;
+  panel.classList.remove("docked");
+}
+})()</script><script src="https://www.w3.org/scripts/TR/2021/fixup.js"></script></body></html>

@@ -156,3 +156,13 @@ span.threat-tag.threat-tag-security {
 span.threat-tag.threat-tag-privacy {
         background-color: #f8c49a;
 }
+table.dictionary,
+table.dictionary th,
+table.dictionary td {
+  border: thin solid rgb(176, 176, 176);
+  border-collapse: collapse;
+  padding: 5px;
+}
+table.dictionary td.left {
+  width: 12em;
+}
