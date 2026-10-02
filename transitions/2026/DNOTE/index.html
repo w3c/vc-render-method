@@ -100,7 +100,7 @@ Render Method specification. It identifies and analyzes security and
 privacy threats specific to the publication, retrieval, and processing of
 render methods used to produce a human-readable rendering of a
 verifiable credential.">
-<link rel="canonical" href="https://www.w3.org/TR/vc-render-method/threat-model/">
+<link rel="canonical" href="https://www.w3.org/TR/vc-render-method/threat-model-1.0/">
 <style>
 var:hover{text-decoration:underline;cursor:pointer}
 var.respec-hl{color:var(--color,#000);background-color:var(--bg-color);box-shadow:0 0 0 2px var(--bg-color)}
@@ -131,7 +131,7 @@ var[data-type]:hover::after,var[data-type]:hover::before{opacity:1}
   "group": "vc",
   "publishDate": "2026-10-08",
   "edDraftURI": "https://w3c.github.io/vc-render-method/threat-model/",
-  "latestVersion": "https://www.w3.org/TR/vc-render-method/threat-model/",
+  "latestVersion": "https://www.w3.org/TR/vc-render-method/threat-model-1.0/",
   "github": {
     "repoURL": "https://github.com/w3c/vc-render-method/",
     "branch": "main"
@@ -177,7 +177,7 @@ var[data-type]:hover::after,var[data-type]:hover::before{opacity:1}
                   <a class="u-url" href="https://www.w3.org/TR/2026/DNOTE-vc-render-method-threat-model-1.0-20261008/threat-model/">https://www.w3.org/TR/2026/DNOTE-vc-render-method-threat-model-1.0-20261008/threat-model/</a>
                 </dd>
         <dt>Latest published version:</dt><dd>
-                  <a href="https://www.w3.org/TR/vc-render-method/threat-model/">https://www.w3.org/TR/vc-render-method/threat-model/</a>
+                  <a href="https://www.w3.org/TR/vc-render-method/threat-model-1.0/">https://www.w3.org/TR/vc-render-method/threat-model-1.0/</a>
                 </dd>
         <dt>Latest editor's draft:</dt><dd><a href="https://w3c.github.io/vc-render-method/threat-model/">https://w3c.github.io/vc-render-method/threat-model/</a></dd>
         <dt>History:</dt><dd>
@@ -321,7 +321,7 @@ it; and the <strong><a data-link-type="dfn|abstract-op" data-lt="E3" href="#dfn-
 as part of evaluating it. The elements and flows introduced by the Render
 Method specification are shown in full color in the data flow diagram below;
 elements reused from the
-<a href="https://www.w3.org/TR/vc-data-model/threat-model/">Verifiable
+<a href="https://www.w3.org/TR/vc-data-model-threat-model-2.1/">Verifiable
 Credentials Data Model threat model</a> are shown grayed as context.
       </p>
       <div class="note" role="note" id="issue-container-generatedID"><div class="note-title marker" id="h-note"><span>Note</span></div><p class="" role="note">
@@ -389,7 +389,7 @@ elements under a single authority)
       <p>
 The dictionary defines the data flow diagram elements introduced by the
 Render Method specification. Elements reused from the
-<a href="https://www.w3.org/TR/vc-data-model/threat-model/">Verifiable
+<a href="https://www.w3.org/TR/vc-data-model-threat-model-2.1/">Verifiable
 Credentials Data Model threat model</a> appear grayed in the diagram for
 context and are defined in that document rather than repeated here.
       </p>
@@ -702,7 +702,7 @@ system.
           </tr>
           <tr>
         <td class="response-desc">
-          So that the asserted presentation is not silently substituted or altered, the issuer treats the render template as an integrity-protected external resource. Because the render template is an external resource whose content affects how the credential is presented, the integrity considerations for it are a subset of <a href="https://www.w3.org/TR/vc-data-model/threat-model/#t19-tampering-with-unprotected-external-resources">Tampering with Unprotected External Resources</a> in the <cite><a data-matched-text="[[[VC-DATA-MODEL-2.0]]]" href="https://www.w3.org/TR/vc-data-model-2.0/">Verifiable Credentials Data Model v2.0</a></cite> threat model; readers are referred there for the full analysis and responses. An issuer that intends to update branding or layout over time instead deliberately leaves the template mutable, accepting that previously issued credentials render using the updated template.
+          So that the asserted presentation is not silently substituted or altered, the issuer treats the render template as an integrity-protected external resource. Because the render template is an external resource whose content affects how the credential is presented, the integrity considerations for it are a subset of <a href="https://www.w3.org/TR/vc-data-model-threat-model-2.1/#tampering-with-unprotected-external-resources">Tampering with Unprotected External Resources</a> in the <cite><a data-matched-text="[[[VC-DATA-MODEL-2.0]]]" href="https://www.w3.org/TR/vc-data-model-2.0/">Verifiable Credentials Data Model v2.0</a></cite> threat model; readers are referred there for the full analysis and responses. An issuer that intends to update branding or layout over time instead deliberately leaves the template mutable, accepting that previously issued credentials render using the updated template.
         </td>
           </tr>
 
@@ -736,7 +736,7 @@ system.
 
         <tr>
           <td class="threat-description">
-            The <a data-link-type="dfn|abstract-op" data-lt="P3" href="#dfn-p3" class="internalDFN" id="ref-for-dfn-p3-11">Render</a> process combines a render template retrieved via <a data-link-type="dfn|abstract-op" data-lt="F1" href="#dfn-f1" class="internalDFN" id="ref-for-dfn-f1-6">Retrieve Render Template</a> with claim values taken from a <a data-link-type="dfn" href="https://www.w3.org/TR/vc-data-model-2.0/#dfn-verifiable-credential">verifiable credential</a>, and produces output a person perceives, which can be visual, auditory, tactile, or textual. In the <code>html</code> render suite the template is an HTML fragment that carries its own CSS and JavaScript, and that code runs in order to render the credential. Both the template code and the credential values placed in the data block are untrusted input from the point of view of the software running the <a data-link-type="dfn|abstract-op" data-lt="P3" href="#dfn-p3" class="internalDFN" id="ref-for-dfn-p3-12">Render</a> process. Template code, or a credential value it consumes, can attempt to reach the surrounding <a data-link-type="dfn|abstract-op" data-lt="C2" href="#dfn-c2" class="internalDFN" id="ref-for-dfn-c2-4">holder system</a> or <a data-link-type="dfn|abstract-op" data-lt="C3" href="#dfn-c3" class="internalDFN" id="ref-for-dfn-c3-4">verifier system</a>, navigate away, or load and contact external locations, giving hostile content access to the context in which it renders. Successful verification of the credential's securing mechanism confirms that the content is authentic, not that it is safe to render, so hostile content can arrive inside a well-formed, verified credential. At the level of the data model this threat is a render-time instance of <a href="https://www.w3.org/TR/vc-data-model/threat-model/#t2-code-injection-via-credential-content">Code Injection via Credential Content</a> in the <cite><a data-matched-text="[[[VC-DATA-MODEL-2.0]]]" href="https://www.w3.org/TR/vc-data-model-2.0/">Verifiable Credentials Data Model v2.0</a></cite> threat model; the additional concern here is that the render method deliberately executes template-supplied code as part of rendering.
+            The <a data-link-type="dfn|abstract-op" data-lt="P3" href="#dfn-p3" class="internalDFN" id="ref-for-dfn-p3-11">Render</a> process combines a render template retrieved via <a data-link-type="dfn|abstract-op" data-lt="F1" href="#dfn-f1" class="internalDFN" id="ref-for-dfn-f1-6">Retrieve Render Template</a> with claim values taken from a <a data-link-type="dfn" href="https://www.w3.org/TR/vc-data-model-2.0/#dfn-verifiable-credential">verifiable credential</a>, and produces output a person perceives, which can be visual, auditory, tactile, or textual. In the <code>html</code> render suite the template is an HTML fragment that carries its own CSS and JavaScript, and that code runs in order to render the credential. Both the template code and the credential values placed in the data block are untrusted input from the point of view of the software running the <a data-link-type="dfn|abstract-op" data-lt="P3" href="#dfn-p3" class="internalDFN" id="ref-for-dfn-p3-12">Render</a> process. Template code, or a credential value it consumes, can attempt to reach the surrounding <a data-link-type="dfn|abstract-op" data-lt="C2" href="#dfn-c2" class="internalDFN" id="ref-for-dfn-c2-4">holder system</a> or <a data-link-type="dfn|abstract-op" data-lt="C3" href="#dfn-c3" class="internalDFN" id="ref-for-dfn-c3-4">verifier system</a>, navigate away, or load and contact external locations, giving hostile content access to the context in which it renders. Successful verification of the credential's securing mechanism confirms that the content is authentic, not that it is safe to render, so hostile content can arrive inside a well-formed, verified credential. At the level of the data model this threat is a render-time instance of <a href="https://www.w3.org/TR/vc-data-model-threat-model-2.1/#code-injection-via-credential-content">Code Injection via Credential Content</a> in the <cite><a data-matched-text="[[[VC-DATA-MODEL-2.0]]]" href="https://www.w3.org/TR/vc-data-model-2.0/">Verifiable Credentials Data Model v2.0</a></cite> threat model; the additional concern here is that the render method deliberately executes template-supplied code as part of rendering.
           </td>
         </tr>
 
@@ -781,7 +781,7 @@ system.
 
         <tr>
           <td class="threat-description">
-            A render method can reference its template, and the template can in turn reference further resources such as images, by location rather than embedding them. When the <a data-link-type="dfn|abstract-op" data-lt="P3" href="#dfn-p3" class="internalDFN" id="ref-for-dfn-p3-14">Render</a> process resolves such a reference over the network via <a data-link-type="dfn|abstract-op" data-lt="F1" href="#dfn-f1" class="internalDFN" id="ref-for-dfn-f1-8">Retrieve Render Template</a>, the request reveals to the <a data-link-type="dfn|abstract-op" data-lt="E1" href="#dfn-e1" class="internalDFN" id="ref-for-dfn-e1-10">issuer</a> or to whoever hosts the resource that a particular credential is being rendered, along with the requester's network address, timing, and other request metadata. An issuer that assigns a distinct template or resource location per credential turns each render into a signal that identifies the specific credential and correlates the times and places it is displayed. In the <code>html</code> render suite, a template that is permitted to load external content could also encode credential data into the URLs of resources it fetches, such as image requests, exfiltrating rendered data to an external location. Embedding the template and its resources in the credential avoids the network requests entirely, at the cost of increasing the size of the credential, which can be significant for constrained devices. This threat is the render-time expression of <a href="https://www.w3.org/TR/vc-data-model/threat-model/#t10-device-tracking-and-fingerprinting">Device Tracking and Fingerprinting</a> in the <cite><a data-matched-text="[[[VC-DATA-MODEL-2.0]]]" href="https://www.w3.org/TR/vc-data-model-2.0/">Verifiable Credentials Data Model v2.0</a></cite> threat model, to which readers are referred for the general analysis.
+            A render method can reference its template, and the template can in turn reference further resources such as images, by location rather than embedding them. When the <a data-link-type="dfn|abstract-op" data-lt="P3" href="#dfn-p3" class="internalDFN" id="ref-for-dfn-p3-14">Render</a> process resolves such a reference over the network via <a data-link-type="dfn|abstract-op" data-lt="F1" href="#dfn-f1" class="internalDFN" id="ref-for-dfn-f1-8">Retrieve Render Template</a>, the request reveals to the <a data-link-type="dfn|abstract-op" data-lt="E1" href="#dfn-e1" class="internalDFN" id="ref-for-dfn-e1-10">issuer</a> or to whoever hosts the resource that a particular credential is being rendered, along with the requester's network address, timing, and other request metadata. An issuer that assigns a distinct template or resource location per credential turns each render into a signal that identifies the specific credential and correlates the times and places it is displayed. In the <code>html</code> render suite, a template that is permitted to load external content could also encode credential data into the URLs of resources it fetches, such as image requests, exfiltrating rendered data to an external location. Embedding the template and its resources in the credential avoids the network requests entirely, at the cost of increasing the size of the credential, which can be significant for constrained devices. This threat is the render-time expression of <a href="https://www.w3.org/TR/vc-data-model-threat-model-2.1/#device-tracking-and-fingerprinting">Device Tracking and Fingerprinting</a> in the <cite><a data-matched-text="[[[VC-DATA-MODEL-2.0]]]" href="https://www.w3.org/TR/vc-data-model-2.0/">Verifiable Credentials Data Model v2.0</a></cite> threat model, to which readers are referred for the general analysis.
           </td>
         </tr>
 
@@ -801,7 +801,7 @@ system.
           </tr>
           <tr>
         <td class="response-desc">
-          Where the retrieval of a template cannot be avoided, the requester protects it rather than revealing each render to the host. As the specification notes, template references are aggressively cached on the client so that a template is fetched at most once, and retrieval is performed through Oblivious HTTP or a similar relay that disassociates the requester from the requested origin. An issuer that prioritizes offline use and unlinkability embeds the template and its resources in the credential, accepting the increase in credential size. The general responses in <a href="https://www.w3.org/TR/vc-data-model/threat-model/#t10-device-tracking-and-fingerprinting">Device Tracking and Fingerprinting</a> in the <cite><a data-matched-text="[[[VC-DATA-MODEL-2.0]]]" href="https://www.w3.org/TR/vc-data-model-2.0/">Verifiable Credentials Data Model v2.0</a></cite> threat model apply here as well.
+          Where the retrieval of a template cannot be avoided, the requester protects it rather than revealing each render to the host. As the specification notes, template references are aggressively cached on the client so that a template is fetched at most once, and retrieval is performed through Oblivious HTTP or a similar relay that disassociates the requester from the requested origin. An issuer that prioritizes offline use and unlinkability embeds the template and its resources in the credential, accepting the increase in credential size. The general responses in <a href="https://www.w3.org/TR/vc-data-model-threat-model-2.1/#tampering-with-unprotected-external-resources">Device Tracking and Fingerprinting</a> in the <cite><a data-matched-text="[[[VC-DATA-MODEL-2.0]]]" href="https://www.w3.org/TR/vc-data-model-2.0/">Verifiable Credentials Data Model v2.0</a></cite> threat model apply here as well.
         </td>
           </tr>
 
