@@ -3,11 +3,11 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Verifiable Credentials Render Method Threat Model</title>
+  <title>Verifiable Credentials Render Method Threat Model 1.0</title>
   <script src="https://www.w3.org/Tools/respec/respec-w3c"
     class="remove"></script>
-  <script src="threats/js-yaml.min.js"></script>
-  <script src="threats/threat-model.js"></script>
+  <script src="threats/js-yaml.min.js" class="remove"></script>
+  <script src="threats/threat-model.js" class="remove"></script>
 
   <script class='remove'>
     // See https://github.com/w3c/respec/wiki/ for how to configure ReSpec
@@ -30,16 +30,7 @@
       noRecTrack: "true",
       maxTocLevel: 4,
       xref: ["VC-DATA-MODEL-2.0", "CID", "DID", "VC-DATA-INTEGRITY"],
-      preProcess: [window.ThreatModel.render],
-      postProcess: [(config, document) => {
-        config.thisVersion =
-          config.thisVersion.replace(/\/$/, '') + '/threat-model/';
-        const link = document.querySelector(".head a.u-url");
-        if(link) {
-          link.href = config.thisVersion;
-          link.textContent = config.thisVersion;
-        }
-      }]
+      preProcess: [window.ThreatModel.render]
     };
   </script>
   <link rel="stylesheet" href="threats/threat-model.css" />
