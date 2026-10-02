@@ -3,18 +3,19 @@
 
 <head>
   <meta charset="utf-8">
-  <title>Verifiable Credentials Render Method Threat Model</title>
+  <title>Verifiable Credentials Render Method Threat Model 1.0</title>
   <script src="https://www.w3.org/Tools/respec/respec-w3c"
     class="remove"></script>
-  <script src="threats/js-yaml.min.js"></script>
-  <script src="threats/threat-model.js"></script>
+  <script src="threats/js-yaml.min.js" class="remove"></script>
+  <script src="threats/threat-model.js" class="remove"></script>
 
   <script class='remove'>
     // See https://github.com/w3c/respec/wiki/ for how to configure ReSpec
     var respecConfig = {
-      specStatus: "ED",
-      shortName: "vc-render-method",
+      specStatus: "DNOTE",
+      shortName: "vc-render-method-threat-model-1.0",
       group: "vc",
+      publishDate: "2026-10-08",
       edDraftURI: "https://w3c.github.io/vc-render-method/threat-model/",
       latestVersion: "https://www.w3.org/TR/vc-render-method/threat-model/",
       github: {
@@ -29,16 +30,7 @@
       noRecTrack: "true",
       maxTocLevel: 4,
       xref: ["VC-DATA-MODEL-2.0", "CID", "DID", "VC-DATA-INTEGRITY"],
-      preProcess: [window.ThreatModel.render],
-      postProcess: [(config, document) => {
-        config.thisVersion =
-          config.thisVersion.replace(/\/$/, '') + '/threat-model/';
-        const link = document.querySelector(".head a.u-url");
-        if(link) {
-          link.href = config.thisVersion;
-          link.textContent = config.thisVersion;
-        }
-      }]
+      preProcess: [window.ThreatModel.render]
     };
   </script>
   <link rel="stylesheet" href="threats/threat-model.css" />
@@ -124,7 +116,7 @@ it; and the <strong>[=E3|Verifier=] (E3)</strong>, who renders a credential
 as part of evaluating it. The elements and flows introduced by the Render
 Method specification are shown in full color in the data flow diagram below;
 elements reused from the
-<a href="https://www.w3.org/TR/vc-data-model/threat-model/">Verifiable
+<a href="https://www.w3.org/TR/vc-data-model-threat-model-2.1/">Verifiable
 Credentials Data Model threat model</a> are shown grayed as context.
       </p>
       <p class="note" role="note">
@@ -190,22 +182,10 @@ elements under a single authority)
 
     <section id="threat-model-architecture-dictionary">
       <h3>Dictionary</h3>
-      <style>
-        table.dictionary,
-        table.dictionary th,
-        table.dictionary td {
-          border: thin solid rgb(176, 176, 176);
-          border-collapse: collapse;
-          padding: 5px;
-        }
-        table.dictionary td.left {
-          width: 12em;
-        }
-      </style>
       <p>
 The dictionary defines the data flow diagram elements introduced by the
 Render Method specification. Elements reused from the
-<a href="https://www.w3.org/TR/vc-data-model/threat-model/">Verifiable
+<a href="https://www.w3.org/TR/vc-data-model-threat-model-2.1/">Verifiable
 Credentials Data Model threat model</a> appear grayed in the diagram for
 context and are defined in that document rather than repeated here.
       </p>
