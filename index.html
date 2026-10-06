@@ -334,7 +334,7 @@ individual render suite sections.
               <td>id</td>
               <td>
 An OPTIONAL [=string=] that follows the [[[URL]]] and, when fetched,
-dereferences to a render template.
+dereferences to a render payload.
               </td>
             </tr>
             <tr>
@@ -381,11 +381,11 @@ presumed to be shared when the render method is used.
               </td>
             </tr>
             <tr>
-              <td>template</td>
+              <td>payload</td>
               <td>
 An OPTIONAL [=URL=] or [=ordered map|map=] that provides or refers to the
-template that will be used to perform the rendering. If the value is a [=URL=],
-it MAY be a `data:` URL [[RFC2397]] containing the template code. If the value
+payload that will be used to perform the rendering. If the value is a [=URL=],
+it MAY be a `data:` URL [[RFC2397]] containing the payload contents. If the value
 is a [=ordered map|map=], it MUST conform to the following rules:
                 <table class="simple">
                   <thead>
@@ -399,7 +399,7 @@ is a [=ordered map|map=], it MUST conform to the following rules:
                       <td>id</td>
                       <td>
 An REQUIRED [=string=] that follows the [[[URL]]] and, when fetched,
-dereferences to a template such as an SVG or PDF file.
+dereferences to a payload such as an SVG or PDF file.
                       </td>
                     </tr>
                     <tr>
@@ -412,7 +412,7 @@ as specified in [[[RFC6838]]].
                     <tr>
                       <td>digestMultibase</td>
                       <td>
-An OPTIONAL multibase-encoded Multihash of the template file. The multibase
+An OPTIONAL multibase-encoded Multihash of the payload resource. The multibase
 value MUST be `u` (base64url-nopad) and the multihash value MUST be SHA-2 with
 256-bits of output (`0x12`).
                       </td>
@@ -441,7 +441,7 @@ suite values are plain strings or URLs, is still under discussion.
         <section>
           <h3>The `summary` Render Suite</h3>
           <p>
-The `summary` render suite uses JSON templates to transform a
+The `summary` render suite uses JSON payloads to transform a
 [=verifiable credential=] into a standardized data display format. This format
 enables wallets to display credentials in a responsive layout with key
 data highlighted and configurable additional fields. Wallets that implement
@@ -451,12 +451,12 @@ natively support a specific credential type.
           </p>
 
           <p>
-The template and the rendered output are both JSON objects that share a
+The payload and the rendered output are both JSON objects that share a
 single definition, the summary object, given below. String values in the
-template can be JSON pointer strings (as specified in [[[RFC6901]]]) that
+payload can be JSON pointer strings (as specified in [[[RFC6901]]]) that
 reference values in the [=verifiable credential=]. When processing the
-template, JSON pointer strings are evaluated against the credential data
-and replaced with the resolved values. Both the template and the resulting
+payload, JSON pointer strings are evaluated against the credential data
+and replaced with the resolved values. Both the payload and the resulting
 output MUST conform to the summary object definition. Compound data across
 multiple fields is not supported; each field references a single JSON
 pointer.
@@ -476,9 +476,9 @@ The `summary` render suite uses the common render method properties as follows:
               </thead>
               <tbody>
                 <tr>
-                  <td>template</td>
+                  <td>payload</td>
                   <td>
-Provides the summary template, either embedded as a `data:` URL or referenced as
+Provides the summary payload, either embedded as a `data:` URL or referenced as
 a map. The value MUST be, or dereference to, a JSON document that conforms to
 the summary object definition in [[[#summary-object]]].
                   </td>
@@ -486,7 +486,7 @@ the summary object definition in [[[#summary-object]]].
                 <tr>
                   <td>renderProperty</td>
                   <td>
-Not used by this suite. The JSON pointer strings in the summary template
+Not used by this suite. The JSON pointer strings in the summary payload
 determine which properties of the [=verifiable credential=] are exposed.
                   </td>
                 </tr>
@@ -505,8 +505,8 @@ display of the rendered summary.
             <h4>The Summary Object</h4>
             <p>
 A summary object is a JSON object [[RFC8259]] with the members defined below.
-The same definition applies to the template and to the rendered output. In
-a template, the value of any member defined as a string MAY instead be a
+The same definition applies to the payload and to the rendered output. In
+a payload, the value of any member defined as a string MAY instead be a
 JSON pointer string (starting with `/`, as specified in [[[RFC6901]]]) that
 references a value in the [=verifiable credential=], except where noted for
 the `label` and `value` members of field objects. In the rendered output,
@@ -549,12 +549,12 @@ object with the following members:
                 <dl>
                   <dt><code>label</code></dt>
                   <dd>
-A REQUIRED string containing the field label. In a template, the label MUST
+A REQUIRED string containing the field label. In a payload, the label MUST
 be a literal string; a JSON pointer is not allowed here.
                   </dd>
                   <dt><code>value</code></dt>
                   <dd>
-A REQUIRED string containing the field value. In a template, the value MUST
+A REQUIRED string containing the field value. In a payload, the value MUST
 be a JSON pointer string (for example, <code>"/issuer"</code>).
                   </dd>
                   <dt><code>language</code></dt>
@@ -582,21 +582,21 @@ be valid.
             </dl>
 
             <p>
-A template SHOULD be validated against the summary object definition above
-before processing. A non-normative JSON Schema for summary templates is
-provided in [[[#summary-template-json-schema]]].
+A payload SHOULD be validated against the summary object definition above
+before processing. A non-normative JSON Schema for summary payloads is
+provided in [[[#summary-payload-json-schema]]].
             </p>
           </section>
 
           <section>
             <h4>Summary Examples</h4>
             <p>
-              The following example shows a valid summary template with JSON pointer
+              The following example shows a valid summary payload with JSON pointer
               strings:
             </p>
 
             <pre class="example nohighlight"
-                 title="Example summary template">
+                 title="Example summary payload">
 {
   "name": "/credentialSubject/degree/name",
   "description": "University Degree Credential",
@@ -658,7 +658,7 @@ provided in [[[#summary-template-json-schema]]].
             </pre>
 
     <p>
-      In the example below, the JSON template is embedded directly in the
+      In the example below, the JSON payload is embedded directly in the
       [=verifiable credential=] as a `data:` URL [[RFC2397]].
     </p>
 
@@ -669,27 +669,27 @@ provided in [[[#summary-template-json-schema]]].
   "renderMethod": {
     "type": "SuiteRenderMethod",
     "renderSuite": "summary",
-    <span class="comment">// the JSON template is embedded in the VC</span>
-    "template": "data:application/json;base64,eyJuYW1lIjogIi9jcmVkZW50aWFsU3ViamVjdC9kZWdyZWUvbmFtZSIsICJkZXNjcmlwdGlvbiI6ICJVbml2ZXJzaXR5IERlZ3JlZSBDcmVkZW50aWFsIiwgImZpZWxkcyI6IFt7ImxhYmVsIjogIkluc3RpdHV0aW9uIiwgInZhbHVlIjogIi9pc3N1ZXIifV19"
+    <span class="comment">// the JSON payload is embedded in the VC</span>
+    "payload": "data:application/json;base64,eyJuYW1lIjogIi9jcmVkZW50aWFsU3ViamVjdC9kZWdyZWUvbmFtZSIsICJkZXNjcmlwdGlvbiI6ICJVbml2ZXJzaXR5IERlZ3JlZSBDcmVkZW50aWFsIiwgImZpZWxkcyI6IFt7ImxhYmVsIjogIkluc3RpdHV0aW9uIiwgInZhbHVlIjogIi9pc3N1ZXIifV19"
   }
 }
           </pre>
 
           <p>
-            The next example links to the JSON template on the Web and secures it against
+            The next example links to the JSON payload on the Web and secures it against
             modification by using the `digestMultibase` property.
           </p>
 
           <pre class="example nohighlight"
-               title="A remotely hosted JSON template for a summary render template">
+               title="A remotely hosted JSON payload for a summary render payload">
 {
 <span class="comment">...</span>
 "renderMethod": {
   "type": "SuiteRenderMethod",
   "renderSuite": "summary",
-  "template": {
-    <span class="comment">// this JSON template is fetched from the Web</span>
-    "id": "https://degree.example/credential-templates/bachelors.json",
+  "payload": {
+    <span class="comment">// this JSON payload is fetched from the Web</span>
+    "id": "https://degree.example/credential-payloads/bachelors.json",
     "mediaType": "application/json",
     "digestMultibase": "zQmerWC85Wg6wFl9znFCwYxApG270iEu5h6JqWAPdhyxz2dR"
   }
@@ -697,7 +697,7 @@ provided in [[[#summary-template-json-schema]]].
           </pre>
 
           <p>
-            The next example links to the rendering template on the Web and secures it
+            The next example links to the rendering payload on the Web and secures it
             using the `digestMultibase` property:
           </p>
 
@@ -722,14 +722,14 @@ provided in [[[#summary-template-json-schema]]].
       <section>
         <h3>The `html` Render Suite</h3>
         <p>
-The `html` render suite allows template authors to provide an HTML template
+The `html` render suite allows payload authors to provide an HTML payload
 to render a [=verifiable credential=]. The HTML can be referenced remotely or
-via a `data:` URL as the value of either `template` or `template.id` (when
-the value of `template` is an object). JavaScript within the HTML fragment is
+via a `data:` URL as the value of either `payload` or `payload.id` (when
+the value of `payload` is an object). JavaScript within the HTML fragment is
 responsible for rendering the filtered [=verifiable credential=] data provided
 via an HTML data block
 (i.e. `&lt;script type="application/vc"&gt;&lt;/script&gt;`) hosted in a
-sandboxed iframe alongside the HTML template.
+sandboxed iframe alongside the HTML payload.
         </p>
 
         <pre class="example"
@@ -758,8 +758,8 @@ sandboxed iframe alongside the HTML template.
       "/issuer/name",
       "/credentialSubject/name"
     ],
-    "template": {
-      "id": "https://test.example/credential-templates/NameCredential.html",
+    "payload": {
+      "id": "https://test.example/credential-payloads/NameCredential.html",
       "mediaType": "text/html",
       "digestMultibase": "zQmerWC85Wg6wFl9znFCwYxApG270iEu5h6JqWAPdhyxz2dR"
     },
@@ -790,7 +790,7 @@ The `html` render suite uses the common render method properties as follows:
           </thead>
           <tbody>
             <tr>
-              <td>template</td>
+              <td>payload</td>
               <td>
 Provides the HTML fragment, either embedded as a `data:` URL or referenced as
 a map whose `id` dereferences to the fragment.
@@ -800,14 +800,14 @@ a map whose `id` dereferences to the fragment.
               <td>renderProperty</td>
               <td>
 MAY be provided to limit the [=verifiable credential=] data passed to the
-template. If absent, the entire [=verifiable credential=] is provided.
+payload. If absent, the entire [=verifiable credential=] is provided.
               </td>
             </tr>
             <tr>
               <td>outputPreference</td>
               <td>
 MAY be provided. The `style` `width` and `height` preferences apply to the
-`iframe` hosting the template.
+`iframe` hosting the payload.
               </td>
             </tr>
           </tbody>
@@ -815,9 +815,9 @@ MAY be provided. The `style` `width` and `height` preferences apply to the
 
         <p>
 Implementations MUST provide an environment that allows for JavaScript to safely
-render the HTML template using the filtered [=verifiable credential=] data.
+render the HTML payload using the filtered [=verifiable credential=] data.
 Additionally, a [=host page=] SHOULD protect the privacy of any request made
-(for example, dereferencing `template.id`) by using Oblivious HTTP [[?RFC9458]]
+(for example, dereferencing `payload.id`) by using Oblivious HTTP [[?RFC9458]]
 or other means of disassociating the requesting client from the requested origin
 by using a protecting relay.
         </p>
@@ -828,10 +828,10 @@ The following terminology is used to describe this environment:
         <dl>
           <dt><dfn>host page</dfn></dt>
           <dd>
-            Provides the secure environment for rendering the HTML template.
+            Provides the secure environment for rendering the HTML payload.
           </dd>
 
-          <dt><dfn>template code</dfn></dt>
+          <dt><dfn>payload code</dfn></dt>
           <dd>
             The HTML fragment provided within or remotely referenced by the
             Render Method.
@@ -839,7 +839,7 @@ The following terminology is used to describe this environment:
 
           <dt><dfn>wrapper code</dfn></dt>
           <dd>
-            Code that wraps the HTML template to provide additional security
+            Code that wraps the HTML payload to provide additional security
             restrictions and communication with the [=host page=].
           </dd>
         </dl>
@@ -851,9 +851,9 @@ privacy harms.
         </p>
 
         <p>
-The environment MUST also expose to the [=template code=] all
+The environment MUST also expose to the [=payload code=] all
 internationalization and accessibility settings that are available in the
-user's environment. This allows a template to honor the language, text size,
+user's environment. This allows a payload to honor the language, text size,
 contrast, and motion preferences that an individual has already expressed to
 their user agent or operating system. Examples of such settings include those
 reflected in CSS, such as the `rem` unit and media queries like
@@ -865,8 +865,8 @@ those available to JavaScript, such as the locale information provided by
         <p>
 Browser based implementations, for example, can provide such an environment
 using a combination of Content Security Policy [[CSP3]] restrictions on a
-[=host page=], sandboxing of an `iframe` hosting the HTML template, and wrapper
-code that wraps the HTML template to add additional CSP restrictions and
+[=host page=], sandboxing of an `iframe` hosting the HTML payload, and wrapper
+code that wraps the HTML payload to add additional CSP restrictions and
 provides ready and error event communication with the [=host page=].
         </p>
 
@@ -886,9 +886,9 @@ graph TD
         A(VC) -- selectively disclosed --> B{VC subset datablock}
         subgraph "iframe[srcdoc] wrapper code"
             B{VC subset datablock}
-            C[HTML/CSS/JS template from renderMethod]
+            C[HTML/CSS/JS payload from renderMethod]
         end
-        C[HTML/CSS/JS template from renderMethod] --> D[renderMethodReady]
+        C[HTML/CSS/JS payload from renderMethod] --> D[renderMethodReady]
     end
           </pre>
           <figcaption>
@@ -899,7 +899,7 @@ graph TD
         <h4>Host Page</h4>
         <p>
 The [=host page=] (typically a Wallet or [=verifiable credential=] renderer) MUST
-prevent the HTML template from navigating the top-level browsing context,
+prevent the HTML payload from navigating the top-level browsing context,
 accessing external content, accessing the [=host page=], and loading any remote
 content.
         </p>
@@ -910,14 +910,14 @@ If a [=host page=] is used, the following rules apply:
           <li>
 The Content Security Policy (CSP) restrictions MUST include `frame-src 'none'`.
 This forces the use of `srcdoc` instead of `src` for iframes, which prevents
-the browser from loading the HTML template. In turn, this forces the
-[=host page=] code to preload remotely referenced template code and check the
+the browser from loading the HTML payload. In turn, this forces the
+[=host page=] code to preload remotely referenced payload code and check the
 response against the related `digestMultibase` value prior to injecting the
-template into the [=wrapper code=].
+payload into the [=wrapper code=].
           </li>
           <li>
 `sandbox="allow-scripts"` MUST be set on the `iframe` hosting the
-HTML template to prevent navigation and top-level access.
+HTML payload to prevent navigation and top-level access.
           </li>
         </ul>
 
@@ -926,43 +926,43 @@ HTML template to prevent navigation and top-level access.
           data-include-format="text">
         </pre>
 
-        <h5>Template Code</h5>
+        <h5>Payload Code</h5>
         <p>
-The HTML [=template code=] referenced by the `template` property in the
+The HTML [=payload code=] referenced by the `payload` property in the
 `renderMethod` MUST be an HTML fragment that contains the HTML, CSS,
 and JavaScript necessary to render the [=verifiable credential=]. The
-[=template code=] MUST NOT include any `&lt;html&gt;`, `&lt;head&gt;`, or `&lt;body&gt;` tags,
+[=payload code=] MUST NOT include any `&lt;html&gt;`, `&lt;head&gt;`, or `&lt;body&gt;` tags,
 as these will be provided by the [=wrapper code=].
         </p>
 
-        <pre class="example" title="Example HTML Template Fragment"
-          data-include="_includes/template-fragment.html"
+        <pre class="example" title="Example HTML Payload Fragment"
+          data-include="_includes/payload-fragment.html"
           data-include-format="text">
         </pre>
 
         <h5>Wrapper Code</h5>
         <p>
-The template HTML fragment MUST be wrapped in [=wrapper code=]
+The payload HTML fragment MUST be wrapped in [=wrapper code=]
 that provides the data block containing the partial [=verifiable credential=]
 and adds an additional CSP policies to prevent navigation and external
 content loading. Specifically, the [=wrapper code=] MUST add the following CSP
 restrictions of `default-src data: 'unsafe-inline'` to prevent any
-network requests from being made by the [=template code=].
+network requests from being made by the [=payload code=].
         </p>
         <pre class="example"
-          title="Wrapper Code to wrap template and credential in iframe[srcdoc]"
+          title="Wrapper Code to wrap payload and credential in iframe[srcdoc]"
           data-include="_includes/wrapper-code.html"
           data-include-format="text">
         </pre>
 
         <p>
 To complete the setup, the [=host page=] MUST inject the [=wrapper code=] (once populated
-with the [=verifiable credential=] and the [=template code=]) into the iframe's `srcdoc`
-attribute which will run any JavaScript contained in the [=wrapper code=] and [=template code=].
+with the [=verifiable credential=] and the [=payload code=]) into the iframe's `srcdoc`
+attribute which will run any JavaScript contained in the [=wrapper code=] and [=payload code=].
         </p>
 
         <pre class="example"
-          title="Combined Wrapper Code with Template and Credential"
+          title="Combined Wrapper Code with Payload and Credential"
           data-include="_includes/combined.html" data-include-format="text">
         </pre>
 
@@ -970,7 +970,7 @@ attribute which will run any JavaScript contained in the [=wrapper code=] and [=
 
         <p>
 The iframe created in the [=wrapper code=] MUST provide a communication channel to
-allow the template to notify the [=host page=] when rendering is complete or if
+allow the payload to notify the [=host page=] when rendering is complete or if
 there was an error during rendering. This can be accomplished using the
 `postMessage` API with a `MessageChannel` setup by the [=wrapper code=].
         </p>
@@ -980,7 +980,7 @@ The JavaScript shown below would be added to the above [=host page=] to add an
 `onload` event to the iframe which sets up the `MessageChannel`. The [=host page=]
 also creates a `Promise` that resolves when a `ready` message is received from
 the [=wrapper code=] or rejects when an `error` message is received. The [=wrapper code=]
-also provides a `window.renderMethodReady` method for use by the template to
+also provides a `window.renderMethodReady` method for use by the payload to
 notify the [=host page=] that rendering is complete or send back an error message.
         </p>
 
@@ -997,7 +997,7 @@ notify the [=host page=] that rendering is complete or send back an error messag
         </pre>
 
         <p>
-With this setup, the template JavaScript can call `window.renderMethodReady()`
+With this setup, the payload JavaScript can call `window.renderMethodReady()`
 to notify the [=host page=] that rendering is complete or call
 `window.renderMethodReady(new Error("error message"))` to notify the [=host page=]
 of an error.
@@ -1007,7 +1007,7 @@ of an error.
         <p>
 Rendering environment preferences MAY be provided within the Render Method. The
 purpose of this object is to provide suggested use, display, and intended
-access mode when rendering the provided template. An implementation SHOULD
+access mode when rendering the provided payload. An implementation SHOULD
 follow these preferences when provided.
         </p>
 
@@ -1022,7 +1022,7 @@ follow these preferences when provided.
             <tr>
               <td>outputPreference</td>
               <td>
-An OPTIONAL [=map=] that expresses the preferred rendering environment for the provided template.
+An OPTIONAL [=map=] that expresses the preferred rendering environment for the provided payload.
               </td>
             </tr>
           </tbody>
@@ -1056,7 +1056,7 @@ An OPTIONAL [=string=] stating a valid media type listed in the
 <a href="https://www.iana.org/assignments/media-types/media-types.xhtml"
 >IANA Media Types</a> preferred for rendering. This value MAY be used when
 suggesting addtional processing prior to rendering. Examples include converting
-an SVG template into a static image or an HTML document into a PDF.
+an SVG payload into a static image or an HTML document into a PDF.
               </td>
             </tr>
             <tr>
@@ -1107,7 +1107,7 @@ such as images, PDFs, or embedded NFC payloads.
 
         <p>
 In the example below, a fully embedded NFC payload is used as the rendering
-template, which only discloses the barcode identifier associated with the
+payload, which only discloses the barcode identifier associated with the
 credential.
         </p>
 
@@ -1121,7 +1121,7 @@ credential.
   "deliveryMode": "nfc",
   "name": "Tap to send",
   <span class="comment">// the NFC payload is embedded</span>
-  "template": "data:application/octet-stream;base64,2QZkpQGDG...G8XJWnROcY4Biw",
+  "payload": "data:application/octet-stream;base64,2QZkpQGDG...G8XJWnROcY4Biw",
   <span class="comment">// only the barcode is transmitted over NFC</span>
   "renderProperty": ["/credentialSubject/barcode"]
 }
@@ -1142,7 +1142,7 @@ The `static` render suite uses the common render method properties as follows:
           </thead>
           <tbody>
             <tr>
-              <td>template</td>
+              <td>payload</td>
               <td>
 Provides the static binary payload, typically embedded as a `data:` URL.
               </td>
@@ -1150,7 +1150,7 @@ Provides the static binary payload, typically embedded as a `data:` URL.
             <tr>
               <td>deliveryMode</td>
               <td>
-Designates the intended delivery method for the rendered template, such as `nfc`
+Designates the intended delivery method for the rendered payload, such as `nfc`
 for transmission over a wireless NFC channel.
               </td>
             </tr>
@@ -1160,7 +1160,7 @@ for transmission over a wireless NFC channel.
               <td>renderProperty</td>
               <td>
 MAY be provided to limit which [=verifiable credential=] data is represented
-in the rendered template.
+in the rendered payload.
               </td>
             </tr>
             <tr>
@@ -1186,20 +1186,20 @@ for rendering methods.
     </p>
 
     <section>
-      <h4>Summary Template Processing</h4>
+      <h4>Summary Payload Processing</h4>
       <p>
-        When processing a summary template, the following steps MUST be
+        When processing a summary payload, the following steps MUST be
         performed:
       </p>
 
       <ol class="algorithm">
         <li>
-          Validate the template against the summary object definition in
+          Validate the payload against the summary object definition in
           [[[#summary-object]]]. If validation fails, processing MUST stop and an
           error MUST be returned.
         </li>
         <li>
-          For each string value in the template object:
+          For each string value in the payload object:
           <ol class="algorithm">
             <li>
               If the string value starts with `/` (indicating it is a JSON pointer),
@@ -1231,24 +1231,24 @@ for rendering methods.
 
       <p>
         Note that compound data across multiple fields is not supported. Each field
-        in the template references a single JSON pointer that resolves to a single
+        in the payload references a single JSON pointer that resolves to a single
         value from the credential.
       </p>
 
     </section>
 
     <section>
-      <h4>HTML Template Processing</h4>
+      <h4>HTML Payload Processing</h4>
         <p>
 The following sections outline the algorithms that are used by the `html` render
-suite to safely render the HTML template. Alternative algorithms MAY be used
+suite to safely render the HTML payload. Alternative algorithms MAY be used
 as long as the security and privacy outcomes as well as the output is the same.
         </p>
 
         <h4>Host Page</h4>
 
         <p>
-The [=host page=] MUST create an `iframe` element to host the HTML template. The
+The [=host page=] MUST create an `iframe` element to host the HTML payload. The
 [=host page=] MUST set the `sandbox` attribute on the `iframe` to
 `allow-scripts` to prevent navigation and top-level access.
         </p>
@@ -1263,12 +1263,12 @@ Let `renderMethod` be the chosen `renderMethod` property in `vc` where
 `renderMethod.renderSuite` is `html`.
           </li>
           <li>
-If `renderMethod.template` is a [=string=], then let `template` be the value of
-`renderMethod.template`.
+If `renderMethod.payload` is a [=string=], then let `payload` be the value of
+`renderMethod.payload`.
           </li>
           <li>
-If `renderMethod.template` is a [=map=], then let `template` be the result of
-fetching the URL in `renderMethod.template.id`.
+If `renderMethod.payload` is a [=map=], then let `payload` be the result of
+fetching the URL in `renderMethod.payload.id`.
           </li>
         </ol>
 
@@ -1288,7 +1288,7 @@ the JSON Pointer [[RFC6901]] values present in `renderMethod.renderProperty`.
 
       <p>
 The [=host page=] MUST create the [=wrapper code=] by embedding the filtered
-[=verifiable credential=] and the HTML template into the [=wrapper code=] template
+[=verifiable credential=] and the HTML payload into the [=wrapper code=] payload
 defined above.
       </p>
 
@@ -1308,7 +1308,7 @@ in stringified JSON format.
 Insert `datablock` into the `&lt;head&gt;` of `wrapperCode`.
         </li>
         <li>
-Insert the value of `template` into the `&lt;body&gt;` of `wrapperCode`.
+Insert the value of `payload` into the `&lt;body&gt;` of `wrapperCode`.
         </li>
       </ol>
 
@@ -1349,7 +1349,7 @@ In the `onload` event of the `iframe`:
             </li>
             <li>
   Create and start a new `port1` listener on `channel` that listens for a `ready`
-  message from the code in `template` now injected into the `iframe` via
+  message from the code in `payload` now injected into the `iframe` via
   `wrapperCode`.
             </li>
             <li>
@@ -1373,7 +1373,7 @@ complete or if there was an error during rendering.
       <p>
 The [=wrapper code=] MUST setup to receive communication from the [=host page=] via the
 `MessageChannel` and provide the `window.renderMethodReady` method for use by
-the [=template code=].
+the [=payload code=].
       </p>
 
       <ol class="algorithm">
@@ -1447,7 +1447,7 @@ what the [=issuer=] attested even though the credential is authentic.
           <a href="threat-model/index.html#t2-unsafe-rendering-of-untrusted-data">
 Unsafe Rendering of Untrusted Data</a>
           <span class="threat-tag threat-tag-security">security</span> -
-The `html` render suite executes template-supplied code and consumes credential
+The `html` render suite executes payload-supplied code and consumes credential
 values that are untrusted input, so hostile content arriving inside a
 well-formed, verified credential can attempt to reach the surrounding
 [=host page=], navigate away, or contact external locations during rendering.
@@ -1459,10 +1459,10 @@ well-formed, verified credential can attempt to reach the surrounding
       <h3>Deployment Threats</h3>
       <ol class="threat-toc">
         <li>
-          <a href="threat-model/index.html#t3-tracking-via-template-and-resource-fetches">
-Tracking via Template and Resource Fetches</a>
+          <a href="threat-model/index.html#t3-tracking-via-payload-and-resource-fetches">
+Tracking via Payload and Resource Fetches</a>
           <span class="threat-tag threat-tag-privacy">privacy</span> -
-Retrieving a template or its referenced resources by location reveals to the
+Retrieving a payload or its referenced resources by location reveals to the
 [=issuer=] or host that a credential is being rendered, and per-credential
 locations or credential data encoded into outbound requests turn each render
 into a tracking or exfiltration signal.
@@ -1477,8 +1477,8 @@ into a tracking or exfiltration signal.
           <a href="threat-model/index.html#t4-harmful-rendering-output">
 Harmful Rendering Output</a>
           <span class="threat-tag threat-tag-security">security</span> -
-Because a render template controls the visual, auditory, and tactile output, a
-hostile template can be crafted to harm the person viewing it, for example with
+Because a render payload controls the visual, auditory, and tactile output, a
+hostile payload can be crafted to harm the person viewing it, for example with
 a flashing pattern capable of triggering a seizure or a sudden disruptive sound,
 even when the underlying credential is authentic.
         </li>
@@ -1494,7 +1494,7 @@ Inherited Rendering Environment Attack Surface</a>
           <span class="threat-tag threat-tag-security">security</span> -
 The `html` render suite relies on the confinement provided by the chosen
 rendering environment, so a defect that lets the sandbox be escaped, a policy be
-bypassed, or the isolation between template and host be broken becomes a defect
+bypassed, or the isolation between payload and host be broken becomes a defect
 in the render process even when the render method is used exactly as specified.
         </li>
       </ol>
@@ -1588,7 +1588,7 @@ Distributing a fully-rendered PDF, static SVG, or HTML document is
 self-contained and widely supported, but such snapshots do not adapt to
 selective disclosure, cannot be re-rendered from the verified data, and are
 not bound to what was secured. This specification reuses these formats as
-templates combined with claim values at render time rather than as finished
+payloads combined with claim values at render time rather than as finished
 documents.
       </p>
     </section>
@@ -1599,7 +1599,7 @@ documents.
 Rather than defining a new integrity mechanism, this specification relies on
 existing securing mechanisms such as [[[VC-DATA-INTEGRITY]]] and the
 [[[VC-DATA-INTEGRITY#resource-integrity|digestMultibase]]] property to bind a
-referenced template to the credential. Readers can learn about these general
+referenced payload to the credential. Readers can learn about these general
 protection mechanisms by reading about the
 <a href="https://www.w3.org/TR/vc-data-model/threat-model/#t19-tampering-with-unprotected-external-resources">
 Tampering with Unprotected External Resources</a> threat in the
@@ -1629,16 +1629,16 @@ confined, "sandboxed" environment, or the `static` suite.
 
   </section>
 
-  <section class="appendix informative" id="summary-template-json-schema">
-    <h2>Summary Template JSON Schema</h2>
+  <section class="appendix informative" id="summary-payload-json-schema">
+    <h2>Summary Payload JSON Schema</h2>
     <p>
 The following JSON Schema implements the summary object rules defined in
-[[[#summary-object]]], as they apply to summary templates. This schema is
+[[[#summary-object]]], as they apply to summary payloads. This schema is
 non-normative.
     </p>
 
     <pre class="example nohighlight"
-         title="JSON Schema for summary templates">
+         title="JSON Schema for summary payloads">
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "type": "object",
