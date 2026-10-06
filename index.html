@@ -292,7 +292,7 @@ for rendering methods
 
         <p>
 The `renderMethod` property is a reserved extension point in the
-[[[VC-DATA-MODEL-2.1]]] specification . An [=issuer=] can utilize this property
+[[[VC-DATA-MODEL-2.1]]] specification. An [=issuer=] can utilize this property
 in a [=verifiable credential=] to express one or more preferred render methods.
         </p>
 
@@ -308,6 +308,20 @@ hint is determined by the render suite specified by the
 `renderSuite` property.
           </dd>
         </dl>
+      </section>
+
+      <section>
+        <h4>Localization: Selecting on Language and Locale</h4>
+
+        <p>
+One of the core use cases for this specification is the ability to present a
+different rendering payload based on the preferred language or locale of the
+user. This extends beyond the value-level localization offered by the core
+[[VC-DATA-MODEL#internationalization-considerations]] specification, and beyond
+translating field labels. Clients displaying or rendering VCs must be able to
+select arbitrary layouts, styling or full pre-rendered payloads based on the
+user's language and locale preferences.
+        </p>
       </section>
 
       <section>
@@ -368,6 +382,14 @@ presentation modes.
               <td>
 An OPTIONAL human-readable [=string=] that provides a more involved description
 than `name` of when the particular rendering might be useful.
+              </td>
+            </tr>
+            <tr>
+              <td>targetLanguage</td>
+              <td>
+An OPTIONAL [=string=] that designates a language range this render method is
+meant to support (see the<a href="https://www.w3.org/TR/international-specs/#lang-matching">Matching
+language and language tags</a> section for more details).
               </td>
             </tr>
             <tr>
