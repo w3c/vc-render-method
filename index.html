@@ -322,6 +322,39 @@ translating field labels. Clients displaying or rendering VCs must be able to
 select arbitrary layouts, styling or full pre-rendered payloads based on the
 user's language and locale preferences.
         </p>
+
+        <p>
+In the example below, the `renderMethod` property contains an array of two
+`static` render method objects, each providing a pre-rendered PNG image of
+the credential. The client selects the one whose `inLanguage` value best
+matches the user's language preference.
+        </p>
+
+        <pre class="example nohighlight"
+              title="Selecting a render method by language">
+{
+<span class="comment">...</span>
+"renderMethod": [
+  {
+    "type": "SuiteRenderMethod",
+    "renderSuite": "static",
+    "inLanguage": "en",
+    "mediaType": "image/png",
+    "name": "Credential image",
+    "payload": "data:image/png;base64,iVBORw0KGgo...AAAElFTkSuQmCC"
+  },
+  {
+    "type": "SuiteRenderMethod",
+    "renderSuite": "static",
+    "inLanguage": "es",
+    "mediaType": "image/png",
+    "name": "Imagen de la credencial",
+    "payload": "data:image/png;base64,iVBORw0KGgo...AAAElFTkSuQmCC"
+  }
+]
+<span class="comment">...</span>
+}
+        </pre>
       </section>
 
       <section>
