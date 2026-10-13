@@ -122,9 +122,12 @@
             href: "https://www.rfc-editor.org/info/bcp47",
             publisher: "IETF",
           },
-          ENTRY: {
-            title: "Example Title",
-            href: "https://website.example/document",
+          "SD-JWT-VC": {
+            title: "SD-JWT-based Verifiable Credentials (SD-JWT VC)",
+            href: "https://datatracker.ietf.org/doc/html/draft-ietf-oauth-sd-jwt-vc",
+            authors: ["Oliver Terbu", "Daniel Fett", "Brian Campbell"],
+            status: "Internet-Draft",
+            publisher: "IETF",
           },
         },
         lint: {"no-unused-dfns": false},
@@ -1053,8 +1056,7 @@ https://w3c.github.io/cg-reports/a11y-discov-vocab/CG-FINAL-vocabulary-20260128/
               <td>mediaType</td>
               <td>
 An OPTIONAL [=string=] stating a valid media type listed in the
-<a href="https://www.iana.org/assignments/media-types/media-types.xhtml"
->IANA Media Types</a> preferred for rendering. This value MAY be used when
+[[[IANA-MEDIA-TYPES|IANA Media Types]]] preferred for rendering. This value MAY be used when
 suggesting addtional processing prior to rendering. Examples include converting
 an SVG payload into a static image or an HTML document into a PDF.
               </td>
@@ -1281,8 +1283,8 @@ used.
 
       <p>
 This filtering MUST be done by applying the `selectJsonLd` algorithm defined in
-<a href="https://www.w3.org/TR/vc-di-ecdsa/#selectjsonld">Section 3.4.13 selectJsonLd</a>
-of the Data Integrity ECDSA Cryptosuites v1.0 specification [[VC-DI-ECDSA]] to
+[[[VC-DI-ECDSA#selectjsonld|Section 3.4.13 selectJsonLd]]]
+of the [[[VC-DI-ECDSA]]] specification to
 the JSON Pointer [[RFC6901]] values present in `renderMethod.renderProperty`.
       </p>
 
@@ -1541,9 +1543,8 @@ branding can be misrepresented, as described in
 <a href="threat-model/index.html#t1-uncontrolled-credential-presentation">Uncontrolled
 Credential Presentation</a>. Credential
 formats such as
-<a href="https://www.iso.org/standard/69084.html">ISO/IEC 18013-5 mobile driving
-licence (mDL)</a> and the JSON Web Tokens
-(<a href="https://www.rfc-editor.org/rfc/rfc7519">RFC 7519</a>) take this
+[[[ISO18013-5|ISO/IEC 18013-5 mobile driving licence (mDL)]]] and the JSON Web
+Tokens [[RFC7519]] take this
 approach, defining the claims a credential carries but leaving their
 presentation to the consuming software. Microsoft's
 <a href="https://en.wikipedia.org/wiki/Information_Card">Information Card</a>
@@ -1577,7 +1578,7 @@ Such a centralized, controlled, registry-focused solution also works against
 the distributed, decentralized, and permissionless patterns otherwise
 specified to be part of the ecosystem of
 [[[DID|Decentralized Identifiers (DIDs)]]] and
-[[[VC-DATA-MODEL|Verifiable Credentials (VCs)]]].
+[[[VC-DATA-MODEL-2.1|Verifiable Credentials (VCs)]]].
       </p>
     </section>
 
@@ -1601,17 +1602,16 @@ existing securing mechanisms such as [[[VC-DATA-INTEGRITY]]] and the
 [[[VC-DATA-INTEGRITY#resource-integrity|digestMultibase]]] property to bind a
 referenced payload to the credential. Readers can learn about these general
 protection mechanisms by reading about the
-<a href="https://www.w3.org/TR/vc-data-model-threat-model-2.1/#tampering-with-unprotected-external-resources">
-Tampering with Unprotected External Resources</a> threat in the
-<a href="https://www.w3.org/TR/vc-data-model-threat-model-2.1/">
-Verifiable Credential Threat Model</a>.
+[[[VC-DATA-MODEL-THREAT-MODEL-2.1#tampering-with-unprotected-external-resources|Tampering
+with Unprotected External Resources]]] threat in the
+[[[VC-DATA-MODEL-THREAT-MODEL-2.1|Verifiable Credential Threat Model]]].
       </p>
     </section>
 
     <section class="notoc">
       <h3>SD-JWT VC Type Metadata Rendering</h3>
       <p>
-<a href="https://www.ietf.org/archive/id/draft-ietf-oauth-sd-jwt-vc-18.html#section-4.5.1">SD-JWT VC</a>
+[[[SD-JWT-VC#section-4.5.1|SD-JWT VC]]]
 defines a `rendering` property to choose between a `simple` method that supports
 a fixed set of styling attributes, and an `svg_templates` method that forbids
 any code execution and substitutes claim values into text placeholders in an

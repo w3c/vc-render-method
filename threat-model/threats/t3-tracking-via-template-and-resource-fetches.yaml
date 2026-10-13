@@ -21,9 +21,9 @@ description: >-
   credential avoids the network requests entirely, at the cost of increasing
   the size of the credential, which can be significant for constrained
   devices. This threat is the render-time expression of
-  <a href="https://www.w3.org/TR/vc-data-model/threat-model/#t10-device-tracking-and-fingerprinting">Device
-  Tracking and Fingerprinting</a> in the [[[VC-DATA-MODEL-2.0]]] threat model,
-  to which readers are referred for the general analysis.
+  [[[VC-DATA-MODEL-THREAT-MODEL-2.1#device-tracking-and-fingerprinting|Device
+  Tracking and Fingerprinting]]], to which readers are referred for the
+  general analysis.
 response:
   - id: R1
     name: Block Network Access During Rendering
@@ -52,6 +52,5 @@ response:
       offline use and unlinkability embeds the template and its resources in
       the credential, accepting the increase in credential size. The general
       responses in
-      <a href="https://www.w3.org/TR/vc-data-model/threat-model/#t10-device-tracking-and-fingerprinting">Device
-      Tracking and Fingerprinting</a> in the [[[VC-DATA-MODEL-2.0]]] threat
-      model apply here as well.
+      [[[VC-DATA-MODEL-THREAT-MODEL-2.1#device-tracking-and-fingerprinting|Device
+      Tracking and Fingerprinting]]] apply here as well.
