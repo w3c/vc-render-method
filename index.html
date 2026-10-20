@@ -574,13 +574,19 @@ the text direction of the field's label and/or value.
               </dd>
               <dt><code>validFrom</code></dt>
               <dd>
-An OPTIONAL ISO 8601 date string indicating when the credential becomes
-valid.
+An OPTIONAL string whose value conforms to the
+<a data-cite="VC-DATA-MODEL-2.1#defn-validFrom"><code>validFrom</code></a>
+property as defined in the
+<a data-cite="VC-DATA-MODEL-2.1#validity-period">Validity Period</a> section
+of the [[[VC-DATA-MODEL-2.1]]] specification.
               </dd>
               <dt><code>validUntil</code></dt>
               <dd>
-An OPTIONAL ISO 8601 date string indicating when the credential ceases to
-be valid.
+An OPTIONAL string whose value conforms to the
+<a data-cite="VC-DATA-MODEL-2.1#defn-validUntil"><code>validUntil</code></a>
+property as defined in the
+<a data-cite="VC-DATA-MODEL-2.1#validity-period">Validity Period</a> section
+of the [[[VC-DATA-MODEL-2.1]]] specification.
               </dd>
             </dl>
 
@@ -1700,11 +1706,11 @@ non-normative.
     },
     "validFrom": {
       "type": "string",
-      "description": "Validity start date as a literal ISO 8601 date string or JSON pointer"
+      "description": "Validity start date as defined by the VC Data Model validFrom property"
     },
     "validUntil": {
       "type": "string",
-      "description": "Validity end date as a literal ISO 8601 date string or JSON pointer"
+      "description": "Validity end date as defined by the VC Data Model validUntil property"
     }
   },
   "additionalProperties": false
