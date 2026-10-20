@@ -117,11 +117,6 @@
         alternateFormats: [ {uri: "diff-20111214.html", label: "diff to previous version"} ],
         */
         localBiblio: {
-          BCP47: {
-            title: "Tags for Identifying Languages",
-            href: "https://www.rfc-editor.org/info/bcp47",
-            publisher: "IETF",
-          },
           "SD-JWT-VC": {
             title: "SD-JWT-based Verifiable Credentials (SD-JWT VC)",
             href: "https://datatracker.ietf.org/doc/html/draft-ietf-oauth-sd-jwt-vc",
@@ -515,8 +510,9 @@ display of the rendered summary.
             <p>
 A summary object is a JSON object [[RFC8259]] with the members defined below.
 The same definition applies to the payload and to the rendered output. In
-a payload, the value of any member defined as a string MAY instead be a
-JSON pointer string (starting with `/`, as specified in [[[RFC6901]]]) that
+a payload, the value of any member defined below as a string, or as one or
+more strings or [=language value objects=], MAY instead be a JSON pointer
+string (starting with `/`, as specified in [[[RFC6901]]]) that
 references a value in the [=verifiable credential=], except where noted for
 the `label` and `value` members of field objects. In the rendered output,
 every JSON pointer has been replaced by its resolved value.
@@ -525,11 +521,19 @@ every JSON pointer has been replaced by its resolved value.
             <dl>
               <dt><code>name</code></dt>
               <dd>
-A REQUIRED string containing the display name for the credential summary.
+A REQUIRED property containing the display name for the credential summary.
+The value MUST be one or more [=strings=] or [=language value objects=] as
+described in the
+<a data-cite="VC-DATA-MODEL-2.1#language-and-base-direction">Language and
+Base Direction</a> section of the [[[VC-DATA-MODEL-2.1]]] specification.
               </dd>
               <dt><code>description</code></dt>
               <dd>
-A REQUIRED string containing the description text for the credential summary.
+A REQUIRED property containing the description text for the credential
+summary. The value MUST be one or more [=strings=] or [=language value
+objects=] as described in the
+<a data-cite="VC-DATA-MODEL-2.1#language-and-base-direction">Language and
+Base Direction</a> section of the [[[VC-DATA-MODEL-2.1]]] specification.
               </dd>
               <dt><code>icon</code></dt>
               <dd>
@@ -558,23 +562,21 @@ object with the following members:
                 <dl>
                   <dt><code>label</code></dt>
                   <dd>
-A REQUIRED string containing the field label. In a payload, the label MUST
-be a literal string; a JSON pointer is not allowed here.
+A REQUIRED property containing the field label. The value MUST be one or
+more [=strings=] or [=language value objects=] as described in the
+<a data-cite="VC-DATA-MODEL-2.1#language-and-base-direction">Language and
+Base Direction</a> section of the [[[VC-DATA-MODEL-2.1]]] specification. In
+a payload, the label MUST be a literal value; a JSON pointer is not allowed
+here.
                   </dd>
                   <dt><code>value</code></dt>
                   <dd>
-A REQUIRED string containing the field value. In a payload, the value MUST
-be a JSON pointer string (for example, <code>"/issuer"</code>).
-                  </dd>
-                  <dt><code>language</code></dt>
-                  <dd>
-An OPTIONAL language tag (as specified in [[[BCP47]]]) indicating the
-language of the field's label and/or value.
-                  </dd>
-                  <dt><code>direction</code></dt>
-                  <dd>
-An OPTIONAL direction tag (as specified in [[[STRING-META]]]) indicating
-the text direction of the field's label and/or value.
+A REQUIRED property containing the field value. The value MUST be one or
+more [=strings=] or [=language value objects=] as described in the
+<a data-cite="VC-DATA-MODEL-2.1#language-and-base-direction">Language and
+Base Direction</a> section of the [[[VC-DATA-MODEL-2.1]]] specification. In
+a payload, the value MUST be a JSON pointer string (for example,
+<code>"/issuer"</code>).
                   </dd>
                 </dl>
               </dd>
@@ -1653,16 +1655,40 @@ non-normative.
          title="JSON Schema for summary payloads">
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "languageValueObject": {
+      "type": "object",
+      "required": ["@value"],
+      "properties": {
+        "@value": { "type": "string" },
+        "@language": { "type": "string" },
+        "@direction": { "type": "string", "enum": ["ltr", "rtl"] }
+      },
+      "additionalProperties": false
+    },
+    "textValue": {
+      "oneOf": [
+        { "type": "string" },
+        { "$ref": "#/$defs/languageValueObject" }
+      ]
+    },
+    "text": {
+      "oneOf": [
+        { "$ref": "#/$defs/textValue" },
+        { "type": "array", "minItems": 1, "items": { "$ref": "#/$defs/textValue" } }
+      ]
+    }
+  },
   "type": "object",
   "required": ["name", "description", "fields"],
   "properties": {
     "name": {
-      "type": "string",
-      "description": "Display name as a literal string or JSON pointer (e.g., \"/credentialSubject/degree/name\")"
+      "$ref": "#/$defs/text",
+      "description": "Display name as one or more strings or language value objects, or a JSON pointer (e.g., \"/credentialSubject/degree/name\")"
     },
     "description": {
-      "type": "string",
-      "description": "Description as a literal string or JSON pointer"
+      "$ref": "#/$defs/text",
+      "description": "Description as one or more strings or language value objects, or a JSON pointer"
     },
     "icon": {
       "type": "string",
@@ -1690,21 +1716,13 @@ non-normative.
         "required": ["label", "value"],
         "properties": {
           "label": {
-            "type": "string",
-            "description": "Field label (a literal string; a JSON pointer is not allowed)"
+            "$ref": "#/$defs/text",
+            "description": "Field label as one or more strings or language value objects (a JSON pointer is not allowed)"
           },
           "value": {
             "type": "string",
             "pattern": "^/",
             "description": "Field value as a JSON pointer string (starts with \"/\")"
-          },
-          "language": {
-            "type": "string",
-            "description": "Optional BCP 47 language tag for the field"
-          },
-          "direction": {
-            "type": "string",
-            "description": "Optional text direction tag for the field"
           }
         },
         "additionalProperties": false
