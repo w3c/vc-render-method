@@ -822,7 +822,10 @@ render the HTML payload using the filtered [=verifiable credential=] data.
 Additionally, a [=host page=] SHOULD protect the privacy of any request made
 (for example, dereferencing `payload.id`) by using Oblivious HTTP [[?RFC9458]]
 or other means of disassociating the requesting client from the requested origin
-by using a protecting relay.
+by using a protecting relay. See
+<a href="#linking-versus-embedding"></a> and
+<a href="#phone-home-mitigations"></a> for the trade-offs between linking and
+embedding payloads and further mitigations for retrieval-time tracking.
         </p>
         <p>
 The following terminology is used to describe this environment:
@@ -1470,6 +1473,84 @@ locations or credential data encoded into outbound requests turn each render
 into a tracking or exfiltration signal.
         </li>
       </ol>
+
+      <section>
+        <h4>Linking Versus Embedding</h4>
+        <p>
+A render method can either <em>link</em> to a payload (and related resources)
+by URL or <em>embed</em> them inline (for example, as a `data:` URL). Linking
+keeps credentials compact and can allow shared branding assets to be reused
+across many credentials, but retrieving those resources reveals to the host
+that a render is occurring and can correlate the requester's network address,
+timing, and — if locations are unique per credential — the specific
+credential being displayed. Embedding avoids that network signal and improves
+offline availability, but increases credential size, which can matter on
+constrained devices and for media that must fit in limited channels.
+        </p>
+        <p>
+When a linked resource is used, a `digestMultibase` value SHOULD be provided
+so the client can verify integrity before use. Integrity protection does not
+by itself prevent phone-home; it only ensures the bytes retrieved match what
+the [=issuer=] bound. Issuers and implementers choose linking or embedding
+based on size, offline, and privacy requirements for their deployment. The
+`html` render suite already requires that, once a payload is loaded into the
+rendering environment, the payload MUST NOT perform further network access;
+the remaining phone-home risk is primarily the <em>retrieval</em> of the
+payload or resources before that confinement applies.
+        </p>
+      </section>
+
+      <section>
+        <h4>Phone-Home Mitigations</h4>
+        <p>
+The following mitigations reduce tracking and correlation when render
+resources are retrieved:
+        </p>
+        <ul>
+          <li>
+            <strong>Embed when unlinkability or offline use is required.</strong>
+            Issuers that prioritize privacy or offline rendering SHOULD embed
+            payloads and dependent resources in the credential rather than
+            assigning per-credential remote locations.
+          </li>
+          <li>
+            <strong>Prefer shared, cacheable locations.</strong>
+            When linking, issuers SHOULD use stable URLs shared across many
+            credentials (together with `digestMultibase`) so wallets and
+            verifiers can fetch a resource at most once and reuse a local
+            cache. Implementations SHOULD aggressively cache render resources
+            keyed by URL and digest so repeated presentations do not generate
+            repeated requests to the origin.
+          </li>
+          <li>
+            <strong>Trusted template directories.</strong>
+            Ecosystems MAY distribute render templates through trusted,
+            pre-provisioned directories or package updates, so clients obtain
+            templates without contacting an [=issuer=]-controlled origin at
+            presentation time.
+          </li>
+          <li>
+            <strong>Privacy-preserving retrieval.</strong>
+            When a remote fetch cannot be avoided, implementations SHOULD use
+            Oblivious HTTP [[?RFC9458]] or another protecting relay that
+            disassociates the requesting client from the requested origin, as
+            already recommended for `html` payload retrieval.
+          </li>
+          <li>
+            <strong>Compression is not a privacy control.</strong>
+            Compressing an embedded template (for example, with gzip) can
+            reduce credential size but does not mitigate phone-home. Size
+            optimizations MAY be used together with embedding; they are not a
+            substitute for the mitigations above.
+          </li>
+        </ul>
+        <p>
+Further analysis and responses appear under
+<a href="threat-model/index.html#t3-tracking-via-payload-and-resource-fetches">
+Tracking via Payload and Resource Fetches</a> in the
+<a href="threat-model/index.html">Render Method Threat Model</a>.
+        </p>
+      </section>
     </section>
 
     <section>
