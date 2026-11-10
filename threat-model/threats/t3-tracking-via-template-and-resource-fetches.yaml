@@ -44,13 +44,16 @@ response:
     type: Reduce
     description: >-
       Where the retrieval of a template cannot be avoided, the requester
-      protects it rather than revealing each render to the host. As the
-      specification notes, template references are aggressively cached on the
-      client so that a template is fetched at most once, and retrieval is
-      performed through Oblivious HTTP or a similar relay that disassociates
-      the requester from the requested origin. An issuer that prioritizes
-      offline use and unlinkability embeds the template and its resources in
-      the credential, accepting the increase in credential size. The general
-      responses in
+      protects it rather than revealing each render to the host. The
+      specification's Linking Versus Embedding and Phone-Home Mitigations
+      sections state that linked template references SHOULD be aggressively
+      cached on the client (keyed by URL and digest) so that a template is
+      fetched at most once, and that retrieval SHOULD be performed through
+      Oblivious HTTP or a similar relay that disassociates the requester from
+      the requested origin. An issuer that prioritizes offline use and
+      unlinkability embeds the template and its resources in the credential,
+      accepting the increase in credential size. Trusted template directories
+      and shared cacheable URLs further reduce presentation-time contact with
+      an issuer-controlled origin. The general responses in
       [[[VC-DATA-MODEL-THREAT-MODEL-2.1#device-tracking-and-fingerprinting|Device
       Tracking and Fingerprinting]]] apply here as well.
